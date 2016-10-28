@@ -1,0 +1,5 @@
+.DS_Store
+.DS_Store_QuestionedFeature.pkl
+.idea/*
+images/*
+*.pyc
