@@ -37,40 +37,50 @@ dbimport = False    #True: imgs from ftp server, False: imgs from local folder
 
 if dbimport:
     setupDB()
-    rootdir = self.ftp.pwd()
-    dirs = self.ftp.nlst()
+    ROOTDIR = FTP.pwd()
+    DIRS = FTP.nlst()
 else:
     pwd = os.getcwd()
-    rootdir = pwd + '/images/id'
-    dirs = os.listdir(rootdir)
+    ROOTDIR = pwd + '/images/id'
+    DIRS = os.listdir(ROOTDIR)
 
 #correctPositiveTrain = [0 for i in xrange(len(dirs))]  statt 5
-correctPositiveTrain = [0 for i in xrange(len(dirs))]
-correctNegativeTrain = [0 for i in xrange(len(dirs))]
-falsePositiveTrain = [0 for i in xrange(len(dirs))]
-falseNegativeTrain = [0 for i in xrange(len(dirs))]
-correctPositiveTest = [0 for i in xrange(len(dirs))]
-correctNegativeTest = [0 for i in xrange(len(dirs))]
-falsePositiveTest = [0 for i in xrange(len(dirs))]
-falseNegativeTest = [0 for i in xrange(len(dirs))]
+correctPositiveTrain = [0 for i in xrange(len(DIRS))]
+correctNegativeTrain = [0 for i in xrange(len(DIRS))]
+falsePositiveTrain = [0 for i in xrange(len(DIRS))]
+falseNegativeTrain = [0 for i in xrange(len(DIRS))]
+correctPositiveTest = [0 for i in xrange(len(DIRS))]
+correctNegativeTest = [0 for i in xrange(len(DIRS))]
+falsePositiveTest = [0 for i in xrange(len(DIRS))]
+falseNegativeTest = [0 for i in xrange(len(DIRS))]
 # length of features for each printer
-train_feature_length = [0 for i in xrange(len(dirs))]
-test_feature_length = [0 for i in xrange(len(dirs))]
+train_feature_length = [0 for i in xrange(len(DIRS))]
+test_feature_length = [0 for i in xrange(len(DIRS))]
 
 class Inspector(pg.Qt.QtGui.QMainWindow):
     
     def __init__(self):
         super(Inspector, self).__init__()
+        # every observed snippet (512,512) is reduced to a patch of 1024 (32,32)
         col = range(1024)
         col.append('name')
+        self.printer_types = np.array(())
+
+        # (1) imgs with their class
         self.data = pd.DataFrame(columns=col)
         self.train = pd.DataFrame()
-        # test_feature = pd.DataFrame()
-        # train_feature = pd.DataFrame()
-        self.pic = np.zeros(shape=(32,32,7))
-        self.mean = pd.DataFrame(columns=range(2*len(dirs)))
-        self.std = pd.DataFrame(columns=range(2*len(dirs)))
+        self.test = pd.DataFrame()
+        ## (2) imgs in feature representation
+        # self.train_feature = pd.DataFrame()
+        # self.test_feature = pd.DataFrame()
+        # (3) descriptor: mean and std of classes
+        self.mean = pd.DataFrame(columns=range(2 * len(DIRS)))
+        self.std = pd.DataFrame(columns=range(2 * len(DIRS)))
 
+        # debugging option
+        #self.pic = np.zeros(shape=(32,32,7))
+
+        # set UI app
         self.initUI()
         
     def initUI(self):
@@ -162,6 +172,7 @@ class Inspector(pg.Qt.QtGui.QMainWindow):
 
     def getSpectra(self):
         self.data = pd.read_pickle("spectra.pkl")
+        self.printer_types = np.unique([printer for printer in self.data.ix[:,1024]])
         if self.data.empty:
             print("No Spectra on memory.")
         else:
@@ -169,23 +180,27 @@ class Inspector(pg.Qt.QtGui.QMainWindow):
 
     def loadDB(self):
         a=0
-        for dirName in dirs:
-            print(dirName)
-        for curr in dirs:
-            if curr == '.DS_Store':
-                print('DS_Store files has not been removed.')
-            elif os.path.isdir(rootdir + '/' + curr):
-                imgs = os.listdir(rootdir + '/' + curr)
+        self.printer_types = np.array(())
+        for printer in DIRS:
+            if printer == '.DS_Store':
+                pass
+            else:
+                self.printer_types = np.append(self.printer_types, printer)
+
+        for curr in self.printer_types:
+            if os.path.isdir(ROOTDIR + '/' + curr):
+                print(curr)
+                imgs = os.listdir(ROOTDIR + '/' + curr)
                 #if len(imgs) >= 70:
                 for img in imgs:
                     if img == '.DS_Store':
                         print('DS_Store files has not been removed.')
                     else:
                         # read image
-                        print("img path: " + rootdir + '/' + curr + '/' + img)
+                        print("img path: " + ROOTDIR + '/' + curr + '/' + img)
                         #/Users/resa/Studium Master/2. Semester - WiSe2014/Projekt/ipython/printers/canon/005_Canon_L02.tif
                         #tmp = skimage.io.imread(rootdir + '/' + curr + '/' + img, plugin='tifffile')
-                        tmp = skimage.io.imread(rootdir + '/' + curr + '/' + img)
+                        tmp = skimage.io.imread(ROOTDIR + '/' + curr + '/' + img)
                         # use only piece of image
                         if(tmp.shape[0]<=1536 and tmp.shape[1]<=1536 ):
                             tmp = tmp[0:1535,0:1535]
@@ -216,10 +231,12 @@ class Inspector(pg.Qt.QtGui.QMainWindow):
                         segment_count[1] = (tmpGrey.shape[1]-noverlap[1])//step[1]
 
                         # for(each segment in img): cut of segment
-                        for i in range(0, segment_count[0]-1):
-                            for j in range(0, segment_count[1]-1):
+                        for i in range(0, segment_count[0]):
+                            for j in range(0, segment_count[1]):
                                 # segment as copy of img snippet
-                                segment = tmpGrey[i:(i+nperseg[0]),j:(j+nperseg[1])]
+                                start_i = i*nperseg[0]
+                                start_j = j*nperseg[1]
+                                segment = tmpGrey[start_i:(start_i+nperseg[0]+1),start_j:(start_j+nperseg[1]+1)]
                                 # cut relevant data out of scanned image
                                 #tmpGreySegment = tmpGrey[:,range(96,160,2)]
                                 #tmpGreySegment = tmpGreySegment[range(80,176,3),:]
@@ -262,8 +279,8 @@ class Inspector(pg.Qt.QtGui.QMainWindow):
 
                                 # save spectrum in data (magnitude_spectrum or fshift ?)
                                 #range(241,272,1)
-                                magnitude_cut = magnitude_spectrum[:,range(192,320,4)]
-                                magnitude_cut = magnitude_cut[range(192,320,4),:]
+                                magnitude_cut = magnitude_spectrum[:,range(192,320,4)]#64,192,4 for snippet-size: 256,256
+                                magnitude_cut = magnitude_cut[range(192,320,4),:]#64,192,4 for snippet-size: 256,256
                                 magnitude_cut = magnitude_cut.reshape(1024)
                                 magnitude_cut = magnitude_cut.tolist() + [curr]
                                 self.data.loc[a] = magnitude_cut
@@ -273,27 +290,40 @@ class Inspector(pg.Qt.QtGui.QMainWindow):
 
 
     def PCA(self):
-        #randomly reorder data
-        self.train = pd.DataFrame()
 
+        self.train = pd.DataFrame()
+        self.test = pd.DataFrame()
+
+        #randomly reorder data
         data_rand = self.data.reindex(np.random.permutation(self.data.index))
-        data_rand.index = range(0,len(self.data))
-        splitpoint = int(round(data_rand.shape[0]*0.6))
-        self.train = data_rand.ix[0:splitpoint,:]
-        test = data_rand.ix[splitpoint+1:,:]
-        test.index = range(0,len(test))
+        data_rand.index = range(0,len(data_rand))
+
+        #splitpoint = int(round(data_rand.shape[0]*0.6))
+        #self.train = data_rand.ix[0:splitpoint,:]
+        #test = data_rand.ix[splitpoint+1:,:]
+        #test.index = range(0,len(test))
+
+
+        # chose same amount of data from each class
+        for printer in self.printer_types:
+            printer_data = data_rand[data_rand['name']==printer].copy()
+            printer_data.index = range(0,len(printer_data))
+            splitpoint = int(round(printer_data.shape[0]*0.6))
+
+            self.train = self.train.append(printer_data.ix[0:splitpoint,:])
+            self.train.index = range(0,len(self.train))
+            self.test = self.test.append(printer_data.ix[splitpoint+1:,:])
+            self.test.index = range(0,len(self.test))
 
         #split up into train and test set
-        printer_types = dirs
-
         z = 0
-        for printer in printer_types:
+        for printer in self.printer_types:
             print(printer)
             nrCanonTrain = len(self.train[self.train['name']==printer])
             nrOtherTrain = len(self.train) - nrCanonTrain
 
-            nrCanonTest = len(test[test['name']==printer])
-            nrOtherTest = len(test) - nrCanonTest
+            nrCanonTest = len(self.test[self.test['name']==printer])
+            nrOtherTest = len(self.test) - nrCanonTest
             
             #PCA
             axis, eigenData, s = hka.hka(self.train.transpose().ix[:1024,:])
@@ -314,20 +344,20 @@ class Inspector(pg.Qt.QtGui.QMainWindow):
                 else:
                     feature[7] = -1
 
-                for i in range(7): # !!!! changed 7 into 6
+                for i in range(7):
                     feature[i] = eigenData[:,i].T*np.matrix(self.train.ix[j,:1024]).T
                 train_feature[j] = feature
 
             test_feature = pd.DataFrame()
-            for j in range(len(test)):
+            for j in range(len(self.test)):
                 feature = np.zeros(8)
-                if test['name'].ix[j] == printer:
+                if self.test['name'].ix[j] == printer:
                     feature[7] = 1
                 else:
                     feature[7] = -1
 
-                for i in range(7): # !!!! changed 7 into 6
-                    feature[i] = eigenData[:,i].T*np.matrix(test.ix[j,:1024]).T
+                for i in range(7):
+                    feature[i] = eigenData[:,i].T*np.matrix(self.test.ix[j,:1024]).T
                 test_feature[j] = feature
 
             train_feature = train_feature.transpose()
@@ -399,26 +429,26 @@ class Inspector(pg.Qt.QtGui.QMainWindow):
 
     def showStat(self):
         newstr = []
-        for i in range(0,len(dirs)):
+        for i in range(0, len(self.printer_types)):
             line0 = "TRAIN SET"
-            line1 = dirs[i]
+            line1 = self.printer_types[i]
             line2 = "%d documents - %d %s" % (correctPositiveTrain[i], 100*correctPositiveTrain[i]/train_feature_length[i], '% correctPositive classifications')
             line3 = "%d documents - %d %s" % (correctNegativeTrain[i], 100*correctNegativeTrain[i]/train_feature_length[i], '% correctNegative classifications')
             line4 = "%d documents - %d %s" % (falsePositiveTrain[i], 100*falsePositiveTrain[i]/train_feature_length[i], '% falsePositive classifications')
             line5 = "%d documents - %d %s" % (falseNegativeTrain[i], 100*falseNegativeTrain[i]/train_feature_length[i], '% falseNegative classifications')  
-            # print dirs[i]
+            # print self.printer_types[i]
             # print correctPositiveTrain[i], 100*correctPositiveTrain[i]/train_feature_length[i], '% correctPositive classifications'
             # print correctNegativeTrain[i], 100*correctNegativeTrain[i]/train_feature_length[i], '% correctNegative classifications'
             # print falsePositiveTrain[i], 100*falsePositiveTrain[i]/train_feature_length[i], '% falsePositive classifications'
             # print falseNegativeTrain[i], 100*falseNegativeTrain[i]/train_feature_length[i], '% falseNegative classifications'
             line6 = "TEST SET"
-            line7 = dirs[i]
+            line7 = self.printer_types[i]
             line8 = "%d documents - %d %s" % (correctPositiveTest[i], 100*correctPositiveTest[i]/test_feature_length[i], '% correctPositive classifications')
             line9 = "%d documents - %d %s" % (correctNegativeTest[i], 100*correctNegativeTest[i]/test_feature_length[i], '% correctNegative classifications')
             line10 = "%d documents - %d %s" % (falsePositiveTest[i], 100*falsePositiveTest[i]/test_feature_length[i], '% falsePositive classifications')
             line11 = "%d documents - %d %s" % (falseNegativeTest[i], 100*falseNegativeTest[i]/test_feature_length[i], '% falseNegative classifications')
             
-            # print dirs[i]
+            # print self.printer_types[i]
             # print correctPositiveTest[i], 100*correctPositiveTest[i]/test_feature_length[i], '% correctPositive classifications'
             # print correctNegativeTest[i], 100*correctNegativeTest[i]/test_feature_length[i], '% correctNegative classifications'
             # print falsePositiveTest[i], 100*falsePositiveTest[i]/test_feature_length[i], '% falsePositive classifications'
@@ -535,7 +565,7 @@ class Inspector(pg.Qt.QtGui.QMainWindow):
         questioned.index = range(0,len(questioned))
 
         z = 0
-        for printer in dirs:
+        for printer in self.printer_types:
             axis, eigenData, s = hka.hka(self.train.transpose().ix[:1024,:])
             
             #Feature Extraction
@@ -565,7 +595,7 @@ class Inspector(pg.Qt.QtGui.QMainWindow):
     def inspect(self):
         z=0
         newstr = []
-        for printer in dirs:
+        for printer in self.printer_types:
             print(printer)
             # read features
             col = range(1024)
