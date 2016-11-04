@@ -58,7 +58,7 @@ train_feature_length = [0 for i in xrange(len(DIRS))]
 test_feature_length = [0 for i in xrange(len(DIRS))]
 
 class Inspector(pg.Qt.QtGui.QMainWindow):
-    
+
     def __init__(self):
         super(Inspector, self).__init__()
         # every observed snippet (512,512) is reduced to a patch of 1024 (32,32)
@@ -74,15 +74,18 @@ class Inspector(pg.Qt.QtGui.QMainWindow):
         # self.train_feature = pd.DataFrame()
         # self.test_feature = pd.DataFrame()
         # (3) descriptor: mean and std of classes
-        self.mean = pd.DataFrame(columns=range(2 * len(DIRS)))
-        self.std = pd.DataFrame(columns=range(2 * len(DIRS)))
+        #self.mean = pd.DataFrame(columns=range(2 * len(DIRS)))
+        #self.std = pd.DataFrame(columns=range(2 * len(DIRS)))
+        self.mean = np.array(())
+        self.std = np.array(())
+        self.apriori = np.array(())
 
         # debugging option
         #self.pic = np.zeros(shape=(32,32,7))
 
         # set UI app
         self.initUI()
-        
+
     def initUI(self):
         # set other GUI elements
         btn0 = QtGui.QPushButton("loadDB", self)
@@ -113,7 +116,7 @@ class Inspector(pg.Qt.QtGui.QMainWindow):
         centralWidget = QtGui.QWidget(self)
         self.setCentralWidget( centralWidget )
         layout = QtGui.QGridLayout( centralWidget )
-        
+
         ##set plot widget
         #self.pl1 = pg.PlotWidget()
         #x = np.random.normal(size=1000)
@@ -139,9 +142,9 @@ class Inspector(pg.Qt.QtGui.QMainWindow):
         layout.addWidget(self.lbl1, 8, 10, 6,10)
         #layout.addWidget(self.scra1, 8, 10, 6,10)
 
-        btn0.clicked.connect(self.loadDB)            
-        btn1.clicked.connect(self.saveSpectra)  
-        btn2.clicked.connect(self.getSpectra) 
+        btn0.clicked.connect(self.loadDB)
+        btn1.clicked.connect(self.saveSpectra)
+        btn2.clicked.connect(self.getSpectra)
         btn3.clicked.connect(self.PCA)
         # btn4.clicked.connect(self.exportFeature)
         # btn5.clicked.connect(self.importFeature)
@@ -152,7 +155,7 @@ class Inspector(pg.Qt.QtGui.QMainWindow):
         #btn10.clicked.connect(self.showROC)
         btn11.clicked.connect(self.loadimg)
         btn12.clicked.connect(self.inspect)
-        
+
         centralWidget.setLayout(layout)
 
         self.setGeometry(1200, 750, 1150, 700)
@@ -173,6 +176,9 @@ class Inspector(pg.Qt.QtGui.QMainWindow):
     def getSpectra(self):
         self.data = pd.read_pickle("spectra.pkl")
         self.printer_types = np.unique([printer for printer in self.data.ix[:,1024]])
+        self.mean = np.zeros((len(self.printer_types),7,2))
+        self.std = np.zeros((len(self.printer_types),7,2))
+        self.apriori = np.zeros((len(self.printer_types),2))
         if self.data.empty:
             print("No Spectra on memory.")
         else:
@@ -186,6 +192,10 @@ class Inspector(pg.Qt.QtGui.QMainWindow):
                 pass
             else:
                 self.printer_types = np.append(self.printer_types, printer)
+
+        self.mean = np.zeros((len(self.printer_types),7,2))
+        self.std = np.zeros((len(self.printer_types),7,2))
+        self.apriori = np.zeros((len(self.printer_types),2))
 
         for curr in self.printer_types:
             if os.path.isdir(ROOTDIR + '/' + curr):
@@ -298,11 +308,6 @@ class Inspector(pg.Qt.QtGui.QMainWindow):
         data_rand = self.data.reindex(np.random.permutation(self.data.index))
         data_rand.index = range(0,len(data_rand))
 
-        #splitpoint = int(round(data_rand.shape[0]*0.6))
-        #self.train = data_rand.ix[0:splitpoint,:]
-        #test = data_rand.ix[splitpoint+1:,:]
-        #test.index = range(0,len(test))
-
 
         # chose same amount of data from each class
         for printer in self.printer_types:
@@ -315,26 +320,26 @@ class Inspector(pg.Qt.QtGui.QMainWindow):
             self.test = self.test.append(printer_data.ix[splitpoint+1:,:])
             self.test.index = range(0,len(self.test))
 
+        #PCA
+        self.axis, self.eigenData, s = hka.hka(self.train.transpose().ix[:1024,:])
+
+        # export hka
+        name_eigen = "eigenData.pkl"
+        pd.DataFrame(self.eigenData).to_pickle(name_eigen)
+
+        print("pca finished!")
+        #Eigen-Spektren
+        # for i in range(7):
+        #     self.pic = self.eigenData[:,i].reshape(32,32)
+            #plt.figure()
+            #plt.imshow(pic, cmap=plt.cm.gray)
+        #plt.show()
+
         #split up into train and test set
         z = 0
         for printer in self.printer_types:
             print(printer)
-            nrCanonTrain = len(self.train[self.train['name']==printer])
-            nrOtherTrain = len(self.train) - nrCanonTrain
-
-            nrCanonTest = len(self.test[self.test['name']==printer])
-            nrOtherTest = len(self.test) - nrCanonTest
-            
-            #PCA
-            axis, eigenData, s = hka.hka(self.train.transpose().ix[:1024,:])
-            print("pca finished!")
-            #Eigen-Spektren
-            # for i in range(7):
-            #     self.pic = eigenData[:,i].reshape(32,32)
-                #plt.figure()
-                #plt.imshow(pic, cmap=plt.cm.gray)
-            #plt.show()
-            
+            printer_number = np.where(self.printer_types==printer)[0][0]
             #Feature Extraction
             train_feature = pd.DataFrame()
             for j in range(len(self.train)):
@@ -345,7 +350,7 @@ class Inspector(pg.Qt.QtGui.QMainWindow):
                     feature[7] = -1
 
                 for i in range(7):
-                    feature[i] = eigenData[:,i].T*np.matrix(self.train.ix[j,:1024]).T
+                    feature[i] = self.eigenData[:,i].T*np.matrix(self.train.ix[j,:1024]).T
                 train_feature[j] = feature
 
             test_feature = pd.DataFrame()
@@ -357,7 +362,7 @@ class Inspector(pg.Qt.QtGui.QMainWindow):
                     feature[7] = -1
 
                 for i in range(7):
-                    feature[i] = eigenData[:,i].T*np.matrix(self.test.ix[j,:1024]).T
+                    feature[i] = self.eigenData[:,i].T*np.matrix(self.test.ix[j,:1024]).T
                 test_feature[j] = feature
 
             train_feature = train_feature.transpose()
@@ -366,17 +371,6 @@ class Inspector(pg.Qt.QtGui.QMainWindow):
             train_feature.rename(columns={7: 'label'}, inplace=True)
             test_feature.rename(columns={7: 'label'}, inplace=True)
 
-            # export features
-            # name_train = printer+"_TrainFeature.pkl"
-            # train_feature.to_pickle(name_train)
-            # name_test = printer+"_TestFeature.pkl"
-            # test_feature.to_pickle(name_test)
-            # print "Feature extraction finished."
-            # read features
-            # name_train = printer+"_TrainFeature.pkl"
-            # train_feature = pd.read_pickle(name_train)
-            # name_test = printer+"_TestFeature.pkl"
-            # test_feature = pd.read_pickle(name_test)
             #Gaussian Naive Bayes - Training
             mean = pd.DataFrame()
             mean[0] = np.matrix(train_feature[train_feature['label']==1].mean()[0:7]).tolist()[0]
@@ -386,46 +380,32 @@ class Inspector(pg.Qt.QtGui.QMainWindow):
             std[0] = np.matrix(train_feature[train_feature['label']==1].std()[0:7]).tolist()[0]
             std[1] = np.matrix(train_feature[train_feature['label']==-1].std()[0:7]).tolist()[0]
 
-            apriori = [len(train_feature[train_feature['label']==1])/float(len(train_feature)),len(train_feature[train_feature['label']==-1])/float(len(train_feature))]
-            
-            # #Plot gaussian probability distribution
-            # for i in range(7):
-            #     figure()
-            #     stdMax = max(std.ix[i,0], std.ix[i,1])
-            #     xMin = min(mean.ix[i,0], mean.ix[i,1]) - 3*stdMax
-            #     xMax = max(mean.ix[i,0], mean.ix[i,1]) + 3*stdMax
-            #     x = np.linspace(xMin,xMax,100)
-            #     plt.plot(x,mlab.normpdf(x,mean.ix[i,0],std.ix[i,0]),color='b')
-            #     plt.plot(x,mlab.normpdf(x,mean.ix[i,1],std.ix[i,1]),color='r')
-                
+            apriori = np.array([len(train_feature[train_feature['label']==1])/float(len(train_feature)),len(train_feature[train_feature['label']==-1])/float(len(train_feature))])
+
+            self.mean[printer_number,:,:] = mean
+            self.std[printer_number,:,:] = std
+            self.apriori[printer_number,:] = apriori
+
+            # export gaussian naive bayes
+            name_mean = printer +"_mean.pkl"
+            mean.to_pickle(name_mean)
+            name_std = printer +"_std.pkl"
+            std.to_pickle(name_std)
+            name_apriori = printer +"_apriori.pkl"
+            a = pd.DataFrame(apriori)
+            a.to_pickle(name_apriori)
+
             # Train Set
             [correctPositiveTrain[z], correctNegativeTrain[z], falsePositiveTrain[z], falseNegativeTrain[z], tmp, tmp] = GNBMatch(train_feature, mean, std, apriori, 1)
             train_feature_length[z] = len(train_feature)
             # Test Set
             [correctPositiveTest[z], correctNegativeTest[z], falsePositiveTest[z], falseNegativeTest[z], tmp, tmp] = GNBMatch(test_feature, mean, std, apriori, 1)
-            test_feature_length[z] = len(test_feature) 
+            test_feature_length[z] = len(test_feature)
             print("GNB training finished.")
             z = z+1
 
         print("Training for all printers finished.")
 
-    # def showPC(self):
-    #     # for i in range(7):
-    #     #     img = pg.image(pic[:,:,i])
-
-    #     win = pg.GraphicsWindow(title="PC - Eigen-Spektren")
-    #     win.resize(1000,600)
-        
-    #     for i in range(7):
-    #         p1 = win.addPlot()
-    #         p1.plot(pg.image(self.pic[:,:,i]))
-    #         if i == 3:
-    #             win.nextRow()
-    # def classGNB(self):
-    #     print ""
-
-    # def showBayes(self):
-    #     print "Show Bayes"
 
     def showStat(self):
         newstr = []
@@ -435,17 +415,12 @@ class Inspector(pg.Qt.QtGui.QMainWindow):
             line2 = "%d documents - %d %s" % (correctPositiveTrain[i], 100*correctPositiveTrain[i]/train_feature_length[i], '% correctPositive classifications')
             line3 = "%d documents - %d %s" % (correctNegativeTrain[i], 100*correctNegativeTrain[i]/train_feature_length[i], '% correctNegative classifications')
             line4 = "%d documents - %d %s" % (falsePositiveTrain[i], 100*falsePositiveTrain[i]/train_feature_length[i], '% falsePositive classifications')
-            line5 = "%d documents - %d %s" % (falseNegativeTrain[i], 100*falseNegativeTrain[i]/train_feature_length[i], '% falseNegative classifications')  
+            line5 = "%d documents - %d %s" % (falseNegativeTrain[i], 100*falseNegativeTrain[i]/train_feature_length[i], '% falseNegative classifications')
 
             line51 = "Hit Ratio: %d %s" % (100*correctPositiveTrain[i] / (correctPositiveTrain[i] + falseNegativeTrain[i]), "%")
             line52 = "Accuracy: %d %s" % (100*correctPositiveTrain[i] / (correctPositiveTrain[i] + falsePositiveTrain[i]), "%")
             line53 = "Fallout: %d %s" % (100*falsePositiveTrain[i] / (falsePositiveTrain[i] + correctNegativeTrain[i]), "%")
 
-            # print self.printer_types[i]
-            # print correctPositiveTrain[i], 100*correctPositiveTrain[i]/train_feature_length[i], '% correctPositive classifications'
-            # print correctNegativeTrain[i], 100*correctNegativeTrain[i]/train_feature_length[i], '% correctNegative classifications'
-            # print falsePositiveTrain[i], 100*falsePositiveTrain[i]/train_feature_length[i], '% falsePositive classifications'
-            # print falseNegativeTrain[i], 100*falseNegativeTrain[i]/train_feature_length[i], '% falseNegative classifications'
             line6 = "TEST SET"
             line7 = self.printer_types[i]
             line8 = "%d documents - %d %s" % (correctPositiveTest[i], 100*correctPositiveTest[i]/test_feature_length[i], '% correctPositive classifications')
@@ -456,23 +431,15 @@ class Inspector(pg.Qt.QtGui.QMainWindow):
             line111 = "Hit Ratio: %d %s" % (100*correctPositiveTest[i] / (correctPositiveTest[i] + falseNegativeTest[i]), "%")
             line112 = "Accuracy: %d %s" % (100*correctPositiveTest[i] / (correctPositiveTest[i] + falsePositiveTest[i]), "%")
             line113 = "Fallout: %d %s" % (100*falsePositiveTest[i] / (falsePositiveTest[i] + correctNegativeTest[i]), "%")
-            # print self.printer_types[i]
-            # print correctPositiveTest[i], 100*correctPositiveTest[i]/test_feature_length[i], '% correctPositive classifications'
-            # print correctNegativeTest[i], 100*correctNegativeTest[i]/test_feature_length[i], '% correctNegative classifications'
-            # print falsePositiveTest[i], 100*falsePositiveTest[i]/test_feature_length[i], '% falsePositive classifications'
-            # print falseNegativeTest[i], 100*falseNegativeTest[i]/test_feature_length[i], '% falseNegative classifications'
             newstr.append("\n".join(("                                                            ".join((line0,line6)),"                                                            ".join((line1,line7)),"          ".join((line2,line8)),"         ".join((line3,line9)),"                    ".join((line4,line10)),"                    ".join((line5,line11)),"                                                        ".join((line51,line111)),"                                                        ".join((line52,line112)),"                                                        ".join((line53,line113)))))
-        
-        self.lbl1.setText("\n".join((newstr)))
-        #self.scra1.setText("\n".join((newstr)))
 
-    # def showROC(self):
-    #     print "Show ROC"
+        self.lbl1.setText("\n".join((newstr)))
+
 
     def loadimg(self):
         qimg = QtGui.QImage()
         col = range(1024)
-        col.append('name') 
+        col.append('name')
         questioned = pd.DataFrame(columns=col)
         filename = QtGui.QFileDialog.getOpenFileName(
                    self, 'Open File', '', 'Images (*.png *.xpm *.jpg)')
@@ -483,7 +450,7 @@ class Inspector(pg.Qt.QtGui.QMainWindow):
         #self.lbl2.setPixmap(pixmap) # show loaded image in screen (too large)
 
         tmp = skimage.io.imread(str(filename))
-        
+
         if tmp.size == 0:
             print("Image could not be load: ")
             print(filename)
@@ -509,7 +476,7 @@ class Inspector(pg.Qt.QtGui.QMainWindow):
         segment_count = np.empty([len(tmpGrey.shape)], dtype=int)
         segment_count[0] = (tmpGrey.shape[0]-noverlap[0])//step[0]
         segment_count[1] = (tmpGrey.shape[1]-noverlap[1])//step[1]
-        
+
         # for(each segment in img): cut of segment
         for i in range(0, segment_count[0]-1):
             for j in range(0, segment_count[1]-1):
@@ -527,7 +494,7 @@ class Inspector(pg.Qt.QtGui.QMainWindow):
                 # hanning vectors
                 u_vector = np.hanning(segment.shape[0])#eine Zeile
                 v_vector = np.hanning(segment.shape[1])#eine Spalte
-                
+
                 # 2d hanning matrix
                 for u in range(0,segment.shape[0]-1):
                     for v in range(0,segment.shape[1]-1):
@@ -572,29 +539,20 @@ class Inspector(pg.Qt.QtGui.QMainWindow):
         # feature extraction (PCA + GNB)
         questioned.index = range(0,len(questioned))
 
-        z = 0
-        for printer in self.printer_types:
-            axis, eigenData, s = hka.hka(self.train.transpose().ix[:1024,:])
-            
-            #Feature Extraction
-            questioned_feature = pd.DataFrame()
-            for j in range(len(questioned)):
-                feature = np.zeros(8)
-                if questioned['name'].ix[j] == printer:
-                    feature[7] = 1
-                else:
-                    feature[7] = -1
+        questioned_feature = pd.DataFrame()
+        for j in range(len(questioned)):
+            feature = np.zeros(8)
+            feature[7] = 0
 
-                for i in range(7):
-                    feature[i] = eigenData[:,i].T*np.matrix(questioned.ix[j,:1024]).T
-                questioned_feature[j] = feature
+            for i in range(7):
+                feature[i] = self.eigenData[:,i].T*np.matrix(questioned.ix[j,:1024]).T
+            questioned_feature[j] = feature
 
-            questioned_feature = questioned_feature.transpose()
-            questioned_feature.rename(columns={7: 'label'}, inplace=True)
-            # export features
-            name_test = printer+"_QuestionedFeature.pkl"
-            questioned_feature.to_pickle(name_test)
-            z = z+1
+        questioned_feature = questioned_feature.transpose()
+        questioned_feature.rename(columns={7: 'label'}, inplace=True)
+        # export features
+        name_test = "QuestionedFeature.pkl"
+        questioned_feature.to_pickle(name_test)
 
         print("Feature extraction of questioned document finished.")
         #self.lbl2.show() # show loaded image in screen (too large)
@@ -605,43 +563,28 @@ class Inspector(pg.Qt.QtGui.QMainWindow):
         newstr = []
         for printer in self.printer_types:
             print(printer)
+            printer_number = np.where(self.printer_types==printer)[0][0]
             # read features
             col = range(1024)
-            col.append('name') 
+            col.append('name')
             questioned_feature = pd.DataFrame(columns=col)
-            
-            name_test = printer+"_QuestionedFeature.pkl"
+
+            name_test = "QuestionedFeature.pkl"
             questioned_feature = pd.read_pickle(name_test)
 
-            axis, eigenData, s = hka.hka(self.train.transpose().ix[:1024,:])
-            #Feature Extraction of Train
-            train_feature = pd.DataFrame()
-            for j in range(len(self.train)):
-                feature = np.zeros(8)
-                if self.train['name'].ix[j] == printer:
-                    feature[7] = 1
-                else:
-                    feature[7] = -1
 
-                for i in range(7):
-                    feature[i] = eigenData[:,i].T*np.matrix(self.train.ix[j,:1024]).T
-                train_feature[j] = feature
+            mean = pd.DataFrame(self.mean[printer_number,:,:], columns=[0,1])
+            std = pd.DataFrame(self.std[printer_number,:,:], columns=[0,1])
+            apriori = self.apriori[printer_number,:]
 
-            train_feature = train_feature.transpose()
-            train_feature.rename(columns={7: 'label'}, inplace=True)
+            name_test = "QuestionedFeature.pkl"
+            questioned_feature = pd.read_pickle(name_test)
 
+            # import gaussian naive bayes
+            mean = pd.read_pickle(printer +"_mean.pkl")
+            std = pd.read_pickle(printer +"_std.pkl")
+            apriori = np.array(pd.read_pickle(printer +"_apriori.pkl")).T.flatten()
 
-            #Gaussian Naive Bayes - Training
-            mean = pd.DataFrame()
-            mean[0] = np.matrix(train_feature[train_feature['label']==1].mean()[0:7]).tolist()[0]
-            mean[1] = np.matrix(train_feature[train_feature['label']==-1].mean()[0:7]).tolist()[0]
-
-            std = pd.DataFrame()
-            std[0] = np.matrix(train_feature[train_feature['label']==1].std()[0:7]).tolist()[0]
-            std[1] = np.matrix(train_feature[train_feature['label']==-1].std()[0:7]).tolist()[0]
-
-            apriori = [len(train_feature[train_feature['label']==1])/float(len(train_feature)),len(train_feature[train_feature['label']==-1])/float(len(train_feature))]
-               
             ## Train Set
             #[correctPositiveTrain[z], correctNegativeTrain[z], falsePositiveTrain[z], falseNegativeTrain[z], tmp, tmp] = GNBMatch(train_feature, self.mean.ix[:,2*z:2*z+1], self.std.ix[:,2*z:2*z+1], apriori, 1)
             #train_feature_length[z] = len(train_feature)
@@ -658,7 +601,7 @@ class Inspector(pg.Qt.QtGui.QMainWindow):
                 newstr.append("  ".join((newstr2, printer, quote_neg)))
             # Zugehörigkeit:       Espon (zu 99%)
             # Nicht-Zugehörigkeit: Canon (zu 94%), HP(zu 100%), Brother (zu 99%)
-            z = z+1
+            #z = z+1
             # if(falsePositiveQ >= falseNegativeTest[z]):
             #     newstr = "Positive: "
             #     quote_pos = "%d %s" % (100*falsePositiveTest[i]/len(questioned_feature), '%')
