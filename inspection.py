@@ -49,7 +49,7 @@ if dbimport:
     DIRS = FTP.nlst()
 else:
     pwd = os.getcwd()
-    ROOTDIR = pwd + '/images/idcards_all' #id #idcards_all
+    ROOTDIR = pwd + '/images/id_mini' #id #idcards_all
     DIRS = os.listdir(ROOTDIR)
 
 #correctPositiveTrain = [0 for i in xrange(len(dirs))]  statt 5
@@ -185,15 +185,15 @@ class Inspector(pg.Qt.QtGui.QMainWindow):
 
         if add_all_fft:
             if self.data_merged.empty==False:
-                self.data_merged.to_pickle("data_merged.pkl")
-                self.data_merged_multi.to_pickle("data_merged_multi.pkl")
-                self.data_detailed.to_pickle("data_detailed.pkl")
+                self.data_merged.to_pickle("B_additiveCorrelation_id_mini_w512_1000px/data_merged.pkl")
+                self.data_merged_multi.to_pickle("B_additiveCorrelation_id_mini_w512_1000px/data_merged_multi.pkl")
+                self.data_detailed.to_pickle("B_additiveCorrelation_id_mini_w512_1000px/data_detailed.pkl")
                 print("saved merged spectra!")
             else:
                 print("Data is still empty, press loadDB first.")
         else:
             if self.data.empty==False:
-                self.data.to_pickle("spectra.pkl")
+                self.data.to_pickle("B_additiveCorrelation_id_mini_w512_1000px/spectra.pkl")
                 print("saved spectra!")
             else:
                 print("Data is still empty, press loadDB first.")
@@ -201,9 +201,9 @@ class Inspector(pg.Qt.QtGui.QMainWindow):
     def getSpectra(self):
 
         if add_all_fft:
-            self.data_merged = pd.read_pickle("data_merged.pkl")
-            self.data_merged_multi = pd.read_pickle("data_merged_multi.pkl")
-            self.data_detailed = pd.read_pickle("data_detailed.pkl")
+            self.data_merged = pd.read_pickle("B_additiveCorrelation_id_w512_1000px/data_merged.pkl")
+            self.data_merged_multi = pd.read_pickle("B_additiveCorrelation_id_w512_1000px/data_merged_multi.pkl")
+            self.data_detailed = pd.read_pickle("B_additiveCorrelation_id_w512_1000px/data_detailed.pkl")
             class_column = self.data_detailed.shape[1]-1
             self.printer_types = np.unique([printer for printer in self.data_detailed.ix[:,class_column]])
             self.snippet_amount_perPrinter = np.zeros((len(self.printer_types)))
@@ -216,7 +216,7 @@ class Inspector(pg.Qt.QtGui.QMainWindow):
                 print("got spectra!")
 
         else:
-            self.data = pd.read_pickle("spectra.pkl")
+            self.data = pd.read_pickle("B_additiveCorrelation_id_w512_1000px/spectra.pkl")
             self.printer_types = np.unique([printer for printer in self.data.ix[:,1024]])
             self.snippet_amount_perPrinter = np.zeros((len(self.printer_types)))
             if self.data.empty:
@@ -428,6 +428,7 @@ class Inspector(pg.Qt.QtGui.QMainWindow):
                 data_normed[p,:,:] = np.reshape(vector, (snippet_w,snippet_w))
                 sum[p] = np.sum(np.sum(data_normed[p]))
                 #data_normed[p,:,:] = np.divide(data_normed[p,:,:],sum[p])
+                pd.DataFrame(data_normed[p]).to_pickle("B_additiveCorrelation_id_mini_w512_1000px/corr_"+self.printer_types[p]+".pkl")
 
             nr_segments = self.data_detailed.shape[0]
             correlation_list = np.zeros((nr_segments, self.printer_types.size+1))
@@ -451,7 +452,7 @@ class Inspector(pg.Qt.QtGui.QMainWindow):
                 printer_list = correlation_list[correlation_list[:,-1] == p]
 
                 for row in range(printer_list.shape[0]):
-                    printer_list[row,:].max()
+                    #printer_list[row,:].max()
                     likeliest_class = np.where(printer_list[row,:]==printer_list[row,:].max())[0][0]
 
                     if likeliest_class == p:
@@ -472,8 +473,11 @@ class Inspector(pg.Qt.QtGui.QMainWindow):
 
                         print(p, ": False.")
 
-
-
+            #for p in range(len(self.printer_types)):
+            pd.DataFrame(np.array(correctPositiveTrain)).to_pickle("B_additiveCorrelation_id_mini_w512_1000px/correctPositive.pkl")
+            pd.DataFrame(np.array(correctNegativeTrain)).to_pickle("B_additiveCorrelation_id_mini_w512_1000px/correctNegative.pkl")
+            pd.DataFrame(np.array(falsePositiveTrain)).to_pickle("B_additiveCorrelation_id_mini_w512_1000px/falsePositive.pkl")
+            pd.DataFrame(np.array(falseNegativeTrain)).to_pickle("B_additiveCorrelation_id_mini_w512_1000px/falseNegative.pkl")
 
         else:
             self.train = pd.DataFrame()
@@ -499,7 +503,7 @@ class Inspector(pg.Qt.QtGui.QMainWindow):
             self.axis, self.eigenData, s = hka.hka(self.train.transpose().ix[:1024,:])
 
             # export hka
-            name_eigen = "eigenData.pkl"
+            name_eigen = "B_additiveCorrelation_id_mini_w512_1000px/eigenData.pkl"
             pd.DataFrame(self.eigenData).to_pickle(name_eigen)
 
             print("pca finished!")
@@ -562,11 +566,11 @@ class Inspector(pg.Qt.QtGui.QMainWindow):
                 self.apriori[printer_number,:] = apriori
 
                 # export gaussian naive bayes
-                name_mean = printer +"_mean.pkl"
+                name_mean = "B_additiveCorrelation_id_mini_w512_1000px/" +printer +"_mean.pkl"
                 mean.to_pickle(name_mean)
-                name_std = printer +"_std.pkl"
+                name_std = "B_additiveCorrelation_id_mini_w512_1000px/" +printer +"_std.pkl"
                 std.to_pickle(name_std)
-                name_apriori = printer +"_apriori.pkl"
+                name_apriori = "B_additiveCorrelation_id_mini_w512_1000px/" +printer +"_apriori.pkl"
                 a = pd.DataFrame(apriori)
                 a.to_pickle(name_apriori)
 
@@ -582,20 +586,41 @@ class Inspector(pg.Qt.QtGui.QMainWindow):
         print("Training for all printers finished.")
 
 
+    def safe_correlation(self):
+
+        self.data_merged.to_pickle("B_additiveCorrelation_id_mini_w512_1000px/data_merged.pkl")
+
     def showStat(self):
         newstr = []
         if add_all_fft:
+            col = []
+            col.append('hit_rate')
+            col.append('miss_rate')
+            col.append('fall_out')
+            col.append('accuracy')
+            col.append('failure')
+            col.append('printer')
+            statistics = pd.DataFrame(columns=col)
+
             for i in range(0, len(self.printer_types)):
                 #print("TRAIN SET")
+                hit_rate = 100*correctPositiveTrain[i] / (correctPositiveTrain[i] + falseNegativeTrain[i])
+                miss_rate = 100*falseNegativeTrain[i] / (correctNegativeTrain[i] + falseNegativeTrain[i])
+                fall_out = 100*falsePositiveTrain[i] / (falsePositiveTrain[i] + correctNegativeTrain[i])
+                amount_all = correctPositiveTrain[i] + correctNegativeTrain[i] + falsePositiveTrain[i] + falseNegativeTrain[i]
+                accuracy = 100*(correctPositiveTrain[i]+correctNegativeTrain[i]) / amount_all
+                failure = 100*(falsePositiveTrain[i] + falseNegativeTrain[i]) / amount_all
                 print(self.printer_types[i], "############################")
-                print("Hit Rate: %d %s" % (100*correctPositiveTrain[i] / (correctPositiveTrain[i] + falseNegativeTrain[i]), "%"))
-                print("Miss Rate: %d %s" % (100*falseNegativeTrain[i] / (correctNegativeTrain[i] + falseNegativeTrain[i]), "%"))
-                print("Fallout: %d %s" % (100*falsePositiveTrain[i] / (falsePositiveTrain[i] + correctNegativeTrain[i]), "%"))
+                print("Hit Rate: %d %s" % (hit_rate, "%"))
+                print("Miss Rate: %d %s" % (miss_rate, "%"))
+                print("Fallout: %d %s" % (fall_out, "%"))
                 print("-------------------------------")
-                print("Accuracy: %d %s" % (100*(correctPositiveTrain[i]+correctNegativeTrain[i]) / (correctPositiveTrain[i] + correctNegativeTrain[i] + falsePositiveTrain[i] + falseNegativeTrain[i]), "%"))
-                print("Classification Failure: %d %s" % (100*(falsePositiveTrain[i] + falseNegativeTrain[i]) / (correctPositiveTrain[i] + correctNegativeTrain[i] + falsePositiveTrain[i] + falseNegativeTrain[i]), "%"))
+                print("Accuracy: %d %s" % (accuracy, "%"))
+                print("Classification Failure: %d %s" % (failure, "%"))
 
+                statistics.loc[i] = np.array([hit_rate,miss_rate,fall_out,accuracy,failure,self.printer_types[i]])
 
+            statistics.to_pickle("B_additiveCorrelation_id_mini_w512_1000px/statistics.pkl")
                 #line6 = "TEST SET"
                 #line7 = self.printer_types[i]
                 #line111 = "Hit Rate: %d %s" % (100*correctPositiveTest[i] / (correctPositiveTest[i] + falseNegativeTest[i]), "%")
@@ -746,7 +771,7 @@ class Inspector(pg.Qt.QtGui.QMainWindow):
         questioned_feature = questioned_feature.transpose()
         questioned_feature.rename(columns={pca_amount: 'label'}, inplace=True)
         # export features
-        name_test = "QuestionedFeature.pkl"
+        name_test = "B_additiveCorrelation_id_mini_w512_1000px/QuestionedFeature.pkl"
         questioned_feature.to_pickle(name_test)
 
         print("Feature extraction of questioned document finished.")
@@ -764,7 +789,7 @@ class Inspector(pg.Qt.QtGui.QMainWindow):
             col.append('name')
             questioned_feature = pd.DataFrame(columns=col)
 
-            name_test = "QuestionedFeature.pkl"
+            name_test = "B_additiveCorrelation_id_mini_w512_1000px/QuestionedFeature.pkl"
             questioned_feature = pd.read_pickle(name_test)
 
 
@@ -772,7 +797,7 @@ class Inspector(pg.Qt.QtGui.QMainWindow):
             std = pd.DataFrame(self.std[printer_number,:,:], columns=[0,1])
             apriori = self.apriori[printer_number,:]
 
-            name_test = "QuestionedFeature.pkl"
+            name_test = "B_additiveCorrelation_id_mini_w512_1000px/QuestionedFeature.pkl"
             questioned_feature = pd.read_pickle(name_test)
 
             # import gaussian naive bayes
