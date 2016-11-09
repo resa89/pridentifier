@@ -384,10 +384,14 @@ class Inspector(pg.Qt.QtGui.QMainWindow):
 
                     threshold = b[b.size - nr_pixels]
 
-                    magnitude_all[magnitude_all<threshold] == magnitude_all.min()
-                    magnitude_all_multi[magnitude_all_multi<threshold] == magnitude_all_multi.min()
+                    min = magnitude_all.min()
+
+                    magnitude_all[magnitude_all<threshold] = min
+                    magnitude_all_multi[magnitude_all_multi<threshold] = min
 
                     magnitude_all = magnitude_all - magnitude_all.min()
+                    magnitude_all = magnitude_all/magnitude_all.sum()
+
 
                     self.data_merged.loc[printer_number] = magnitude_all.reshape(magnitude_all.size).tolist() + [curr]
                     self.data_merged_multi.loc[printer_number] = magnitude_all_multi.reshape(magnitude_all_multi.size).tolist() + [curr]
@@ -420,11 +424,11 @@ class Inspector(pg.Qt.QtGui.QMainWindow):
             sum = np.zeros((self.printer_types.size))
 
             for p in range(self.printer_types.size):
-                vector = np.array(np.divide(self.data_merged.ix[p,:-1],self.snippet_amount_perPrinter[p]))
+                #vector = np.array(np.divide(self.data_merged.ix[p,:-1],self.snippet_amount_perPrinter[p]))
+                vector = np.array(self.data_merged.ix[p,:-1])
                 data_normed[p,:,:] = np.reshape(vector, (snippet_w,snippet_w))
                 sum[p] = np.sum(np.sum(data_normed[p]))
-                data_normed[p,:,:] = np.divide(data_normed[p,:,:],sum[p])
-
+                #data_normed[p,:,:] = np.divide(data_normed[p,:,:],sum[p])
 
             nr_segments = self.data_detailed.shape[0]
             correlation_list = np.zeros((nr_segments, self.printer_types.size+1))
