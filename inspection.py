@@ -37,10 +37,10 @@ from matplotlib.backends.backend_qt4agg import NavigationToolbar2QTAgg as Naviga
 # configuration
 dbimport = False    #True: imgs from ftp server, False: imgs from local folder
 pca_amount = 20
-snippet_w = 256
+snippet_w = 512
 scale_fft = False
 add_all_fft = True
-nr_pixels = 100
+nr_pixels = 10000
 
 
 if dbimport:
@@ -49,7 +49,7 @@ if dbimport:
     DIRS = FTP.nlst()
 else:
     pwd = os.getcwd()
-    ROOTDIR = pwd + '/images/id_mini' #id #idcards_all
+    ROOTDIR = pwd + '/images/idcards_all' #id #idcards_all
     DIRS = os.listdir(ROOTDIR)
 
 #correctPositiveTrain = [0 for i in xrange(len(dirs))]  statt 5
@@ -69,6 +69,7 @@ class Inspector(pg.Qt.QtGui.QMainWindow):
 
     def __init__(self):
         super(Inspector, self).__init__()
+        print("Number of Pixels: ", nr_pixels)
         # every observed snippet (512,512) is reduced to a patch of 1024 (32,32)
         col = range(1024)
         col_large = range(snippet_w*snippet_w)
@@ -273,7 +274,7 @@ class Inspector(pg.Qt.QtGui.QMainWindow):
                             continue
 
                         # number of pixels per segents
-                        nperseg=[256,256]#[512,512]
+                        nperseg=[snippet_w,snippet_w]#[512,512]
 
                         # number of pixels which overlap
                         noverlap = np.empty([2], dtype=int)
@@ -337,19 +338,6 @@ class Inspector(pg.Qt.QtGui.QMainWindow):
                                 fshift = np.fft.fftshift(f)
                                 magnitude_spectrum = 20*np.log(np.abs(fshift))
 
-                                # save spectrum in data (magnitude_spectrum or fshift ?)
-                                #range(241,272,1)
-                                if not scale_fft:
-                                    magnitude_cut = magnitude_spectrum[:,range(96,160,2)] #192,320,4 for snippet-size 512,512
-                                    #64,192,4 for snippet-size: 256,256
-                                    magnitude_cut = magnitude_cut[range(96,160,2),:] #192,320,4 for snippet-size 512,512
-                                    #64,192,4 for snippet-size: 256,256
-                                else:
-                                    magnitude_cut = magnitude_spectrum[:,range(96,160,2)]
-                                    magnitude_cut = magnitude_cut[range(96,160,2),:]
-                                magnitude_cut = magnitude_cut.reshape(1024)
-
-                                magnitude_list = magnitude_cut.tolist() + [curr]
 
                                 if add_all_fft:
                                     # darken region around axis
@@ -370,6 +358,19 @@ class Inspector(pg.Qt.QtGui.QMainWindow):
                                     self.data_detailed.loc[a] = magnitude_spectrum.reshape(magnitude_spectrum.size).tolist() + [curr]
                                 else:
                                     # add class to list
+                                    # save spectrum in data (magnitude_spectrum or fshift ?)
+                                    #range(241,272,1)
+                                    if not scale_fft:
+                                        magnitude_cut = magnitude_spectrum[:,range(96,160,1)] #192,320,4 for snippet-size 512,512
+                                        #64,192,4 for snippet-size: 256,256
+                                        magnitude_cut = magnitude_cut[range(96,160,1),:] #192,320,4 for snippet-size 512,512
+                                        #64,192,4 for snippet-size: 256,256
+                                    else:
+                                        magnitude_cut = magnitude_spectrum[:,range(96,160,1)]
+                                        magnitude_cut = magnitude_cut[range(96,160,1),:]
+                                        magnitude_cut = magnitude_cut.reshape(1024)
+
+                                    magnitude_list = magnitude_cut.tolist() + [curr]
                                     self.data.loc[a] = magnitude_list
                                 a=a+1
 
@@ -392,10 +393,8 @@ class Inspector(pg.Qt.QtGui.QMainWindow):
                     magnitude_all = magnitude_all - magnitude_all.min()
                     magnitude_all = magnitude_all/magnitude_all.sum()
 
-
                     self.data_merged.loc[printer_number] = magnitude_all.reshape(magnitude_all.size).tolist() + [curr]
                     self.data_merged_multi.loc[printer_number] = magnitude_all_multi.reshape(magnitude_all_multi.size).tolist() + [curr]
-
 
                     #save image: merged frequency spectrum by addition
                     f_add = Image.fromarray(np.divide(magnitude_all,magnitude_all.max())*255).convert('RGB')
@@ -433,6 +432,8 @@ class Inspector(pg.Qt.QtGui.QMainWindow):
             nr_segments = self.data_detailed.shape[0]
             correlation_list = np.zeros((nr_segments, self.printer_types.size+1))
 
+            printers_nr = np.arange(self.printer_types.size)
+
             for i in range(self.data_detailed.shape[0]):
                 p_id = self.data_detailed.ix[i,class_column]
                 printer_number = np.where(self.printer_types==p_id)[0][0]
@@ -455,9 +456,23 @@ class Inspector(pg.Qt.QtGui.QMainWindow):
 
                     if likeliest_class == p:
                         print(p, ": TRUE classification.")
+                        correctPositiveTrain[p] += 1
 
+                        li = np.delete(printers_nr,p)
+                        for l in li:
+                            correctNegativeTrain[l] += 1
                     else:
+                        # falseClassification:
+                        falseNegativeTrain[p] += 1                  # printer p was not identified
+                        falsePositiveTrain[likeliest_class] += 1    # printer likeliest_class was wrongly detected
+                        li = np.delete(printers_nr,p)
+                        li = np.delete(li,likeliest_class-1)
+                        for l in li:
+                            correctNegativeTrain[l] += 1
+
                         print(p, ": False.")
+
+
 
 
         else:
@@ -569,29 +584,49 @@ class Inspector(pg.Qt.QtGui.QMainWindow):
 
     def showStat(self):
         newstr = []
-        for i in range(0, len(self.printer_types)):
-            line0 = "TRAIN SET"
-            line1 = self.printer_types[i]
-            line2 = "%d documents - %d %s" % (correctPositiveTrain[i], 100*correctPositiveTrain[i]/train_feature_length[i], '% correctPositive classifications')
-            line3 = "%d documents - %d %s" % (correctNegativeTrain[i], 100*correctNegativeTrain[i]/train_feature_length[i], '% correctNegative classifications')
-            line4 = "%d documents - %d %s" % (falsePositiveTrain[i], 100*falsePositiveTrain[i]/train_feature_length[i], '% falsePositive classifications')
-            line5 = "%d documents - %d %s" % (falseNegativeTrain[i], 100*falseNegativeTrain[i]/train_feature_length[i], '% falseNegative classifications')
+        if add_all_fft:
+            for i in range(0, len(self.printer_types)):
+                #print("TRAIN SET")
+                print(self.printer_types[i], "############################")
+                print("Hit Rate: %d %s" % (100*correctPositiveTrain[i] / (correctPositiveTrain[i] + falseNegativeTrain[i]), "%"))
+                print("Miss Rate: %d %s" % (100*falseNegativeTrain[i] / (correctNegativeTrain[i] + falseNegativeTrain[i]), "%"))
+                print("Fallout: %d %s" % (100*falsePositiveTrain[i] / (falsePositiveTrain[i] + correctNegativeTrain[i]), "%"))
+                print("-------------------------------")
+                print("Accuracy: %d %s" % (100*(correctPositiveTrain[i]+correctNegativeTrain[i]) / (correctPositiveTrain[i] + correctNegativeTrain[i] + falsePositiveTrain[i] + falseNegativeTrain[i]), "%"))
+                print("Classification Failure: %d %s" % (100*(falsePositiveTrain[i] + falseNegativeTrain[i]) / (correctPositiveTrain[i] + correctNegativeTrain[i] + falsePositiveTrain[i] + falseNegativeTrain[i]), "%"))
 
-            line51 = "Hit Ratio: %d %s" % (100*correctPositiveTrain[i] / (correctPositiveTrain[i] + falseNegativeTrain[i]), "%")
-            line52 = "Accuracy: %d %s" % (100*correctPositiveTrain[i] / (correctPositiveTrain[i] + falsePositiveTrain[i]), "%")
-            line53 = "Fallout: %d %s" % (100*falsePositiveTrain[i] / (falsePositiveTrain[i] + correctNegativeTrain[i]), "%")
 
-            line6 = "TEST SET"
-            line7 = self.printer_types[i]
-            line8 = "%d documents - %d %s" % (correctPositiveTest[i], 100*correctPositiveTest[i]/test_feature_length[i], '% correctPositive classifications')
-            line9 = "%d documents - %d %s" % (correctNegativeTest[i], 100*correctNegativeTest[i]/test_feature_length[i], '% correctNegative classifications')
-            line10 = "%d documents - %d %s" % (falsePositiveTest[i], 100*falsePositiveTest[i]/test_feature_length[i], '% falsePositive classifications')
-            line11 = "%d documents - %d %s" % (falseNegativeTest[i], 100*falseNegativeTest[i]/test_feature_length[i], '% falseNegative classifications')
+                #line6 = "TEST SET"
+                #line7 = self.printer_types[i]
+                #line111 = "Hit Rate: %d %s" % (100*correctPositiveTest[i] / (correctPositiveTest[i] + falseNegativeTest[i]), "%")
+                #line112 = "Accuracy: %d %s" % (100*correctPositiveTest[i] / (correctPositiveTest[i] + falsePositiveTest[i]), "%")
+                #line113 = "Fallout: %d %s" % (100*falsePositiveTest[i] / (falsePositiveTest[i] + correctNegativeTest[i]), "%")
+                #newstr.append("\n".join(("                                                            ".join((line0)),"                                                            ".join((line1)),"          ".join((line2)),"         ".join((line3)),"                    ".join((line4)),"                    ".join((line5)),"                                                        ".join((line6)),"                                                        ".join((line7)))))
 
-            line111 = "Hit Ratio: %d %s" % (100*correctPositiveTest[i] / (correctPositiveTest[i] + falseNegativeTest[i]), "%")
-            line112 = "Accuracy: %d %s" % (100*correctPositiveTest[i] / (correctPositiveTest[i] + falsePositiveTest[i]), "%")
-            line113 = "Fallout: %d %s" % (100*falsePositiveTest[i] / (falsePositiveTest[i] + correctNegativeTest[i]), "%")
-            newstr.append("\n".join(("                                                            ".join((line0,line6)),"                                                            ".join((line1,line7)),"          ".join((line2,line8)),"         ".join((line3,line9)),"                    ".join((line4,line10)),"                    ".join((line5,line11)),"                                                        ".join((line51,line111)),"                                                        ".join((line52,line112)),"                                                        ".join((line53,line113)))))
+        else:
+            for i in range(0, len(self.printer_types)):
+                line0 = "TRAIN SET"
+                line1 = self.printer_types[i]
+                line2 = "%d documents - %d %s" % (correctPositiveTrain[i], 100*correctPositiveTrain[i]/train_feature_length[i], '% correctPositive classifications')
+                line3 = "%d documents - %d %s" % (correctNegativeTrain[i], 100*correctNegativeTrain[i]/train_feature_length[i], '% correctNegative classifications')
+                line4 = "%d documents - %d %s" % (falsePositiveTrain[i], 100*falsePositiveTrain[i]/train_feature_length[i], '% falsePositive classifications')
+                line5 = "%d documents - %d %s" % (falseNegativeTrain[i], 100*falseNegativeTrain[i]/train_feature_length[i], '% falseNegative classifications')
+
+                line51 = "Hit Ratio: %d %s" % (100*correctPositiveTrain[i] / (correctPositiveTrain[i] + falseNegativeTrain[i]), "%")
+                line52 = "Accuracy: %d %s" % (100*correctPositiveTrain[i] / (correctPositiveTrain[i] + falsePositiveTrain[i]), "%")
+                line53 = "Fallout: %d %s" % (100*falsePositiveTrain[i] / (falsePositiveTrain[i] + correctNegativeTrain[i]), "%")
+
+                line6 = "TEST SET"
+                line7 = self.printer_types[i]
+                line8 = "%d documents - %d %s" % (correctPositiveTest[i], 100*correctPositiveTest[i]/test_feature_length[i], '% correctPositive classifications')
+                line9 = "%d documents - %d %s" % (correctNegativeTest[i], 100*correctNegativeTest[i]/test_feature_length[i], '% correctNegative classifications')
+                line10 = "%d documents - %d %s" % (falsePositiveTest[i], 100*falsePositiveTest[i]/test_feature_length[i], '% falsePositive classifications')
+                line11 = "%d documents - %d %s" % (falseNegativeTest[i], 100*falseNegativeTest[i]/test_feature_length[i], '% falseNegative classifications')
+
+                line111 = "Hit Ratio: %d %s" % (100*correctPositiveTest[i] / (correctPositiveTest[i] + falseNegativeTest[i]), "%")
+                line112 = "Accuracy: %d %s" % (100*correctPositiveTest[i] / (correctPositiveTest[i] + falsePositiveTest[i]), "%")
+                line113 = "Fallout: %d %s" % (100*falsePositiveTest[i] / (falsePositiveTest[i] + correctNegativeTest[i]), "%")
+                newstr.append("\n".join(("                                                            ".join((line0,line6)),"                                                            ".join((line1,line7)),"          ".join((line2,line8)),"         ".join((line3,line9)),"                    ".join((line4,line10)),"                    ".join((line5,line11)),"                                                        ".join((line51,line111)),"                                                        ".join((line52,line112)),"                                                        ".join((line53,line113)))))
 
         self.lbl1.setText("\n".join((newstr)))
 
