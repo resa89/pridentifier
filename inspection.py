@@ -26,6 +26,7 @@ import copy
 import math
 import hka
 from ftplib import FTP
+from PIL import Image
 
 from pyqtgraph.Qt import QtGui, QtCore
 import pyqtgraph as pg
@@ -33,7 +34,13 @@ import pyqtgraph as pg
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt4agg import NavigationToolbar2QTAgg as NavigationToolbar
 
+# configuration
 dbimport = False    #True: imgs from ftp server, False: imgs from local folder
+pca_amount = 20
+snippet_w = 256
+scale_fft = False
+add_all_fft = True
+
 
 if dbimport:
     setupDB()
@@ -41,7 +48,7 @@ if dbimport:
     DIRS = FTP.nlst()
 else:
     pwd = os.getcwd()
-    ROOTDIR = pwd + '/images/id'
+    ROOTDIR = pwd + '/images/id_mini' #id #idcards_all
     DIRS = os.listdir(ROOTDIR)
 
 #correctPositiveTrain = [0 for i in xrange(len(dirs))]  statt 5
@@ -63,11 +70,17 @@ class Inspector(pg.Qt.QtGui.QMainWindow):
         super(Inspector, self).__init__()
         # every observed snippet (512,512) is reduced to a patch of 1024 (32,32)
         col = range(1024)
+        col_large = range(snippet_w*snippet_w)
         col.append('name')
+        col_large.append('name')
         self.printer_types = np.array(())
+        self.snippet_amount_perPrinter = np.array(())
 
         # (1) imgs with their class
         self.data = pd.DataFrame(columns=col)
+        self.data_merged = pd.DataFrame(columns=col_large)
+        self.data_merged_multi = pd.DataFrame(columns=col_large)
+        self.data_detailed = pd.DataFrame(columns=col_large)
         self.train = pd.DataFrame()
         self.test = pd.DataFrame()
         ## (2) imgs in feature representation
@@ -167,22 +180,52 @@ class Inspector(pg.Qt.QtGui.QMainWindow):
         self.statusBar().showMessage(sender.text() + ' was pressed')
 
     def saveSpectra(self):
-        if self.data.empty==False:
-            self.data.to_pickle("spectra.pkl")
-            print("saved spectra!")
+
+        if add_all_fft:
+            if self.data_merged.empty==False:
+                self.data_merged.to_pickle("data_merged.pkl")
+                self.data_merged_multi.to_pickle("data_merged_multi.pkl")
+                self.data_detailed.to_pickle("data_detailed.pkl")
+                print("saved merged spectra!")
+            else:
+                print("Data is still empty, press loadDB first.")
         else:
-            print("Data is still empty, press loadDB first.")
+            if self.data.empty==False:
+                self.data.to_pickle("spectra.pkl")
+                print("saved spectra!")
+            else:
+                print("Data is still empty, press loadDB first.")
 
     def getSpectra(self):
-        self.data = pd.read_pickle("spectra.pkl")
-        self.printer_types = np.unique([printer for printer in self.data.ix[:,1024]])
-        self.mean = np.zeros((len(self.printer_types),7,2))
-        self.std = np.zeros((len(self.printer_types),7,2))
-        self.apriori = np.zeros((len(self.printer_types),2))
-        if self.data.empty:
-            print("No Spectra on memory.")
+
+        if add_all_fft:
+            self.data_merged = pd.read_pickle("data_merged.pkl")
+            self.data_merged_multi = pd.read_pickle("data_merged_multi.pkl")
+            self.data_detailed = pd.read_pickle("data_detailed.pkl")
+            class_column = self.data_detailed.shape[1]-1
+            self.printer_types = np.unique([printer for printer in self.data_detailed.ix[:,class_column]])
+            self.snippet_amount_perPrinter = np.zeros((len(self.printer_types)))
+            for i in range(self.printer_types.shape[0]):
+                self.snippet_amount_perPrinter[i] = self.data_detailed[self.data_detailed.ix[:,class_column]==self.printer_types[i]].shape[0]
+
+            if self.data_merged.empty:
+                print("No merged spectra on memory.")
+            else:
+                print("got spectra!")
+
         else:
-            print("got spectra!")
+            self.data = pd.read_pickle("spectra.pkl")
+            self.printer_types = np.unique([printer for printer in self.data.ix[:,1024]])
+            self.snippet_amount_perPrinter = np.zeros((len(self.printer_types)))
+            if self.data.empty:
+                print("No Spectra on memory.")
+            else:
+                print("got spectra!")
+
+        self.mean = np.zeros((len(self.printer_types),pca_amount,2))
+        self.std = np.zeros((len(self.printer_types),pca_amount,2))
+        self.apriori = np.zeros((len(self.printer_types),2))
+
 
     def loadDB(self):
         a=0
@@ -193,15 +236,21 @@ class Inspector(pg.Qt.QtGui.QMainWindow):
             else:
                 self.printer_types = np.append(self.printer_types, printer)
 
-        self.mean = np.zeros((len(self.printer_types),7,2))
-        self.std = np.zeros((len(self.printer_types),7,2))
+        self.snippet_amount_perPrinter = np.zeros((len(self.printer_types)))
+
+        self.mean = np.zeros((len(self.printer_types),pca_amount,2))
+        self.std = np.zeros((len(self.printer_types),pca_amount,2))
         self.apriori = np.zeros((len(self.printer_types),2))
 
         for curr in self.printer_types:
             if os.path.isdir(ROOTDIR + '/' + curr):
                 print(curr)
                 imgs = os.listdir(ROOTDIR + '/' + curr)
+                printer_number = np.where(self.printer_types==curr)[0][0]
                 #if len(imgs) >= 70:
+                magnitude_all = np.zeros((snippet_w,snippet_w))
+                magnitude_all_multi = np.ones((snippet_w,snippet_w))
+
                 for img in imgs:
                     if img == '.DS_Store':
                         print('DS_Store files has not been removed.')
@@ -223,7 +272,7 @@ class Inspector(pg.Qt.QtGui.QMainWindow):
                             continue
 
                         # number of pixels per segents
-                        nperseg=[512,512]
+                        nperseg=[256,256]#[512,512]
 
                         # number of pixels which overlap
                         noverlap = np.empty([2], dtype=int)
@@ -246,7 +295,7 @@ class Inspector(pg.Qt.QtGui.QMainWindow):
                                 # segment as copy of img snippet
                                 start_i = i*nperseg[0]
                                 start_j = j*nperseg[1]
-                                segment = tmpGrey[start_i:(start_i+nperseg[0]+1),start_j:(start_j+nperseg[1]+1)]
+                                segment = tmpGrey[start_i:(start_i+nperseg[0]),start_j:(start_j+nperseg[1])]
                                 # cut relevant data out of scanned image
                                 #tmpGreySegment = tmpGrey[:,range(96,160,2)]
                                 #tmpGreySegment = tmpGreySegment[range(80,176,3),:]
@@ -289,120 +338,213 @@ class Inspector(pg.Qt.QtGui.QMainWindow):
 
                                 # save spectrum in data (magnitude_spectrum or fshift ?)
                                 #range(241,272,1)
-                                magnitude_cut = magnitude_spectrum[:,range(192,320,4)]#64,192,4 for snippet-size: 256,256
-                                magnitude_cut = magnitude_cut[range(192,320,4),:]#64,192,4 for snippet-size: 256,256
+                                if not scale_fft:
+                                    magnitude_cut = magnitude_spectrum[:,range(96,160,2)] #192,320,4 for snippet-size 512,512
+                                    #64,192,4 for snippet-size: 256,256
+                                    magnitude_cut = magnitude_cut[range(96,160,2),:] #192,320,4 for snippet-size 512,512
+                                    #64,192,4 for snippet-size: 256,256
+                                else:
+                                    magnitude_cut = magnitude_spectrum[:,range(96,160,2)]
+                                    magnitude_cut = magnitude_cut[range(96,160,2),:]
                                 magnitude_cut = magnitude_cut.reshape(1024)
-                                magnitude_cut = magnitude_cut.tolist() + [curr]
-                                self.data.loc[a] = magnitude_cut
+
+                                magnitude_list = magnitude_cut.tolist() + [curr]
+
+                                if add_all_fft:
+                                    # darken region around axis
+                                    middle = int(magnitude_spectrum.shape[0]/2)
+                                    magnitude_spectrum[middle-5:middle+5,:] = magnitude_spectrum.min()
+                                    magnitude_spectrum[:,middle-5:middle+5] = magnitude_spectrum.min()
+
+                                    # norm: max = 1 (for one segment)
+                                    mag_normed = np.divide(magnitude_spectrum,magnitude_spectrum.max())
+                                    # add and multiply cumulative
+                                    magnitude_all += mag_normed
+                                    magnitude_all_multi *= mag_normed
+
+                                    mag_shift = mag_normed - mag_normed.mean()
+                                    mag_shift = np.divide(mag_shift, mag_shift.max() - mag_shift.min())
+                                    self.data_detailed.loc[a] = mag_shift.reshape(mag_shift.size).tolist() + [curr]
+                                else:
+                                    # add class to list
+                                    self.data.loc[a] = magnitude_list
                                 a=a+1
+
+                if add_all_fft:
+                    # add class and add one per printer to pandas dataframes
+                    magnitude_all = magnitude_all - magnitude_all.mean()
+                    magnitude_all = np.divide(magnitude_all, (magnitude_all.max()-magnitude_all.min()))
+
+                    self.data_merged.loc[printer_number] = magnitude_all.reshape(magnitude_all.size).tolist() + [curr]
+                    self.data_merged_multi.loc[printer_number] = magnitude_all_multi.reshape(magnitude_all_multi.size).tolist() + [curr]
+
+
+                    #save image: merged frequency spectrum by addition
+                    f_add = Image.fromarray(np.divide(magnitude_all,magnitude_all.max())*255).convert('RGB')
+
+                    #save image: merged frequency spectrum by addition
+
+                    #use a threshold (only for visualization)
+                    self.snippet_amount_perPrinter[printer_number] = segment_count[0]*segment_count[1]*len(imgs)
+                    mean = np.divide(magnitude_all_multi.mean(),self.snippet_amount_perPrinter[printer_number])
+
+                    temp = magnitude_all_multi.copy()
+                    temp[magnitude_all_multi>mean] = 255
+                    temp[magnitude_all_multi<=mean] = 0
+                    f_multi = Image.fromarray(temp).convert('RGB')
+                    f_add.save(curr+"_merged_add.png","PNG")
+                    f_multi.save(curr+"_merged_multi.png","PNG")
+
         print("load and prepare data finished!")
         self.statusBar().showMessage('images are loaded.')
 
 
     def PCA(self):
+        if add_all_fft:
+            data_normed = np.zeros((self.printer_types.size, snippet_w,snippet_w))
+            class_column = self.data_detailed.shape[1]-1
+            sum = np.zeros((self.printer_types.size))
 
-        self.train = pd.DataFrame()
-        self.test = pd.DataFrame()
+            for p in range(self.printer_types.size):
+                vector = np.array(np.divide(self.data_merged.ix[p,:-1],self.snippet_amount_perPrinter[p]))
+                data_normed[p,:,:] = np.reshape(vector, (snippet_w,snippet_w))
+                sum[p] = np.sum(np.sum(data_normed[p]))
+                data_normed[p,:,:] = np.divide(data_normed[p,:,:],sum[p])
 
-        #randomly reorder data
-        data_rand = self.data.reindex(np.random.permutation(self.data.index))
-        data_rand.index = range(0,len(data_rand))
+
+            nr_segments = self.data_detailed.shape[0]
+            correlation_list = np.zeros((nr_segments, self.printer_types.size+1))
+
+            for i in range(self.data_detailed.shape[0]):
+                p_id = self.data_detailed.ix[i,class_column]
+                printer_number = np.where(self.printer_types==p_id)[0][0]
+
+                # prove similarity - correlation of segment ffts with additive spcectras
+                for p in range(len(self.printer_types)):
+
+                    correlation_list[i,p] = np.dot(self.data_detailed.ix[i,:class_column], data_normed[p,:,:].reshape(class_column))
+
+                    correlation_list[i,p+1] = printer_number
 
 
-        # chose same amount of data from each class
-        for printer in self.printer_types:
-            printer_data = data_rand[data_rand['name']==printer].copy()
-            printer_data.index = range(0,len(printer_data))
-            splitpoint = int(round(printer_data.shape[0]*0.6))
+            for p in range(len(self.printer_types)):
 
-            self.train = self.train.append(printer_data.ix[0:splitpoint,:])
-            self.train.index = range(0,len(self.train))
-            self.test = self.test.append(printer_data.ix[splitpoint+1:,:])
-            self.test.index = range(0,len(self.test))
+                printer_list = correlation_list[correlation_list[:,-1] == p]
 
-        #PCA
-        self.axis, self.eigenData, s = hka.hka(self.train.transpose().ix[:1024,:])
+                for row in range(printer_list.shape[0]):
+                    printer_list[row,:].max()
+                    likeliest_class = np.where(printer_list[row,:]==printer_list[row,:].max())[0][0]
 
-        # export hka
-        name_eigen = "eigenData.pkl"
-        pd.DataFrame(self.eigenData).to_pickle(name_eigen)
+                    if likeliest_class == p:
+                        print(p, ": TRUE classification.")
 
-        print("pca finished!")
-        #Eigen-Spektren
-        # for i in range(7):
-        #     self.pic = self.eigenData[:,i].reshape(32,32)
-            #plt.figure()
-            #plt.imshow(pic, cmap=plt.cm.gray)
-        #plt.show()
+                    else:
+                        print(p, ": False.")
 
-        #split up into train and test set
-        z = 0
-        for printer in self.printer_types:
-            print(printer)
-            printer_number = np.where(self.printer_types==printer)[0][0]
-            #Feature Extraction
-            train_feature = pd.DataFrame()
-            for j in range(len(self.train)):
-                feature = np.zeros(8)
-                if self.train['name'].ix[j] == printer:
-                    feature[7] = 1
-                else:
-                    feature[7] = -1
 
-                for i in range(7):
-                    feature[i] = self.eigenData[:,i].T*np.matrix(self.train.ix[j,:1024]).T
-                train_feature[j] = feature
+        else:
+            self.train = pd.DataFrame()
+            self.test = pd.DataFrame()
 
-            test_feature = pd.DataFrame()
-            for j in range(len(self.test)):
-                feature = np.zeros(8)
-                if self.test['name'].ix[j] == printer:
-                    feature[7] = 1
-                else:
-                    feature[7] = -1
+            #randomly reorder data
+            data_rand = self.data.reindex(np.random.permutation(self.data.index))
+            data_rand.index = range(0,len(data_rand))
 
-                for i in range(7):
-                    feature[i] = self.eigenData[:,i].T*np.matrix(self.test.ix[j,:1024]).T
-                test_feature[j] = feature
 
-            train_feature = train_feature.transpose()
-            test_feature = test_feature.transpose()
+            # chose same amount of data from each class
+            for printer in self.printer_types:
+                printer_data = data_rand[data_rand['name']==printer].copy()
+                printer_data.index = range(0,len(printer_data))
+                splitpoint = int(round(printer_data.shape[0]*0.6))
 
-            train_feature.rename(columns={7: 'label'}, inplace=True)
-            test_feature.rename(columns={7: 'label'}, inplace=True)
+                self.train = self.train.append(printer_data.ix[0:splitpoint,:])
+                self.train.index = range(0,len(self.train))
+                self.test = self.test.append(printer_data.ix[splitpoint+1:,:])
+                self.test.index = range(0,len(self.test))
 
-            #Gaussian Naive Bayes - Training
-            mean = pd.DataFrame()
-            mean[0] = np.matrix(train_feature[train_feature['label']==1].mean()[0:7]).tolist()[0]
-            mean[1] = np.matrix(train_feature[train_feature['label']==-1].mean()[0:7]).tolist()[0]
+            #PCA
+            self.axis, self.eigenData, s = hka.hka(self.train.transpose().ix[:1024,:])
 
-            std = pd.DataFrame()
-            std[0] = np.matrix(train_feature[train_feature['label']==1].std()[0:7]).tolist()[0]
-            std[1] = np.matrix(train_feature[train_feature['label']==-1].std()[0:7]).tolist()[0]
+            # export hka
+            name_eigen = "eigenData.pkl"
+            pd.DataFrame(self.eigenData).to_pickle(name_eigen)
 
-            apriori = np.array([len(train_feature[train_feature['label']==1])/float(len(train_feature)),len(train_feature[train_feature['label']==-1])/float(len(train_feature))])
+            print("pca finished!")
+            #Eigen-Spektren
+            # for i in range(7):
+            #     self.pic = self.eigenData[:,i].reshape(32,32)
+                #plt.figure()
+                #plt.imshow(pic, cmap=plt.cm.gray)
+            #plt.show()
 
-            self.mean[printer_number,:,:] = mean
-            self.std[printer_number,:,:] = std
-            self.apriori[printer_number,:] = apriori
+            #split up into train and test set
+            z = 0
+            for printer in self.printer_types:
+                print("Start learning ", printer)
+                printer_number = np.where(self.printer_types==printer)[0][0]
+                #Feature Extraction
+                train_feature = pd.DataFrame()
+                for j in range(len(self.train)):
+                    feature = np.zeros(pca_amount+1)
+                    if self.train['name'].ix[j] == printer:
+                        feature[pca_amount] = 1
+                    else:
+                        feature[pca_amount] = -1
 
-            # export gaussian naive bayes
-            name_mean = printer +"_mean.pkl"
-            mean.to_pickle(name_mean)
-            name_std = printer +"_std.pkl"
-            std.to_pickle(name_std)
-            name_apriori = printer +"_apriori.pkl"
-            a = pd.DataFrame(apriori)
-            a.to_pickle(name_apriori)
+                    for i in range(pca_amount):
+                        feature[i] = self.eigenData[:,i].T*np.matrix(self.train.ix[j,:1024]).T
+                    train_feature[j] = feature
 
-            # Train Set
-            [correctPositiveTrain[z], correctNegativeTrain[z], falsePositiveTrain[z], falseNegativeTrain[z], tmp, tmp] = GNBMatch(train_feature, mean, std, apriori, 1)
-            train_feature_length[z] = len(train_feature)
-            # Test Set
-            [correctPositiveTest[z], correctNegativeTest[z], falsePositiveTest[z], falseNegativeTest[z], tmp, tmp] = GNBMatch(test_feature, mean, std, apriori, 1)
-            test_feature_length[z] = len(test_feature)
-            print("GNB training finished.")
-            z = z+1
+                test_feature = pd.DataFrame()
+                for j in range(len(self.test)):
+                    feature = np.zeros(pca_amount+1)
+                    if self.test['name'].ix[j] == printer:
+                        feature[pca_amount] = 1
+                    else:
+                        feature[pca_amount] = -1
+
+                    for i in range(pca_amount):
+                        feature[i] = self.eigenData[:,i].T*np.matrix(self.test.ix[j,:1024]).T
+                    test_feature[j] = feature
+
+                train_feature = train_feature.transpose()
+                test_feature = test_feature.transpose()
+
+                train_feature.rename(columns={pca_amount: 'label'}, inplace=True)
+                test_feature.rename(columns={pca_amount: 'label'}, inplace=True)
+
+                #Gaussian Naive Bayes - Training
+                mean = pd.DataFrame()
+                mean[0] = np.matrix(train_feature[train_feature['label']==1].mean()[0:pca_amount]).tolist()[0]
+                mean[1] = np.matrix(train_feature[train_feature['label']==-1].mean()[0:pca_amount]).tolist()[0]
+
+                std = pd.DataFrame()
+                std[0] = np.matrix(train_feature[train_feature['label']==1].std()[0:pca_amount]).tolist()[0]
+                std[1] = np.matrix(train_feature[train_feature['label']==-1].std()[0:pca_amount]).tolist()[0]
+
+                apriori = np.array([len(train_feature[train_feature['label']==1])/float(len(train_feature)),len(train_feature[train_feature['label']==-1])/float(len(train_feature))])
+
+                self.mean[printer_number,:,:] = mean
+                self.std[printer_number,:,:] = std
+                self.apriori[printer_number,:] = apriori
+
+                # export gaussian naive bayes
+                name_mean = printer +"_mean.pkl"
+                mean.to_pickle(name_mean)
+                name_std = printer +"_std.pkl"
+                std.to_pickle(name_std)
+                name_apriori = printer +"_apriori.pkl"
+                a = pd.DataFrame(apriori)
+                a.to_pickle(name_apriori)
+
+                # Train Set
+                [correctPositiveTrain[z], correctNegativeTrain[z], falsePositiveTrain[z], falseNegativeTrain[z], tmp, tmp] = GNBMatch(train_feature, mean, std, apriori, 1)
+                train_feature_length[z] = len(train_feature)
+                # Test Set
+                [correctPositiveTest[z], correctNegativeTest[z], falsePositiveTest[z], falseNegativeTest[z], tmp, tmp] = GNBMatch(test_feature, mean, std, apriori, 1)
+                test_feature_length[z] = len(test_feature)
+                print("GNB training finished.")
+                z = z+1
 
         print("Training for all printers finished.")
 
@@ -541,15 +683,15 @@ class Inspector(pg.Qt.QtGui.QMainWindow):
 
         questioned_feature = pd.DataFrame()
         for j in range(len(questioned)):
-            feature = np.zeros(8)
-            feature[7] = 0
+            feature = np.zeros(pca_amount+1)
+            feature[pca_amount] = 0
 
-            for i in range(7):
+            for i in range(pca_amount):
                 feature[i] = self.eigenData[:,i].T*np.matrix(questioned.ix[j,:1024]).T
             questioned_feature[j] = feature
 
         questioned_feature = questioned_feature.transpose()
-        questioned_feature.rename(columns={7: 'label'}, inplace=True)
+        questioned_feature.rename(columns={pca_amount: 'label'}, inplace=True)
         # export features
         name_test = "QuestionedFeature.pkl"
         questioned_feature.to_pickle(name_test)
@@ -630,7 +772,7 @@ def GNBMatch(matchData, mean, std, apriori, c):
     for k in range(0,len(matchData)):
         w1Prob = 1
         w2Prob = 1
-        for j in range(7):
+        for j in range(pca_amount):
             w1Prob = w1Prob * GNB(matchData.ix[k,j], mean.ix[j,0], std.ix[j,0])
             w2Prob = w2Prob * GNB(matchData.ix[k,j], mean.ix[j,1], std.ix[j,1])
 
