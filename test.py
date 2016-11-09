@@ -24,6 +24,9 @@ class Tester():
         # (1) imgs with their class
         self.data = pd.DataFrame(columns=col)
         self.train = pd.DataFrame()
+        col2 = range(snippet_w*snippet_w)
+        col2.append('name')
+        self.questioned_data = pd.DataFrame(columns=col2)
         self.statistics = pd.DataFrame()
         self.cor_matrix = np.array(())
 
@@ -133,7 +136,7 @@ class Tester():
                         magnitude_spectrum[:,middle-5:middle+5] = magnitude_spectrum.min()
 
                         # add segment fft to data_detailed
-                        self.data_detailed.loc[a] = magnitude_spectrum.reshape(magnitude_spectrum.size).tolist() + ['Q']
+                        self.questioned_data.loc[a] = magnitude_spectrum.reshape(magnitude_spectrum.size).tolist() + ['Q']
 
 
                     else:
@@ -149,28 +152,27 @@ class Tester():
                         # feature extraction (PCA + GNB)
                         questioned.index = range(0,len(questioned))
 
-                        questioned_feature = pd.DataFrame()
                         for j in range(len(questioned)):
                             feature = np.zeros(8)
                             feature[7] = 0
 
                             for i in range(7):
                                 feature[i] = eigenData[:,i].T*np.matrix(questioned.ix[j,:1024]).T
-                            questioned_feature[j] = feature
+                            self.questioned_feature[j] = feature
 
-                        questioned_feature = questioned_feature.transpose()
-                        questioned_feature.rename(columns={7: 'label'}, inplace=True)
+                        self.questioned_feature = self.questioned_feature.transpose()
+                        self.questioned_feature.rename(columns={7: 'label'}, inplace=True)
                         # export features
                         name_test = "B_additiveCorrelation_id_mini_w512_1000px/QuestionedFeature.pkl"
-                        questioned_feature.to_pickle(name_test)
+                        self.questioned_feature.to_pickle(name_test)
                         print("Feature extraction of questioned document finished.")
 
 
     def inspect(self):
 
         if add_all_fft:
-            class_column = self.data_detailed.shape[1]-1
-            nr_segments = self.data_detailed.shape[0]
+            class_column = self.questioned_data.shape[1]-1
+            nr_segments = self.questioned_data.shape[0]
             printers_nr = np.arange(self.printer_types.size)
 
             sum = np.zeros((self.printer_types.size))
@@ -181,11 +183,11 @@ class Tester():
             correlation_list = np.zeros((nr_segments, self.printer_types.size))
 
             # prove every segment
-            for i in range(self.data_detailed.shape[0]):
+            for i in range(self.questioned_data.shape[0]):
 
                 # prove similarity - correlation of segment fft with additive spcectras
                 for p in range(len(self.printer_types)):
-                    correlation_list[i,p] = np.dot(self.data_detailed.ix[i,:class_column], self.cor_matrix[p,:,:].reshape(class_column))
+                    correlation_list[i,p] = np.dot(self.questioned_data.ix[i,:class_column], self.cor_matrix[p,:,:].reshape(class_column))
 
             result = np.zeros(len(self.printer_types))
 
@@ -196,7 +198,7 @@ class Tester():
             s = result.sum()
 
             for p in range(len(self.printer_types)):
-                print self.printer_types[p]+ str(100 * result[p]/s) + "%"
+                print self.printer_types[p]+ ":     " + str(100 * result[p]/s) + "%"
 
 
         else:
@@ -259,20 +261,20 @@ class Tester():
 
     def get_Learner(self):
         if add_all_fft:
-            self.data_detailed = pd.read_pickle("B_additiveCorrelation_id_w512_1000px/data_detailed.pkl")
-            class_column = self.data_detailed.shape[1]-1
-            self.printer_types = np.unique([printer for printer in self.data_detailed.ix[:,class_column]])
+            self.statistics = pd.read_pickle("B_additiveCorrelation_id_mini_w512_1000px/statistics.pkl")
+            class_column = self.statistics.shape[1]-1
+            self.printer_types = np.unique([printer for printer in self.statistics.ix[:,class_column]])
             self.cor_matrix = np.zeros((self.printer_types.size,snippet_w,snippet_w))
 
-            if self.data_detailed.empty:
-                print("No merged spectra on memory.")
+            if self.statistics.empty:
+                print("No statistics file on memory.")
             else:
-                print("got spectra!")
+                print("got statistics!")
 
             for p in range(self.printer_types.size):
                 self.cor_matrix[p] = pd.read_pickle("B_additiveCorrelation_id_mini_w512_1000px/corr_"+self.printer_types[p]+".pkl")
 
-            self.statistics = pd.read_pickle("B_additiveCorrelation_id_mini_w512_1000px/statistics.pkl")
+
 
         else:
             data = pd.read_pickle("B_additiveCorrelation_id_mini_w512_1000px/spectra.pkl")
@@ -323,7 +325,7 @@ def main():
     tester = Tester()
 
     tester.get_Learner()
-    tester.loadimg('images/id/Brother/idcard_11.jpg')
+    tester.loadimg('images/idcards_all/HP/idcard_09.jpg')
     tester.inspect()
 
 
