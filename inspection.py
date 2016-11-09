@@ -40,6 +40,7 @@ pca_amount = 20
 snippet_w = 256
 scale_fft = False
 add_all_fft = True
+nr_pixels = 100
 
 
 if dbimport:
@@ -357,14 +358,16 @@ class Inspector(pg.Qt.QtGui.QMainWindow):
                                     magnitude_spectrum[:,middle-5:middle+5] = magnitude_spectrum.min()
 
                                     # norm: max = 1 (for one segment)
-                                    mag_normed = np.divide(magnitude_spectrum,magnitude_spectrum.max())
-                                    # add and multiply cumulative
-                                    magnitude_all += mag_normed
-                                    magnitude_all_multi *= mag_normed
+                                    #mag_normed = np.divide(magnitude_spectrum,magnitude_spectrum.max())
+                                    #mag_shift = mag_normed - mag_normed.mean()
+                                    #mag_shift = np.divide(mag_shift, (mag_shift.max() - mag_shift.min()))
+                                    mag_shift = np.divide(magnitude_spectrum, segment_count[0]*segment_count[1]*len(imgs))
 
-                                    mag_shift = mag_normed - mag_normed.mean()
-                                    mag_shift = np.divide(mag_shift, mag_shift.max() - mag_shift.min())
-                                    self.data_detailed.loc[a] = mag_shift.reshape(mag_shift.size).tolist() + [curr]
+                                    # add and multiply cumulative
+                                    magnitude_all += mag_shift
+                                    magnitude_all_multi *= mag_shift
+                                    # add segment fft to data_detailed
+                                    self.data_detailed.loc[a] = magnitude_spectrum.reshape(magnitude_spectrum.size).tolist() + [curr]
                                 else:
                                     # add class to list
                                     self.data.loc[a] = magnitude_list
@@ -372,8 +375,19 @@ class Inspector(pg.Qt.QtGui.QMainWindow):
 
                 if add_all_fft:
                     # add class and add one per printer to pandas dataframes
-                    magnitude_all = magnitude_all - magnitude_all.mean()
-                    magnitude_all = np.divide(magnitude_all, (magnitude_all.max()-magnitude_all.min()))
+                    # norm additive + multiplied spectras
+                    #magnitude_all = np.divide(magnitude_all, magnitude_all.max())
+                    #magnitude_all = magnitude_all - magnitude_all.mean()
+                    #magnitude_all = np.divide(magnitude_all, (magnitude_all.max()-magnitude_all.min()))
+                    idx = np.argsort(magnitude_all.flatten())
+                    b = magnitude_all.flatten()[idx]
+
+                    threshold = b[b.size - nr_pixels]
+
+                    magnitude_all[magnitude_all<threshold] == magnitude_all.min()
+                    magnitude_all_multi[magnitude_all_multi<threshold] == magnitude_all_multi.min()
+
+                    magnitude_all = magnitude_all - magnitude_all.min()
 
                     self.data_merged.loc[printer_number] = magnitude_all.reshape(magnitude_all.size).tolist() + [curr]
                     self.data_merged_multi.loc[printer_number] = magnitude_all_multi.reshape(magnitude_all_multi.size).tolist() + [curr]
