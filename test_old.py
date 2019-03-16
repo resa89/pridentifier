@@ -7,7 +7,6 @@ import skimage.io
 import copy
 import math
 
-from pyqtgraph.Qt import QtGui, QtCore
 snippet_w = 512
 add_all_fft = True
 nr_pixels = 10000
@@ -325,7 +324,7 @@ def main():
     tester = Tester()
 
     tester.get_Learner()
-    tester.loadimg('images/idcards_all/HP/idcard_09.jpg')
+    tester.loadimg('images/idcards_all/Canon_Pro/idcard_15.jpg')
     tester.inspect()
 
 
