@@ -1,46 +1,33 @@
 # -*- coding: utf-8 -*-
 
-"""
-Drop Matrix Inspector
+# Form implementation generated from reading ui file 'pridentifier2.ui'
+#
+# Created by: PyQt5 UI code generator 5.8.2
+#
+# WARNING! All changes made in this file will be lost!
 
-This application is to explore, research and inspect
-printed documents and their printers.
-
-author: Theresa Kocher
-last edited: August 2015
-"""
-
-#import sys
-#sys.path.append('/usr/local/lib/python2.7/site-packages')
-from PyQt5 import QtGui, QtCore
-
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-from matplotlib.pyplot import *
-import os
-import skimage
-import skimage.io
 import copy
 import math
-import hka
+import os
 from ftplib import FTP
+
+import pandas as pd
+import skimage
+import skimage.io
 from PIL import Image
+from PyQt5 import QtCore, QtGui, QtWidgets
+from matplotlib.pyplot import *
 
-from pyqtgraph.Qt import QtGui, QtCore
-import pyqtgraph as pg
+from src import hka
 
-#from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
-#from matplotlib.backends.backend_qt4agg import NavigationToolbar2QTAgg as NavigationToolbar
 
-# configuration
 dbimport = False    #True: imgs from ftp server, False: imgs from local folder
 pca_amount = 20
 snippet_w = 512
 scale_fft = False
 add_all_fft = True
 nr_pixels = 10000
-TRAINING = False # if False: then generating test dataset statistics
+TRAINING = True # if False: then generating test dataset statistics
 
 
 if dbimport:
@@ -49,7 +36,7 @@ if dbimport:
     DIRS = FTP.nlst()
 else:
     pwd = os.getcwd()
-    ROOTDIR = pwd + '/images/idcards-testset' #id #idcards_all
+    ROOTDIR = pwd + '/../data/images/idcards-testset' #id #idcards_all
     SUBPATH = 'the_same_large'
     DIRS = os.listdir(ROOTDIR)
 
@@ -66,10 +53,10 @@ falseNegativeTest = [0 for i in range(len(DIRS))]
 train_feature_length = [0 for i in range(len(DIRS))]
 test_feature_length = [0 for i in range(len(DIRS))]
 
-class Inspector(pg.Qt.QtGui.QMainWindow):
 
+class Ui_MainWindow(object):
     def __init__(self):
-        super(Inspector, self).__init__()
+        super(Ui_MainWindow, self).__init__()
         print("Number of Pixels: ", nr_pixels)
         # every observed snippet (512,512) is reduced to a patch of 1024 (32,32)
         col = [i for i in range(1024)]
@@ -96,141 +83,611 @@ class Inspector(pg.Qt.QtGui.QMainWindow):
         self.std = np.array(())
         self.apriori = np.array(())
 
-        # debugging option
-        #self.pic = np.zeros(shape=(32,32,7))
 
-        # set UI app
-        self.initUI()
+    def setupUi(self, MainWindow):
+        MainWindow.setObjectName("MainWindow")
+        MainWindow.resize(937, 630)
+        MainWindow.setStyleSheet("background-color: #222222;")
+        self.centralwidget = QtWidgets.QWidget(MainWindow)
+        self.centralwidget.setObjectName("centralwidget")
+        self.gridLayoutWidget = QtWidgets.QWidget(self.centralwidget)
+        self.gridLayoutWidget.setGeometry(QtCore.QRect(9, 9, 911, 611))
+        self.gridLayoutWidget.setObjectName("gridLayoutWidget")
+        self.gridLayout = QtWidgets.QGridLayout(self.gridLayoutWidget)
+        self.gridLayout.setContentsMargins(0, 0, 0, 0)
+        self.gridLayout.setObjectName("gridLayout")
+        self.tabWidget = QtWidgets.QTabWidget(self.gridLayoutWidget)
+        self.tabWidget.setStyleSheet("QTabWidget::pane {\n"
+"    border-top: 4px solid #fff;\n"
+"    background-color: #fff;\n"
+"}\n"
+"\n"
+"QTabWidget::tab-bar:top {\n"
+"    top: 1px;\n"
+"}\n"
+"\n"
+"QTabWidget::tab-bar:bottom {\n"
+"    bottom: 1px;\n"
+"}\n"
+"\n"
+"QTabWidget::tab-bar:left {\n"
+"    right: 1px;\n"
+"}\n"
+"\n"
+"QTabWidget::tab-bar:right {\n"
+"    left: 1px;\n"
+"}\n"
+"\n"
+"QTabBar::tab {\n"
+"    border: 0px solid #fff;\n"
+"    background-color: #393939;\n"
+"    color: #fff;\n"
+"    \n"
+"\n"
+"}\n"
+"\n"
+"QTabBar::tab:selected {\n"
+"    background: white;\n"
+"    color: #000;\n"
+"}\n"
+"\n"
+"QTabBar::tab:!selected {\n"
+"    background: silver;\n"
+"}\n"
+"\n"
+"QTabBar::tab:!selected:hover {\n"
+"    background: #777777;\n"
+"}\n"
+"\n"
+"QTabBar::tab:top:!selected {\n"
+"    margin-top: 3px;\n"
+"}\n"
+"\n"
+"QTabBar::tab:bottom:!selected {\n"
+"    margin-bottom: 3px;\n"
+"}\n"
+"\n"
+"QTabBar::tab:top, QTabBar::tab:bottom {\n"
+"    min-width: 8ex;\n"
+"    margin-right: -1px;\n"
+"    padding: 5px 10px 5px 10px;\n"
+"}\n"
+"\n"
+"QTabBar::tab:top:selected {\n"
+"    border-bottom-color: none;\n"
+"}\n"
+"\n"
+"QTabBar::tab:bottom:selected {\n"
+"    border-top-color: none;\n"
+"}\n"
+"\n"
+"QTabBar::tab:top:last, QTabBar::tab:bottom:last,\n"
+"QTabBar::tab:top:only-one, QTabBar::tab:bottom:only-one {\n"
+"    margin-right: 0;\n"
+"}\n"
+"\n"
+"QTabBar::tab:left:!selected {\n"
+"    margin-right: 3px;\n"
+"}\n"
+"\n"
+"QTabBar::tab:right:!selected {\n"
+"    margin-left: 3px;\n"
+"}\n"
+"\n"
+"QTabBar::tab:left, QTabBar::tab:right {\n"
+"    min-height: 8ex;\n"
+"    margin-bottom: -1px;\n"
+"    padding: 10px 5px 10px 5px;\n"
+"\n"
+"}\n"
+"\n"
+"QTabBar::tab:left:selected {\n"
+"    border-left-color: none;\n"
+"}\n"
+"\n"
+"QTabBar::tab:right:selected {\n"
+"    border-right-color: none;\n"
+"}\n"
+"\n"
+"QTabBar::tab:left:last, QTabBar::tab:right:last,\n"
+"QTabBar::tab:left:only-one, QTabBar::tab:right:only-one {\n"
+"    margin-bottom: 0;\n"
+"}")
+        self.tabWidget.setObjectName("tabWidget")
+        self.tab = QtWidgets.QWidget()
+        self.tab.setStyleSheet("")
+        self.tab.setObjectName("tab")
+        self.horizontalLayoutWidget = QtWidgets.QWidget(self.tab)
+        self.horizontalLayoutWidget.setGeometry(QtCore.QRect(0, 0, 911, 591))
+        self.horizontalLayoutWidget.setObjectName("horizontalLayoutWidget")
+        self.horizontalLayout_6 = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget)
+        self.horizontalLayout_6.setContentsMargins(0, 0, 0, 0)
+        self.horizontalLayout_6.setObjectName("horizontalLayout_6")
+        self.verticalLayout_7 = QtWidgets.QVBoxLayout()
+        self.verticalLayout_7.setContentsMargins(15, 30, 15, 15)
+        self.verticalLayout_7.setObjectName("verticalLayout_7")
+        self.comboBox_6 = QtWidgets.QComboBox(self.horizontalLayoutWidget)
+        self.comboBox_6.setStyleSheet("QComboBox {\n"
+"    background-color: #777777;\n"
+"    min-width: 160px;\n"
+"    padding: 12px 16px;\n"
+"    border: 2px solid #fff;\n"
+"    color: #fff;\n"
+"}\n"
+"\n"
+"\n"
+"QComboBox::drop-down {\n"
+"    border-left-width: 0px;\n"
+"    border-left-color: none;\n"
+"    border-left-style: solid; /* just a single line */\n"
+"    margin-right: 10px;\n"
+"\n"
+"}\n"
+"\n"
+"QComboBox::down-arrow {\n"
+"    image: url(/Users/resa/Projekte/Korensics/arrow.png);\n"
+"    height: 100px;\n"
+"}")
+        self.comboBox_6.setObjectName("comboBox_6")
+        self.comboBox_6.addItem("")
+        self.comboBox_6.addItem("")
+        self.verticalLayout_7.addWidget(self.comboBox_6)
+        self.pushButton_21 = QtWidgets.QPushButton(self.horizontalLayoutWidget)
+        self.pushButton_21.setStyleSheet("QPushButton {\n"
+"background-color: #009999;\n"
+"min-width: 160px;\n"
+"padding: 12px 16px;\n"
+"border: 2px solid #fff;\n"
+"color: #fff;\n"
+"}\n"
+"QPushButton:hover {\n"
+"    background-color: #75bdc3;\n"
+"}")
+        self.pushButton_21.setObjectName("pushButton_21")
+        self.verticalLayout_7.addWidget(self.pushButton_21)
+        self.pushButton_22 = QtWidgets.QPushButton(self.horizontalLayoutWidget)
+        self.pushButton_22.setStyleSheet("QPushButton {\n"
+"    display: none;\n"
+"    background-color: #393939;\n"
+"    min-width: 160px;\n"
+"    padding: 12px 16px;\n"
+"    border: 2px solid #fff;\n"
+"    color: #fff;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    background-color: #777777;\n"
+"}")
+        self.pushButton_22.setObjectName("pushButton_22")
+        self.verticalLayout_7.addWidget(self.pushButton_22)
+        self.pushButton_23 = QtWidgets.QPushButton(self.horizontalLayoutWidget)
+        self.pushButton_23.setStyleSheet("QPushButton{\n"
+"    display: none;\n"
+"    background-color: #393939;\n"
+"    min-width: 160px;\n"
+"    padding: 12px 16px;\n"
+"    border: 2px solid #fff;\n"
+"    color: #fff;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    background-color: #777777;\n"
+"}")
+        self.pushButton_23.setObjectName("pushButton_23")
+        self.verticalLayout_7.addWidget(self.pushButton_23)
+        spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        self.verticalLayout_7.addItem(spacerItem)
+        self.horizontalLayout_6.addLayout(self.verticalLayout_7)
+        self.listWidget_6 = QtWidgets.QListWidget(self.horizontalLayoutWidget)
+        self.listWidget_6.setStyleSheet("border: 0px;")
+        self.listWidget_6.setObjectName("listWidget_6")
+        self.horizontalLayout_6.addWidget(self.listWidget_6)
+        self.tabWidget.addTab(self.tab, "")
+        self.tab_2 = QtWidgets.QWidget()
+        self.tab_2.setObjectName("tab_2")
+        self.horizontalLayoutWidget_2 = QtWidgets.QWidget(self.tab_2)
+        self.horizontalLayoutWidget_2.setGeometry(QtCore.QRect(0, 0, 911, 591))
+        self.horizontalLayoutWidget_2.setObjectName("horizontalLayoutWidget_2")
+        self.horizontalLayout_2 = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget_2)
+        self.horizontalLayout_2.setContentsMargins(0, 0, 0, 0)
+        self.horizontalLayout_2.setObjectName("horizontalLayout_2")
+        self.verticalLayout_3 = QtWidgets.QVBoxLayout()
+        self.verticalLayout_3.setContentsMargins(15, 30, 15, 15)
+        self.verticalLayout_3.setObjectName("verticalLayout_3")
+        self.comboBox_2 = QtWidgets.QComboBox(self.horizontalLayoutWidget_2)
+        self.comboBox_2.setStyleSheet("QComboBox {\n"
+"    background-color: #777777;\n"
+"    min-width: 160px;\n"
+"    padding: 12px 16px;\n"
+"    border: 2px solid #fff;\n"
+"    color: #fff;\n"
+"}\n"
+"\n"
+"\n"
+"QComboBox::drop-down {\n"
+"    border-left-width: 0px;\n"
+"    border-left-color: none;\n"
+"    border-left-style: solid; /* just a single line */\n"
+"    margin-right: 10px;\n"
+"\n"
+"}\n"
+"\n"
+"QComboBox::down-arrow {\n"
+"    image: url(/Users/resa/Projekte/Korensics/arrow.png);\n"
+"    height: 100px;\n"
+"}")
+        self.comboBox_2.setObjectName("comboBox_2")
+        self.comboBox_2.addItem("")
+        self.comboBox_2.addItem("")
+        self.comboBox_2.addItem("")
+        self.comboBox_2.addItem("")
+        self.verticalLayout_3.addWidget(self.comboBox_2)
+        self.pushButton_5 = QtWidgets.QPushButton(self.horizontalLayoutWidget_2)
+        self.pushButton_5.setStyleSheet("QPushButton{\n"
+"    background-color: #009999;\n"
+"    min-width: 160px;\n"
+"    padding: 12px 16px;\n"
+"    border: 2px solid #fff;\n"
+"    color: #fff;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    background-color: #75bdc3;\n"
+"}")
+        self.pushButton_5.setObjectName("pushButton_5")
+        self.verticalLayout_3.addWidget(self.pushButton_5)
+        self.pushButton_6 = QtWidgets.QPushButton(self.horizontalLayoutWidget_2)
+        self.pushButton_6.setStyleSheet("QPushButton {\n"
+"    display: none;\n"
+"    background-color: #393939;\n"
+"    min-width: 160px;\n"
+"    padding: 12px 16px;\n"
+"    border: 2px solid #fff;\n"
+"    color: #fff;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    background-color: #777777;\n"
+"}")
+        self.pushButton_6.setObjectName("pushButton_6")
+        self.verticalLayout_3.addWidget(self.pushButton_6)
+        self.pushButton_7 = QtWidgets.QPushButton(self.horizontalLayoutWidget_2)
+        self.pushButton_7.setStyleSheet("QPushButton {\n"
+"    display: none;\n"
+"    background-color: #393939;\n"
+"    min-width: 160px;\n"
+"    padding: 12px 16px;\n"
+"    border: 2px solid #fff;\n"
+"    color: #fff;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    background-color: #777777;\n"
+"}")
+        self.pushButton_7.setObjectName("pushButton_7")
+        self.verticalLayout_3.addWidget(self.pushButton_7)
+        spacerItem1 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        self.verticalLayout_3.addItem(spacerItem1)
+        self.horizontalLayout_2.addLayout(self.verticalLayout_3)
+        self.listWidget_2 = QtWidgets.QListWidget(self.horizontalLayoutWidget_2)
+        self.listWidget_2.setStyleSheet("border: 0px;")
+        self.listWidget_2.setObjectName("listWidget_2")
+        self.horizontalLayout_2.addWidget(self.listWidget_2)
+        self.tabWidget.addTab(self.tab_2, "")
+        self.tab_3 = QtWidgets.QWidget()
+        self.tab_3.setObjectName("tab_3")
+        self.horizontalLayoutWidget_3 = QtWidgets.QWidget(self.tab_3)
+        self.horizontalLayoutWidget_3.setGeometry(QtCore.QRect(0, 0, 911, 591))
+        self.horizontalLayoutWidget_3.setObjectName("horizontalLayoutWidget_3")
+        self.horizontalLayout_3 = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget_3)
+        self.horizontalLayout_3.setContentsMargins(0, 0, 0, 0)
+        self.horizontalLayout_3.setObjectName("horizontalLayout_3")
+        self.verticalLayout_4 = QtWidgets.QVBoxLayout()
+        self.verticalLayout_4.setContentsMargins(15, 30, 15, 15)
+        self.verticalLayout_4.setObjectName("verticalLayout_4")
+        self.comboBox_3 = QtWidgets.QComboBox(self.horizontalLayoutWidget_3)
+        self.comboBox_3.setStyleSheet("QComboBox {\n"
+"    background-color: #777777;\n"
+"    min-width: 160px;\n"
+"    padding: 12px 16px;\n"
+"    border: 2px solid #fff;\n"
+"    color: #fff;\n"
+"}\n"
+"\n"
+"\n"
+"QComboBox::drop-down {\n"
+"    border-left-width: 0px;\n"
+"    border-left-color: none;\n"
+"    border-left-style: solid; /* just a single line */\n"
+"    margin-right: 10px;\n"
+"\n"
+"}\n"
+"\n"
+"QComboBox::down-arrow {\n"
+"    image: url(/Users/resa/Projekte/Korensics/arrow.png);\n"
+"    height: 100px;\n"
+"}")
+        self.comboBox_3.setObjectName("comboBox_3")
+        self.comboBox_3.addItem("")
+        self.comboBox_3.addItem("")
+        self.comboBox_3.addItem("")
+        self.comboBox_3.addItem("")
+        self.verticalLayout_4.addWidget(self.comboBox_3)
+        self.pushButton_9 = QtWidgets.QPushButton(self.horizontalLayoutWidget_3)
+        self.pushButton_9.setStyleSheet("QPushButton{\n"
+"    background-color: #009999;\n"
+"    min-width: 160px;\n"
+"    padding: 12px 16px;\n"
+"    border: 2px solid #fff;\n"
+"    color: #fff;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    background-color: #75bdc3;\n"
+"}")
+        self.pushButton_9.setObjectName("pushButton_9")
+        self.verticalLayout_4.addWidget(self.pushButton_9)
+        self.pushButton_10 = QtWidgets.QPushButton(self.horizontalLayoutWidget_3)
+        self.pushButton_10.setStyleSheet("QPushButton {\n"
+"    display: none;\n"
+"    background-color: #393939;\n"
+"    min-width: 160px;\n"
+"    padding: 12px 16px;\n"
+"    border: 2px solid #fff;\n"
+"    color: #fff;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    background-color: #777777;\n"
+"}")
+        self.pushButton_10.setObjectName("pushButton_10")
+        self.verticalLayout_4.addWidget(self.pushButton_10)
+        spacerItem2 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        self.verticalLayout_4.addItem(spacerItem2)
+        self.horizontalLayout_3.addLayout(self.verticalLayout_4)
+        self.tableWidget = QtWidgets.QTableWidget(self.horizontalLayoutWidget_3)
+        self.tableWidget.setStyleSheet("QWidget {\n"
+"    background-color: #333333;\n"
+"    color: #fff;\n"
+"}\n"
+"\n"
+"QHeaderView::section {\n"
+"    background-color: #646464;\n"
+"    padding: 4px;\n"
+"    border: 1px solid #fffff8;\n"
+"    font-size: 14pt;\n"
+"}\n"
+"\n"
+"QTableWidget::item {\n"
+"    width: 130px;\n"
+"}\n"
+"\n"
+"QTableWidget {\n"
+"    gridline-color: #fffff8;\n"
+"    font-size: 12pt;\n"
+"    padding-top: 30px;\n"
+"    padding-left: 30px;\n"
+"}\n"
+"\n"
+"QTableWidget QTableCornerButton::section {\n"
+"    background-color: #646464;\n"
+"    border: 1px solid #fffff8;\n"
+"}")
+        self.tableWidget.setObjectName("tableWidget")
+        self.tableWidget.setColumnCount(0)
+        self.tableWidget.setRowCount(0)
+        self.horizontalLayout_3.addWidget(self.tableWidget)
+        self.tabWidget.addTab(self.tab_3, "")
+        self.tab_4 = QtWidgets.QWidget()
+        self.tab_4.setObjectName("tab_4")
+        self.horizontalLayoutWidget_4 = QtWidgets.QWidget(self.tab_4)
+        self.horizontalLayoutWidget_4.setGeometry(QtCore.QRect(0, 0, 911, 591))
+        self.horizontalLayoutWidget_4.setObjectName("horizontalLayoutWidget_4")
+        self.horizontalLayout_4 = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget_4)
+        self.horizontalLayout_4.setContentsMargins(0, 0, 0, 0)
+        self.horizontalLayout_4.setObjectName("horizontalLayout_4")
+        self.verticalLayout_5 = QtWidgets.QVBoxLayout()
+        self.verticalLayout_5.setContentsMargins(15, 30, 15, 15)
+        self.verticalLayout_5.setObjectName("verticalLayout_5")
+        self.pushButton_13 = QtWidgets.QPushButton(self.horizontalLayoutWidget_4)
+        self.pushButton_13.setStyleSheet("QPushButton{\n"
+"    background-color: #009999;\n"
+"    min-width: 160px;\n"
+"    padding: 12px 16px;\n"
+"    border: 2px solid #fff;\n"
+"    color: #fff;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    background-color: #75bdc3;\n"
+"}")
+        self.pushButton_13.setObjectName("pushButton_13")
+        self.verticalLayout_5.addWidget(self.pushButton_13)
+        self.comboBox_4 = QtWidgets.QComboBox(self.horizontalLayoutWidget_4)
+        self.comboBox_4.setStyleSheet("QComboBox {\n"
+"    background-color: #777777;\n"
+"    min-width: 160px;\n"
+"    padding: 12px 16px;\n"
+"    border: 2px solid #fff;\n"
+"    color: #fff;\n"
+"}\n"
+"\n"
+"\n"
+"QComboBox::drop-down {\n"
+"    border-left-width: 0px;\n"
+"    border-left-color: none;\n"
+"    border-left-style: solid; /* just a single line */\n"
+"    margin-right: 10px;\n"
+"\n"
+"}\n"
+"\n"
+"QComboBox::down-arrow {\n"
+"    image: url(/Users/resa/Projekte/Korensics/arrow.png);\n"
+"    height: 100px;\n"
+"}")
+        self.comboBox_4.setObjectName("comboBox_4")
+        self.comboBox_4.addItem("")
+        self.comboBox_4.addItem("")
+        self.comboBox_4.addItem("")
+        self.comboBox_4.addItem("")
+        self.verticalLayout_5.addWidget(self.comboBox_4)
+        self.pushButton_15 = QtWidgets.QPushButton(self.horizontalLayoutWidget_4)
+        self.pushButton_15.setStyleSheet("QPushButton{\n"
+"    background-color: #009999;\n"
+"    min-width: 160px;\n"
+"    padding: 12px 16px;\n"
+"    border: 2px solid #fff;\n"
+"    color: #fff;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    background-color: #75bdc3;\n"
+"}")
+        self.pushButton_15.setObjectName("pushButton_15")
+        self.verticalLayout_5.addWidget(self.pushButton_15)
+        self.pushButton_11 = QtWidgets.QPushButton(self.horizontalLayoutWidget_4)
+        self.pushButton_11.setStyleSheet("QPushButton {\n"
+"    display: none;\n"
+"    background-color: #393939;\n"
+"    min-width: 160px;\n"
+"    padding: 12px 16px;\n"
+"    border: 2px solid #fff;\n"
+"    color: #fff;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    background-color: #777777;\n"
+"}")
+        self.pushButton_11.setObjectName("pushButton_11")
+        self.verticalLayout_5.addWidget(self.pushButton_11)
+        spacerItem3 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        self.verticalLayout_5.addItem(spacerItem3)
+        self.horizontalLayout_4.addLayout(self.verticalLayout_5)
+        self.listWidget_4 = QtWidgets.QListWidget(self.horizontalLayoutWidget_4)
+        self.listWidget_4.setObjectName("listWidget_4")
+        self.horizontalLayout_4.addWidget(self.listWidget_4)
+        self.tabWidget.addTab(self.tab_4, "")
+        self.gridLayout.addWidget(self.tabWidget, 0, 0, 1, 1)
+        MainWindow.setCentralWidget(self.centralwidget)
+        self.menubar = QtWidgets.QMenuBar(MainWindow)
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 937, 22))
+        self.menubar.setAutoFillBackground(False)
+        self.menubar.setStyleSheet("")
+        self.menubar.setObjectName("menubar")
+        self.menuData = QtWidgets.QMenu(self.menubar)
+        self.menuData.setObjectName("menuData")
+        self.menuKnowledge = QtWidgets.QMenu(self.menubar)
+        self.menuKnowledge.setObjectName("menuKnowledge")
+        self.menuTest = QtWidgets.QMenu(self.menubar)
+        self.menuTest.setObjectName("menuTest")
+        self.menuInspection = QtWidgets.QMenu(self.menubar)
+        self.menuInspection.setObjectName("menuInspection")
+        self.menuAbout = QtWidgets.QMenu(self.menubar)
+        self.menuAbout.setObjectName("menuAbout")
+        self.menuIntroduction = QtWidgets.QMenu(self.menubar)
+        self.menuIntroduction.setObjectName("menuIntroduction")
+        MainWindow.setMenuBar(self.menubar)
+        self.statusbar = QtWidgets.QStatusBar(MainWindow)
+        self.statusbar.setObjectName("statusbar")
+        MainWindow.setStatusBar(self.statusbar)
+        self.actionload = QtWidgets.QAction(MainWindow)
+        self.actionload.setObjectName("actionload")
+        self.actionimport = QtWidgets.QAction(MainWindow)
+        self.actionimport.setObjectName("actionimport")
+        self.actiontrain = QtWidgets.QAction(MainWindow)
+        self.actiontrain.setObjectName("actiontrain")
+        self.actionimport_2 = QtWidgets.QAction(MainWindow)
+        self.actionimport_2.setObjectName("actionimport_2")
+        self.actionevaluate = QtWidgets.QAction(MainWindow)
+        self.actionevaluate.setObjectName("actionevaluate")
+        self.actionload_document = QtWidgets.QAction(MainWindow)
+        self.actionload_document.setObjectName("actionload_document")
+        self.actioninspect = QtWidgets.QAction(MainWindow)
+        self.actioninspect.setObjectName("actioninspect")
+        self.menuData.addAction(self.actionload)
+        self.menuData.addAction(self.actionimport)
+        self.menuKnowledge.addAction(self.actiontrain)
+        self.menuKnowledge.addAction(self.actionimport_2)
+        self.menuTest.addAction(self.actionevaluate)
+        self.menuInspection.addAction(self.actionload_document)
+        self.menuInspection.addAction(self.actioninspect)
+        self.menubar.addAction(self.menuIntroduction.menuAction())
+        self.menubar.addAction(self.menuData.menuAction())
+        self.menubar.addAction(self.menuKnowledge.menuAction())
+        self.menubar.addAction(self.menuTest.menuAction())
+        self.menubar.addAction(self.menuInspection.menuAction())
+        self.menubar.addAction(self.menuAbout.menuAction())
 
-    def initUI(self):
-        # set other GUI elements
-        btn0 = QtGui.QPushButton("loadDB", self)
-        btn1 = QtGui.QPushButton("export spectra", self)
-        btn2 = QtGui.QPushButton("import spectra", self)
+        self.retranslateUi(MainWindow)
+        self.tabWidget.setCurrentIndex(0)
+        self.pushButton_21.clicked.connect(self.loadData)
+        self.pushButton_22.clicked.connect(self.saveSpectra)
+        self.pushButton_23.clicked.connect(self.getSpectra)
+        self.pushButton_21.clicked['bool'].connect(self.listWidget_6.show)
+        self.pushButton_5.clicked.connect(self.training)
+        self.pushButton_6.clicked.connect(self.save_correlation)
+        self.pushButton_9.clicked.connect(self.showStat)
+        self.pushButton_13.clicked.connect(self.loadimg)
+        self.pushButton_15.clicked.connect(self.toinspect)
+        QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
-        btn3 = QtGui.QPushButton("Training", self)
-        # btn4 = QtGui.QPushButton("export feature", self)
-        # btn5 = QtGui.QPushButton("import feature", self)
-
-        # btn6 = QtGui.QPushButton("GNB classification", self)
-        #btn7 = QtGui.QPushButton("show PC spectra", self)
-        #btn8 = QtGui.QPushButton("show naive Bayes", self)
-        btn9 = QtGui.QPushButton("show statistics", self)
-        #btn10 = QtGui.QPushButton("show ROC", self)
-
-        btn11 = QtGui.QPushButton("load document", self)
-        btn12 = QtGui.QPushButton("inspect", self)
-
-        #self.scra1 = QtGui.QScrollArea(self)
-        #self.scra1.move(200, 600)
-
-        #self.lbl1 = QtGui.QLabel('TestLabel', self.scra1)
-        self.lbl1 = QtGui.QLabel('', self)
-        self.lbl2 = QtGui.QLabel('', self)
-
-        # main layout
-        centralWidget = QtGui.QWidget(self)
-        self.setCentralWidget( centralWidget )
-        layout = QtGui.QGridLayout( centralWidget )
-
-        ##set plot widget
-        #self.pl1 = pg.PlotWidget()
-        #x = np.random.normal(size=1000)
-        #y = np.random.normal(size=1000)
-        #self.pl1.plot(x, y, pen=None, symbol='o')
-
-        layout.addWidget(btn0, 0, 0)
-        layout.addWidget(btn1, 1, 0)
-        layout.addWidget(btn2, 2, 0)
-        layout.addWidget(btn3, 3, 0)
-        # layout.addWidget(btn4, 4, 0)
-        # layout.addWidget(btn5, 5, 0)
-        # layout.addWidget(btn6, 6, 0)
-        #layout.addWidget(btn7, 7, 0)
-        #layout.addWidget(btn8, 8, 0)
-        layout.addWidget(btn9, 5, 0)
-        #layout.addWidget(btn10, 10, 0)
-        layout.addWidget(btn11, 10, 0)
-        layout.addWidget(btn12, 11, 0)
-
-        #layout.addWidget(self.pl1, 0, 7, 6,10)
-        layout.addWidget(self.lbl2, 0, 7, 6,10)
-        layout.addWidget(self.lbl1, 8, 10, 6,10)
-        #layout.addWidget(self.scra1, 8, 10, 6,10)
-
-        btn0.clicked.connect(self.loadDB)
-        btn1.clicked.connect(self.saveSpectra)
-        btn2.clicked.connect(self.getSpectra)
-        btn3.clicked.connect(self.PCA)
-        # btn4.clicked.connect(self.exportFeature)
-        # btn5.clicked.connect(self.importFeature)
-        # btn6.clicked.connect(self.classGNB)
-        #btn7.clicked.connect(self.showPC)
-        #btn8.clicked.connect(self.showBayes)
-        btn9.clicked.connect(self.showStat)
-        #btn10.clicked.connect(self.showROC)
-        btn11.clicked.connect(self.loadimg)
-        btn12.clicked.connect(self.inspect)
-
-        centralWidget.setLayout(layout)
-
-        self.setGeometry(1200, 750, 1150, 700)
-        self.setWindowTitle('Inspector')
-        self.show()
-
-    def buttonClicked(self):
-        sender = self.sender()
-        self.statusBar().showMessage(sender.text() + ' was pressed')
-
-    def saveSpectra(self):
-
-        if add_all_fft:
-            if self.data_merged.empty==False:
-                self.data_merged.to_pickle(SUBPATH+"/data_merged.pkl")
-                #self.data_merged_multi.to_pickle(SUBPATH,"/data_merged_multi.pkl")
-                self.data_detailed.to_pickle(SUBPATH+"/data_detailed.pkl")
-                print("saved merged spectra!")
-            else:
-                print("Data is still empty, press loadDB first.")
-        else:
-            if self.data.empty==False:
-                self.data.to_pickle(SUBPATH+"/spectra.pkl")
-                print("saved spectra!")
-            else:
-                print("Data is still empty, press loadDB first.")
-
-    def getSpectra(self):
-
-        if add_all_fft:
-            self.data_merged = pd.read_pickle(SUBPATH+"/data_merged.pkl")
-            #self.data_merged_multi = pd.read_pickle(SUBPATH+"/data_merged_multi.pkl")
-            self.data_detailed = pd.read_pickle(SUBPATH+"/data_detailed.pkl")
-            class_column = self.data_detailed.shape[1]-1
-            self.printer_types = np.unique([printer for printer in self.data_detailed.ix[:,class_column]])
-            self.snippet_amount_perPrinter = np.zeros((len(self.printer_types)))
-            for i in range(self.printer_types.shape[0]):
-                self.snippet_amount_perPrinter[i] = self.data_detailed[self.data_detailed.ix[:,class_column]==self.printer_types[i]].shape[0]
-
-            if self.data_merged.empty:
-                print("No merged spectra on memory.")
-            else:
-                print("got spectra!")
-
-        else:
-            self.data = pd.read_pickle("B_additiveCorrelation_id_w512_1000px/spectra.pkl")
-            self.printer_types = np.unique([printer for printer in self.data.ix[:,1024]])
-            self.snippet_amount_perPrinter = np.zeros((len(self.printer_types)))
-            if self.data.empty:
-                print("No Spectra on memory.")
-            else:
-                print("got spectra!")
-
-        self.mean = np.zeros((len(self.printer_types),pca_amount,2))
-        self.std = np.zeros((len(self.printer_types),pca_amount,2))
-        self.apriori = np.zeros((len(self.printer_types),2))
+    def retranslateUi(self, MainWindow):
+        _translate = QtCore.QCoreApplication.translate
+        MainWindow.setWindowTitle(_translate("MainWindow", "Pridentifier"))
+        self.comboBox_6.setItemText(0, _translate("MainWindow", "FFT Fingerprint"))
+        self.comboBox_6.setItemText(1, _translate("MainWindow", "images only"))
+        self.pushButton_21.setText(_translate("MainWindow", "LOAD"))
+        self.pushButton_22.setText(_translate("MainWindow", "export data"))
+        self.pushButton_23.setText(_translate("MainWindow", "import data"))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("MainWindow", "Data"))
+        self.comboBox_2.setItemText(0, _translate("MainWindow", "FFT Correlation"))
+        self.comboBox_2.setItemText(1, _translate("MainWindow", "Bayes Classifier"))
+        self.comboBox_2.setItemText(2, _translate("MainWindow", "Support Vector Machine"))
+        self.comboBox_2.setItemText(3, _translate("MainWindow", "Neural Network"))
+        self.pushButton_5.setText(_translate("MainWindow", "TRAIN"))
+        self.pushButton_6.setText(_translate("MainWindow", "export knowledge"))
+        self.pushButton_7.setText(_translate("MainWindow", "import knowledge"))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("MainWindow", "Learning"))
+        self.comboBox_3.setItemText(0, _translate("MainWindow", "FFT Correlation"))
+        self.comboBox_3.setItemText(1, _translate("MainWindow", "Naive Bayes"))
+        self.comboBox_3.setItemText(2, _translate("MainWindow", "Support Vector Machine"))
+        self.comboBox_3.setItemText(3, _translate("MainWindow", "Neural Network"))
+        self.pushButton_9.setText(_translate("MainWindow", "EVALUATE"))
+        self.pushButton_10.setText(_translate("MainWindow", "save statistics"))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), _translate("MainWindow", "Evaluation"))
+        self.pushButton_13.setText(_translate("MainWindow", "LOAD IMAGE"))
+        self.comboBox_4.setItemText(0, _translate("MainWindow", "FFT Correlation"))
+        self.comboBox_4.setItemText(1, _translate("MainWindow", "Bayes Classifier"))
+        self.comboBox_4.setItemText(2, _translate("MainWindow", "Support Vector Machine"))
+        self.comboBox_4.setItemText(3, _translate("MainWindow", "Neural Networks"))
+        self.pushButton_15.setText(_translate("MainWindow", "INSPECT"))
+        self.pushButton_11.setText(_translate("MainWindow", "save results"))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_4), _translate("MainWindow", "Inspection"))
+        self.menuData.setTitle(_translate("MainWindow", "Data"))
+        self.menuKnowledge.setTitle(_translate("MainWindow", "Learning"))
+        self.menuTest.setTitle(_translate("MainWindow", "Evaluation"))
+        self.menuInspection.setTitle(_translate("MainWindow", "Inspection"))
+        self.menuAbout.setTitle(_translate("MainWindow", "About"))
+        self.menuIntroduction.setTitle(_translate("MainWindow", "Instruction"))
+        self.actionload.setText(_translate("MainWindow", "load"))
+        self.actionimport.setText(_translate("MainWindow", "import data"))
+        self.actiontrain.setText(_translate("MainWindow", "train"))
+        self.actionimport_2.setText(_translate("MainWindow", "import knowledge"))
+        self.actionevaluate.setText(_translate("MainWindow", "evaluate"))
+        self.actionload_document.setText(_translate("MainWindow", "load image"))
+        self.actioninspect.setText(_translate("MainWindow", "inspect"))
 
 
-    def loadDB(self):
+
+    def loadData(self):
+
+        #print(DIRS)
+        filter = "Folder with folders representing each class (*.*)"
+        ROOTDIR = QtWidgets.QFileDialog.getExistingDirectory(directory = '..', options = QtWidgets.QFileDialog.ShowDirsOnly)
+        DIRS = os.listdir(ROOTDIR)
+        print('DIRS: ', DIRS)
+        print('ROOTDIR: ', ROOTDIR)
+
         a=0
         self.printer_types = np.array(())
         for printer in DIRS:
@@ -238,7 +695,9 @@ class Inspector(pg.Qt.QtGui.QMainWindow):
                 pass
             else:
                 self.printer_types = np.append(self.printer_types, printer)
+                print('Printer', printer)
 
+        print('printer_types: ', self.printer_types)
         self.snippet_amount_perPrinter = np.zeros((len(self.printer_types)))
 
         self.mean = np.zeros((len(self.printer_types),pca_amount,2))
@@ -259,10 +718,11 @@ class Inspector(pg.Qt.QtGui.QMainWindow):
                         print('DS_Store files has not been removed.')
                     else:
                         # read image
-                        print("img path: " + ROOTDIR + '/' + curr + '/' + img)
+                        img_path = ROOTDIR + '/' + curr + '/' + img
+                        print("img path: " + img_path)
                         #/Users/resa/Studium Master/2. Semester - WiSe2014/Projekt/ipython/printers/canon/005_Canon_L02.tif
                         #tmp = skimage.io.imread(rootdir + '/' + curr + '/' + img, plugin='tifffile')
-                        tmp = skimage.io.imread(ROOTDIR + '/' + curr + '/' + img)
+                        tmp = skimage.io.imread(img_path)
                         # use only piece of image
                         if(tmp.shape[0]<=1536 and tmp.shape[1]<=1536 ):
                             tmp = tmp[0:1535,0:1535]
@@ -429,14 +889,61 @@ class Inspector(pg.Qt.QtGui.QMainWindow):
                         self.data.to_pickle(curr+"/spectra.pkl")
                         print("saved spectra!")
                     else:
-                        print("Data is still empty, press loadDB first.")
+                        print("Data is still empty, press load first.")
 
 
         print("load and prepare data finished!")
-        self.statusBar().showMessage('images are loaded.')
+        #self.statusBar().showMessage('images are loaded.')
+        print('images are loaded.')
 
+    def saveSpectra(self):
 
-    def PCA(self):
+        if add_all_fft:
+            if self.data_merged.empty==False:
+                self.data_merged.to_pickle(SUBPATH+"/data_merged.pkl")
+                #self.data_merged_multi.to_pickle(SUBPATH,"/data_merged_multi.pkl")
+                self.data_detailed.to_pickle(SUBPATH+"/data_detailed.pkl")
+                print("saved merged spectra!")
+            else:
+                print("Data is still empty, press load first.")
+        else:
+            if self.data.empty==False:
+                self.data.to_pickle(SUBPATH+"/spectra.pkl")
+                print("saved spectra!")
+            else:
+                print("Data is still empty, press load first.")
+
+    def getSpectra(self):
+
+        if add_all_fft:
+            self.data_merged = pd.read_pickle(SUBPATH+"/data_merged.pkl")
+            #self.data_merged_multi = pd.read_pickle(SUBPATH+"/data_merged_multi.pkl")
+            self.data_detailed = pd.read_pickle(SUBPATH+"/data_detailed.pkl")
+            class_column = self.data_detailed.shape[1]-1
+            self.printer_types = np.unique([printer for printer in self.data_detailed.ix[:,class_column]])
+            self.snippet_amount_perPrinter = np.zeros((len(self.printer_types)))
+            for i in range(self.printer_types.shape[0]):
+                self.snippet_amount_perPrinter[i] = self.data_detailed[self.data_detailed.ix[:,class_column]==self.printer_types[i]].shape[0]
+
+            if self.data_merged.empty:
+                print("No merged spectra on memory.")
+            else:
+                print("got spectra!")
+
+        else:
+            self.data = pd.read_pickle("B_additiveCorrelation_id_w512_1000px/spectra.pkl")
+            self.printer_types = np.unique([printer for printer in self.data.ix[:,1024]])
+            self.snippet_amount_perPrinter = np.zeros((len(self.printer_types)))
+            if self.data.empty:
+                print("No Spectra on memory.")
+            else:
+                print("got spectra!")
+
+        self.mean = np.zeros((len(self.printer_types),pca_amount,2))
+        self.std = np.zeros((len(self.printer_types),pca_amount,2))
+        self.apriori = np.zeros((len(self.printer_types),2))
+
+    def training(self):
         if add_all_fft:
             data_normed = np.zeros((self.printer_types.size, snippet_w,snippet_w))
             class_column = self.data_detailed.shape[1]-1
@@ -528,7 +1035,7 @@ class Inspector(pg.Qt.QtGui.QMainWindow):
                 self.test.index = range(0,len(self.test))
 
             #PCA
-            self.axis, self.eigenData, s = hka.hka(self.train.transpose().ix[:1024,:])
+            self.axis, self.eigenData, s = hka.hka(self.train.transpose().ix[:1024, :])
 
             # export hka
             name_eigen = SUBPATH+"/eigenData.pkl"
@@ -613,8 +1120,7 @@ class Inspector(pg.Qt.QtGui.QMainWindow):
 
         print("Training for all printers finished.")
 
-
-    def safe_correlation(self):
+    def save_correlation(self):
 
         self.data_merged.to_pickle(SUBPATH+"/data_merged.pkl")
 
@@ -628,6 +1134,36 @@ class Inspector(pg.Qt.QtGui.QMainWindow):
             col.append('accuracy')
             col.append('failure')
             col.append('printer')
+
+            #self.tableWidget = QTableWidget()
+            # set row count
+            self.tableWidget.setRowCount(int(len(col)-1))
+            # set column count
+            self.tableWidget.setColumnCount(int(len(self.printer_types)))
+
+            # name columns
+            for i in range(len(self.printer_types)):
+                self.tableWidget.setHorizontalHeaderItem(i, QtWidgets.QTableWidgetItem(self.printer_types[i]))
+
+            # name rows
+            for i in range(len(col)-1):
+                self.tableWidget.setVerticalHeaderItem(i, QtWidgets.QTableWidgetItem(col[i]))
+
+            # compute and write stats for every printer
+            for i in range(len(self.printer_types)):
+                hit_rate = 100*correctPositiveTrain[i] / (correctPositiveTrain[i] + falseNegativeTrain[i])
+                miss_rate = 100*falseNegativeTrain[i] / (correctNegativeTrain[i] + falseNegativeTrain[i])
+                fall_out = 100*falsePositiveTrain[i] / (falsePositiveTrain[i] + correctNegativeTrain[i])
+                amount_all = correctPositiveTrain[i] + correctNegativeTrain[i] + falsePositiveTrain[i] + falseNegativeTrain[i]
+                accuracy = 100*(correctPositiveTrain[i]+correctNegativeTrain[i]) / amount_all
+                failure = 100*(falsePositiveTrain[i] + falseNegativeTrain[i]) / amount_all
+
+                self.tableWidget.setItem(0,i, QtWidgets.QTableWidgetItem(str(hit_rate) + "%"))
+                self.tableWidget.setItem(1,i, QtWidgets.QTableWidgetItem(str(miss_rate) + "%"))
+                self.tableWidget.setItem(2,i, QtWidgets.QTableWidgetItem(str(fall_out) + "%"))
+                self.tableWidget.setItem(3,i, QtWidgets.QTableWidgetItem(str(accuracy) + "%"))
+                self.tableWidget.setItem(4,i, QtWidgets.QTableWidgetItem(str(failure) + "%"))
+
             statistics = pd.DataFrame(columns=col)
 
             for i in range(0, len(self.printer_types)):
@@ -681,7 +1217,10 @@ class Inspector(pg.Qt.QtGui.QMainWindow):
                 line113 = "Fallout: %d %s" % (100*falsePositiveTest[i] / (falsePositiveTest[i] + correctNegativeTest[i]), "%")
                 newstr.append("\n".join(("                                                            ".join((line0,line6)),"                                                            ".join((line1,line7)),"          ".join((line2,line8)),"         ".join((line3,line9)),"                    ".join((line4,line10)),"                    ".join((line5,line11)),"                                                        ".join((line51,line111)),"                                                        ".join((line52,line112)),"                                                        ".join((line53,line113)))))
 
-        self.lbl1.setText("\n".join((newstr)))
+        #tabledata = "\n".join((newstr))
+
+        #header = ['date', 'time', '', 'size', 'filename']
+        #tm = self.tableView(tabledata, header, self)
 
 
     def loadimg(self):
@@ -689,19 +1228,20 @@ class Inspector(pg.Qt.QtGui.QMainWindow):
         col = [i for i in range(1024)]
         col.append('name')
         questioned = pd.DataFrame(columns=col)
-        filename = QtGui.QFileDialog.getOpenFileName(
-                   self, 'Open File', '', 'Images (*.png *.xpm *.jpg)')
-        qimg.load(filename)
+        filename = QtWidgets.QFileDialog.getOpenFileName(filter='Images (*.png *.xpm *.jpg)')
+        #print(filename)
+        print((filename[0]), "2. ", (filename[0]))
+        qimg.load(filename[0])
         print("image is loaded.")
 
         #pixmap = QtGui.QPixmap.fromImage(qimg) # show loaded image in screen (too large)
         #self.lbl2.setPixmap(pixmap) # show loaded image in screen (too large)
 
-        tmp = skimage.io.imread(str(filename))
+        tmp = skimage.io.imread(str(filename[0]))
 
         if tmp.size == 0:
             print("Image could not be load: ")
-            print(filename)
+            print(filename[0])
             #return False
 
         if(len(tmp.shape) == 3):
@@ -806,50 +1346,52 @@ class Inspector(pg.Qt.QtGui.QMainWindow):
         #self.lbl2.show() # show loaded image in screen (too large)
 
 
-    def inspect(self):
-        z=0
+    def toinspect(self):
+        z = 0
         newstr = []
         for printer in self.printer_types:
             print(printer)
-            printer_number = np.where(self.printer_types==printer)[0][0]
+            printer_number = np.where(self.printer_types == printer)[0][0]
             # read features
-            col = range(1024)
+            col = [i for i in range(1024)]
             col.append('name')
             questioned_feature = pd.DataFrame(columns=col)
 
-            name_test = SUBPATH+"/QuestionedFeature.pkl"
+            name_test = SUBPATH + "/QuestionedFeature.pkl"
             questioned_feature = pd.read_pickle(name_test)
 
+            mean = pd.DataFrame(self.mean[printer_number, :, :], columns=[0, 1])
+            std = pd.DataFrame(self.std[printer_number, :, :], columns=[0, 1])
+            apriori = self.apriori[printer_number, :]
 
-            mean = pd.DataFrame(self.mean[printer_number,:,:], columns=[0,1])
-            std = pd.DataFrame(self.std[printer_number,:,:], columns=[0,1])
-            apriori = self.apriori[printer_number,:]
-
-            name_test = SUBPATH+"/QuestionedFeature.pkl"
+            name_test = SUBPATH + "/QuestionedFeature.pkl"
             questioned_feature = pd.read_pickle(name_test)
 
             # import gaussian naive bayes
-            mean = pd.read_pickle(printer +"_mean.pkl")
-            std = pd.read_pickle(printer +"_std.pkl")
-            apriori = np.array(pd.read_pickle(printer +"_apriori.pkl")).T.flatten()
+            mean = pd.read_pickle(printer + "_mean.pkl")
+            std = pd.read_pickle(printer + "_std.pkl")
+            apriori = np.array(pd.read_pickle(printer + "_apriori.pkl")).T.flatten()
 
             ## Train Set
-            #[correctPositiveTrain[z], correctNegativeTrain[z], falsePositiveTrain[z], falseNegativeTrain[z], tmp, tmp] = GNBMatch(train_feature, self.mean.ix[:,2*z:2*z+1], self.std.ix[:,2*z:2*z+1], apriori, 1)
-            #train_feature_length[z] = len(train_feature)
+            # [correctPositiveTrain[z], correctNegativeTrain[z], falsePositiveTrain[z], falseNegativeTrain[z], tmp, tmp] = GNBMatch(train_feature, self.mean.ix[:,2*z:2*z+1], self.std.ix[:,2*z:2*z+1], apriori, 1)
+            # train_feature_length[z] = len(train_feature)
             # Test Set
-            [correctPositiveQ, correctNegativeQ, falsePositiveQ, falseNegativeQ, tmp, tmp] = GNBMatch(questioned_feature, mean, std, apriori, 1)
+            [correctPositiveQ, correctNegativeQ, falsePositiveQ, falseNegativeQ, tmp, tmp] = GNBMatch(
+                    questioned_feature, mean, std, apriori, 1)
 
-            if(falsePositiveQ+correctPositiveQ >= correctNegativeQ+falseNegativeQ):
+            if (falsePositiveQ + correctPositiveQ >= correctNegativeQ + falseNegativeQ):
                 newstr1 = "POSITIVE: "
-                quote_pos = "%d %s" % (100*(falsePositiveQ+correctPositiveQ)/len(questioned_feature), '% agreement ------')
+                quote_pos = "%d %s" % (
+                    100 * (falsePositiveQ + correctPositiveQ) / len(questioned_feature), '% agreement ------')
                 newstr.append("  ".join((newstr1, printer, quote_pos)))
             else:
                 newstr2 = "Negative: "
-                quote_neg = "%d %s" % (100*(falsePositiveQ+correctPositiveQ)/len(questioned_feature), '% agreement')
+                quote_neg = "%d %s" % (
+                    100 * (falsePositiveQ + correctPositiveQ) / len(questioned_feature), '% agreement')
                 newstr.append("  ".join((newstr2, printer, quote_neg)))
             # Zugehörigkeit:       Espon (zu 99%)
             # Nicht-Zugehörigkeit: Canon (zu 94%), HP(zu 100%), Brother (zu 99%)
-            #z = z+1
+            # z = z+1
             # if(falsePositiveQ >= falseNegativeTest[z]):
             #     newstr = "Positive: "
             #     quote_pos = "%d %s" % (100*falsePositiveTest[i]/len(questioned_feature), '%')
@@ -860,9 +1402,10 @@ class Inspector(pg.Qt.QtGui.QMainWindow):
             #     newstr.append("  ".join((printer, quote_neg)))
             ## Zugehörigkeit:       Espon (zu 99%)
             ## Nicht-Zugehörigkeit: Canon (zu 94%), HP(zu 100%), Brother (zu 99%)
-            self.lbl1.setText("\n".join((newstr)))
+            # self.lbl1.setText("\n".join((newstr)))
             print("GNB training finished.")
-            z = z+1
+            z = z + 1
+
 
 def GNB(x, mean, std):
     return 1/math.sqrt(2*math.pi*std)*math.exp(-1/2.0*(x-mean)**2 / std**2)
@@ -887,9 +1430,9 @@ def GNBMatch(matchData, mean, std, apriori, c):
             gMin = g
         if g>gMax:
             gMax = g
-        
+
         g=g*c-1
-        
+
         if g>0:
             if matchData['label'][k] == 1:
                 correctPositive = correctPositive + 1
@@ -901,23 +1444,19 @@ def GNBMatch(matchData, mean, std, apriori, c):
             else:
                 correctNegative = correctNegative + 1
 
-    return [correctPositive, correctNegative, falsePositive, falseNegative, gMin, gMax]        
+    return [correctPositive, correctNegative, falsePositive, falseNegative, gMin, gMax]
 
-def setupDB(self):
-        self.ftp = FTP('141.37.176.19')
-        self.ftp.login('dmm', 'dmm$ios')
-        self.ftp.cwd('printer')
+
+
 
 def main():
-    
-    app = QtGui.QApplication(sys.argv)
-    ex = Inspector()
-    # subplot = ex.getFigure().add_subplot(111)
-    # subplot.plot(1,1)
-    # ex.draw()
+    import sys
+    app = QtWidgets.QApplication(sys.argv)
+    Window = QtWidgets.QMainWindow()
+    ui = Ui_MainWindow()
+    ui.setupUi(Window)
+    Window.show()
     sys.exit(app.exec_())
-    self.ftp.quit()
-
 
 if __name__ == '__main__':
     main()

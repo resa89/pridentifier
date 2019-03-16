@@ -12,7 +12,7 @@ from PyQt5.QtGui import QImage, QPixmap, QIcon
 from PyQt5.QtWidgets import QApplication, QWidget, QLabel
 
 from config import *
-from model import inspector
+from src import inspector
 
 
 class Ui_MainWindow(object):

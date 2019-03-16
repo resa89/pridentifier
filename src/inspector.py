@@ -1,17 +1,15 @@
-from PyQt5 import QtCore, QtGui, QtWidgets
-
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-from matplotlib.pyplot import *
-import os
-import skimage
-import skimage.io
 import copy
 import math
-import hka
-from ftplib import FTP
+import os
+
+import pandas as pd
+import skimage
+import skimage.io
 from PIL import Image
+from PyQt5 import QtGui, QtWidgets
+from matplotlib.pyplot import *
+
+from src import hka
 
 #from config import *
 

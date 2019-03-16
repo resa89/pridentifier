@@ -1,0 +1,906 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>937</width>
+    <height>630</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Pridentifier</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: #222222;</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QWidget" name="gridLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>9</x>
+      <y>9</y>
+      <width>911</width>
+      <height>611</height>
+     </rect>
+    </property>
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="0" column="0">
+      <widget class="QTabWidget" name="tabWidget">
+       <property name="styleSheet">
+        <string notr="true">QTabWidget::pane {
+    border-top: 4px solid #fff;
+    background-color: #fff;
+}
+
+QTabWidget::tab-bar:top {
+    top: 1px;
+}
+
+QTabWidget::tab-bar:bottom {
+    bottom: 1px;
+}
+
+QTabWidget::tab-bar:left {
+    right: 1px;
+}
+
+QTabWidget::tab-bar:right {
+    left: 1px;
+}
+
+QTabBar::tab {
+    border: 0px solid #fff;
+	background-color: #393939;
+	color: #fff;
+	
+
+}
+
+QTabBar::tab:selected {
+    background: white;
+	color: #000;
+}
+
+QTabBar::tab:!selected {
+    background: silver;
+}
+
+QTabBar::tab:!selected:hover {
+    background: #777777;
+}
+
+QTabBar::tab:top:!selected {
+    margin-top: 3px;
+}
+
+QTabBar::tab:bottom:!selected {
+    margin-bottom: 3px;
+}
+
+QTabBar::tab:top, QTabBar::tab:bottom {
+    min-width: 8ex;
+    margin-right: -1px;
+    padding: 5px 10px 5px 10px;
+}
+
+QTabBar::tab:top:selected {
+    border-bottom-color: none;
+}
+
+QTabBar::tab:bottom:selected {
+    border-top-color: none;
+}
+
+QTabBar::tab:top:last, QTabBar::tab:bottom:last,
+QTabBar::tab:top:only-one, QTabBar::tab:bottom:only-one {
+    margin-right: 0;
+}
+
+QTabBar::tab:left:!selected {
+    margin-right: 3px;
+}
+
+QTabBar::tab:right:!selected {
+    margin-left: 3px;
+}
+
+QTabBar::tab:left, QTabBar::tab:right {
+    min-height: 8ex;
+    margin-bottom: -1px;
+    padding: 10px 5px 10px 5px;
+
+}
+
+QTabBar::tab:left:selected {
+    border-left-color: none;
+}
+
+QTabBar::tab:right:selected {
+    border-right-color: none;
+}
+
+QTabBar::tab:left:last, QTabBar::tab:right:last,
+QTabBar::tab:left:only-one, QTabBar::tab:right:only-one {
+    margin-bottom: 0;
+}</string>
+       </property>
+       <property name="currentIndex">
+        <number>3</number>
+       </property>
+       <widget class="QWidget" name="tab">
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
+        <attribute name="title">
+         <string>Data</string>
+        </attribute>
+        <widget class="QWidget" name="horizontalLayoutWidget">
+         <property name="geometry">
+          <rect>
+           <x>0</x>
+           <y>0</y>
+           <width>911</width>
+           <height>591</height>
+          </rect>
+         </property>
+         <layout class="QHBoxLayout" name="horizontalLayout_6">
+          <item>
+           <layout class="QVBoxLayout" name="verticalLayout_7">
+            <property name="spacing">
+             <number>-1</number>
+            </property>
+            <property name="leftMargin">
+             <number>15</number>
+            </property>
+            <property name="topMargin">
+             <number>30</number>
+            </property>
+            <property name="rightMargin">
+             <number>15</number>
+            </property>
+            <property name="bottomMargin">
+             <number>15</number>
+            </property>
+            <item>
+             <widget class="QComboBox" name="load_method">
+              <property name="styleSheet">
+               <string notr="true">QComboBox {
+	background-color: #777777;
+	min-width: 160px;
+	padding: 12px 16px;
+	border: 2px solid #fff;
+	color: #fff;
+}
+
+
+QComboBox::drop-down {
+	border-left-width: 0px;
+    border-left-color: none;
+    border-left-style: solid; /* just a single line */
+	margin-right: 10px;
+
+}
+
+QComboBox::down-arrow {
+    image: url(/Users/resa/Projekte/Korensics/arrow.png);
+	height: 100px;
+}</string>
+              </property>
+              <item>
+               <property name="text">
+                <string>FFT Fingerprint</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>images only</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="load">
+              <property name="styleSheet">
+               <string notr="true">QPushButton {
+background-color: #009999;
+min-width: 160px;
+padding: 12px 16px;
+border: 2px solid #fff;
+color: #fff;
+}
+QPushButton:hover {
+	background-color: #75bdc3;
+}</string>
+              </property>
+              <property name="text">
+               <string>LOAD</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="export_data">
+              <property name="styleSheet">
+               <string notr="true">QPushButton {
+	display: none;
+	background-color: #393939;
+	min-width: 160px;
+	padding: 12px 16px;
+	border: 2px solid #fff;
+	color: #fff;
+}
+
+QPushButton:hover {
+	background-color: #777777;
+}</string>
+              </property>
+              <property name="text">
+               <string>export data</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="import_data">
+              <property name="styleSheet">
+               <string notr="true">QPushButton{
+	display: none;
+	background-color: #393939;
+	min-width: 160px;
+	padding: 12px 16px;
+	border: 2px solid #fff;
+	color: #fff;
+}
+
+QPushButton:hover {
+	background-color: #777777;
+}</string>
+              </property>
+              <property name="text">
+               <string>import data</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="verticalSpacer_12">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="QListWidget" name="listWidget_6">
+            <property name="styleSheet">
+             <string notr="true">border: 0px;</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </widget>
+       <widget class="QWidget" name="tab_2">
+        <attribute name="title">
+         <string>Learning</string>
+        </attribute>
+        <widget class="QWidget" name="horizontalLayoutWidget_2">
+         <property name="geometry">
+          <rect>
+           <x>0</x>
+           <y>0</y>
+           <width>911</width>
+           <height>591</height>
+          </rect>
+         </property>
+         <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <item>
+           <layout class="QVBoxLayout" name="verticalLayout_3">
+            <property name="leftMargin">
+             <number>15</number>
+            </property>
+            <property name="topMargin">
+             <number>30</number>
+            </property>
+            <property name="rightMargin">
+             <number>15</number>
+            </property>
+            <property name="bottomMargin">
+             <number>15</number>
+            </property>
+            <item>
+             <widget class="QComboBox" name="train_method">
+              <property name="styleSheet">
+               <string notr="true">QComboBox {
+	background-color: #777777;
+	min-width: 160px;
+	padding: 12px 16px;
+	border: 2px solid #fff;
+	color: #fff;
+}
+
+
+QComboBox::drop-down {
+	border-left-width: 0px;
+    border-left-color: none;
+    border-left-style: solid; /* just a single line */
+	margin-right: 10px;
+
+}
+
+QComboBox::down-arrow {
+    image: url(/Users/resa/Projekte/Korensics/arrow.png);
+	height: 100px;
+}</string>
+              </property>
+              <item>
+               <property name="text">
+                <string>FFT Correlation</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Bayes Classifier</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Support Vector Machine</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Neural Network</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="train">
+              <property name="styleSheet">
+               <string notr="true">QPushButton{
+	background-color: #009999;
+	min-width: 160px;
+	padding: 12px 16px;
+	border: 2px solid #fff;
+	color: #fff;
+}
+
+QPushButton:hover {
+	background-color: #75bdc3;
+}</string>
+              </property>
+              <property name="text">
+               <string>TRAIN</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="export_knowledge">
+              <property name="styleSheet">
+               <string notr="true">QPushButton {
+	display: none;
+	background-color: #393939;
+	min-width: 160px;
+	padding: 12px 16px;
+	border: 2px solid #fff;
+	color: #fff;
+}
+
+QPushButton:hover {
+	background-color: #777777;
+}</string>
+              </property>
+              <property name="text">
+               <string>export knowledge</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="import_knowledge">
+              <property name="styleSheet">
+               <string notr="true">QPushButton {
+	display: none;
+	background-color: #393939;
+	min-width: 160px;
+	padding: 12px 16px;
+	border: 2px solid #fff;
+	color: #fff;
+}
+
+QPushButton:hover {
+	background-color: #777777;
+}</string>
+              </property>
+              <property name="text">
+               <string>import knowledge</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="verticalSpacer_13">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="QListWidget" name="listWidget_2">
+            <property name="styleSheet">
+             <string notr="true">border: 0px;</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </widget>
+       <widget class="QWidget" name="tab_3">
+        <attribute name="title">
+         <string>Evaluation</string>
+        </attribute>
+        <widget class="QWidget" name="horizontalLayoutWidget_3">
+         <property name="geometry">
+          <rect>
+           <x>0</x>
+           <y>0</y>
+           <width>911</width>
+           <height>591</height>
+          </rect>
+         </property>
+         <layout class="QHBoxLayout" name="horizontalLayout_3">
+          <item>
+           <layout class="QVBoxLayout" name="verticalLayout_4">
+            <property name="leftMargin">
+             <number>15</number>
+            </property>
+            <property name="topMargin">
+             <number>30</number>
+            </property>
+            <property name="rightMargin">
+             <number>15</number>
+            </property>
+            <property name="bottomMargin">
+             <number>15</number>
+            </property>
+            <item>
+             <widget class="QComboBox" name="evaluation_method">
+              <property name="styleSheet">
+               <string notr="true">QComboBox {
+	background-color: #777777;
+	min-width: 160px;
+	padding: 12px 16px;
+	border: 2px solid #fff;
+	color: #fff;
+}
+
+
+QComboBox::drop-down {
+	border-left-width: 0px;
+    border-left-color: none;
+    border-left-style: solid; /* just a single line */
+	margin-right: 10px;
+
+}
+
+QComboBox::down-arrow {
+    image: url(/Users/resa/Projekte/Korensics/arrow.png);
+	height: 100px;
+}</string>
+              </property>
+              <item>
+               <property name="text">
+                <string>FFT Correlation</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Naive Bayes</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Support Vector Machine</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Neural Network</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="evaluate">
+              <property name="styleSheet">
+               <string notr="true">QPushButton{
+	background-color: #009999;
+	min-width: 160px;
+	padding: 12px 16px;
+	border: 2px solid #fff;
+	color: #fff;
+}
+
+QPushButton:hover {
+	background-color: #75bdc3;
+}</string>
+              </property>
+              <property name="text">
+               <string>EVALUATE</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="save_statistics">
+              <property name="styleSheet">
+               <string notr="true">QPushButton {
+	display: none;
+	background-color: #393939;
+	min-width: 160px;
+	padding: 12px 16px;
+	border: 2px solid #fff;
+	color: #fff;
+}
+
+QPushButton:hover {
+	background-color: #777777;
+}</string>
+              </property>
+              <property name="text">
+               <string>save statistics</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="verticalSpacer_5">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="QListWidget" name="listWidget_3"/>
+          </item>
+         </layout>
+        </widget>
+       </widget>
+       <widget class="QWidget" name="tab_4">
+        <attribute name="title">
+         <string>Inspection</string>
+        </attribute>
+        <widget class="QWidget" name="horizontalLayoutWidget_4">
+         <property name="geometry">
+          <rect>
+           <x>0</x>
+           <y>0</y>
+           <width>911</width>
+           <height>591</height>
+          </rect>
+         </property>
+         <layout class="QHBoxLayout" name="horizontalLayout_4">
+          <item>
+           <layout class="QVBoxLayout" name="verticalLayout_5">
+            <property name="spacing">
+             <number>-1</number>
+            </property>
+            <property name="leftMargin">
+             <number>15</number>
+            </property>
+            <property name="topMargin">
+             <number>30</number>
+            </property>
+            <property name="rightMargin">
+             <number>15</number>
+            </property>
+            <property name="bottomMargin">
+             <number>15</number>
+            </property>
+            <item>
+             <widget class="QPushButton" name="load_image">
+              <property name="styleSheet">
+               <string notr="true">QPushButton{
+	background-color: #009999;
+	min-width: 160px;
+	padding: 12px 16px;
+	border: 2px solid #fff;
+	color: #fff;
+}
+
+QPushButton:hover {
+	background-color: #75bdc3;
+}</string>
+              </property>
+              <property name="text">
+               <string>LOAD image</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QComboBox" name="inspection_method">
+              <property name="styleSheet">
+               <string notr="true">QComboBox {
+	background-color: #777777;
+	min-width: 160px;
+	padding: 12px 16px;
+	border: 2px solid #fff;
+	color: #fff;
+}
+
+
+QComboBox::drop-down {
+	border-left-width: 0px;
+    border-left-color: none;
+    border-left-style: solid; /* just a single line */
+	margin-right: 10px;
+
+}
+
+QComboBox::down-arrow {
+    image: url(/Users/resa/Projekte/Korensics/arrow.png);
+	height: 100px;
+}</string>
+              </property>
+              <item>
+               <property name="text">
+                <string>FFT Correlation</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Bayes Classifier</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Support Vector Machine</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Neural Networks</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="inspect">
+              <property name="styleSheet">
+               <string notr="true">QPushButton{
+	background-color: #009999;
+	min-width: 160px;
+	padding: 12px 16px;
+	border: 2px solid #fff;
+	color: #fff;
+}
+
+QPushButton:hover {
+	background-color: #75bdc3;
+}</string>
+              </property>
+              <property name="text">
+               <string>INSPECT</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="save_results">
+              <property name="styleSheet">
+               <string notr="true">QPushButton {
+	display: none;
+	background-color: #393939;
+	min-width: 160px;
+	padding: 12px 16px;
+	border: 2px solid #fff;
+	color: #fff;
+}
+
+QPushButton:hover {
+	background-color: #777777;
+}</string>
+              </property>
+              <property name="text">
+               <string>save results</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="verticalSpacer_8">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="QListWidget" name="listWidget_4"/>
+          </item>
+         </layout>
+        </widget>
+       </widget>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>937</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="autoFillBackground">
+    <bool>false</bool>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
+   <widget class="QMenu" name="menuData">
+    <property name="title">
+     <string>Data</string>
+    </property>
+    <addaction name="actionload"/>
+    <addaction name="actionimport"/>
+   </widget>
+   <widget class="QMenu" name="menuKnowledge">
+    <property name="title">
+     <string>Learning</string>
+    </property>
+    <addaction name="actiontrain"/>
+    <addaction name="actionimport_2"/>
+   </widget>
+   <widget class="QMenu" name="menuTest">
+    <property name="title">
+     <string>Evaluation</string>
+    </property>
+    <addaction name="actionevaluate"/>
+   </widget>
+   <widget class="QMenu" name="menuInspection">
+    <property name="title">
+     <string>Inspection</string>
+    </property>
+    <addaction name="actionload_document"/>
+    <addaction name="actioninspect"/>
+   </widget>
+   <widget class="QMenu" name="menuAbout">
+    <property name="title">
+     <string>About</string>
+    </property>
+   </widget>
+   <widget class="QMenu" name="menuIntroduction">
+    <property name="title">
+     <string>Instruction</string>
+    </property>
+   </widget>
+   <addaction name="menuIntroduction"/>
+   <addaction name="menuData"/>
+   <addaction name="menuKnowledge"/>
+   <addaction name="menuTest"/>
+   <addaction name="menuInspection"/>
+   <addaction name="menuAbout"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionload">
+   <property name="text">
+    <string>load</string>
+   </property>
+  </action>
+  <action name="actionimport">
+   <property name="text">
+    <string>import data</string>
+   </property>
+  </action>
+  <action name="actiontrain">
+   <property name="text">
+    <string>train</string>
+   </property>
+  </action>
+  <action name="actionimport_2">
+   <property name="text">
+    <string>import knowledge</string>
+   </property>
+  </action>
+  <action name="actionevaluate">
+   <property name="text">
+    <string>evaluate</string>
+   </property>
+  </action>
+  <action name="actionload_document">
+   <property name="text">
+    <string>load image</string>
+   </property>
+  </action>
+  <action name="actioninspect">
+   <property name="text">
+    <string>inspect</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>load</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>loadDB()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>200</x>
+     <y>159</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-2</x>
+     <y>120</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>export_data</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>saveSpectra()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>157</x>
+     <y>206</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1</x>
+     <y>193</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>import_data</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>getSpectra()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>25</x>
+     <y>246</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-4</x>
+     <y>238</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>loadDB()</slot>
+  <slot>saveSpectra()</slot>
+  <slot>getSpectra()</slot>
+ </slots>
+</ui>

@@ -3,7 +3,7 @@ from PyQt5.QtGui import QImage, QPixmap, QIcon
 from PyQt5.QtWidgets import QApplication, QWidget, QLabel
 
 from config import *
-from model import inspector
+from src import inspector
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
@@ -12,7 +12,7 @@ from matplotlib.pyplot import *
 import os
 from ftplib import FTP
 
-from model import inspector
+from src import inspector
 
 dbimport = False  # True: imgs from ftp server, False: imgs from local folder
 

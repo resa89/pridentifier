@@ -4,7 +4,7 @@ from matplotlib.pyplot import *
 import os
 from ftplib import FTP
 
-from model import inspector
+from src import inspector
 
 dbimport = False  # True: imgs from ftp server, False: imgs from local folder
 
