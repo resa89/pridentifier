@@ -1,26 +1,14 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'pridentifier2.ui'
+# Form implementation generated from reading ui file 'priGUI.ui'
 #
 # Created by: PyQt5 UI code generator 5.8.2
 #
 # WARNING! All changes made in this file will be lost!
+
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-import pandas as pd
-from PyQt5.QtGui import QImage, QPixmap, QIcon
-from PyQt5.QtWidgets import QApplication, QWidget, QLabel
-
-from config import *
-from model import inspector
-
-
 class Ui_MainWindow(object):
-    def __init__(self):
-        super(Ui_MainWindow, self).__init__()
-        print("Number of Pixels: ", nr_pixels)
-        self.inspector = inspector.Inspector()
-
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(937, 630)
@@ -817,17 +805,17 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
         self.tabWidget.setCurrentIndex(0)
-        self.button_loadData.clicked.connect(self.loadData)
-        self.button_exportData.clicked.connect(self.saveSpectra)
-        self.button_importData.clicked.connect(self.getSpectra)
-        self.button_evaluate.clicked.connect(self.showStat)
-        self.button_loadImage.clicked.connect(self.loadImg)
-        self.button_importKnowledge.clicked.connect(self.getCorrelation)
-        self.button_exportKnowledge.clicked.connect(self.saveCorrelation)
-        self.button_saveStatistics.clicked.connect(self.saveStat)
-        self.button_saveResults.clicked.connect(self.saveResult)
-        self.button_train.clicked.connect(self.training)
-        self.button_inspect.clicked.connect(self.inspection)
+        self.button_loadData.clicked.connect(MainWindow.loadData)
+        self.button_exportData.clicked.connect(MainWindow.saveSpectra)
+        self.button_importData.clicked.connect(MainWindow.getSpectra)
+        self.button_evaluate.clicked.connect(MainWindow.showStat)
+        self.button_loadImage.clicked.connect(MainWindow.loadImg)
+        self.button_importKnowledge.clicked.connect(MainWindow.getCorrelation)
+        self.button_exportKnowledge.clicked.connect(MainWindow.saveCorrelation)
+        self.button_saveStatistics.clicked.connect(MainWindow.saveStat)
+        self.button_saveResults.clicked.connect(MainWindow.saveResult)
+        self.button_train.clicked.connect(MainWindow.training)
+        self.button_inspect.clicked.connect(MainWindow.inspection)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -867,307 +855,3 @@ class Ui_MainWindow(object):
         self.actionload_document.setText(_translate("MainWindow", "load image"))
         self.actioninspect.setText(_translate("MainWindow", "inspect"))
 
-
-
-
-
-    def showFingerprints(self):
-
-        qimg_1 = QtGui.QImage()
-        qimg_2 = QtGui.QImage()
-        qimg_3 = QtGui.QImage()
-        qimg_4 = QtGui.QImage()
-
-        filename_1 = ROOTDIR + "/../../fingerprints/Brother_merged_multi.png"
-        filename_2 = ROOTDIR + "/../../fingerprints/Canon_MX870_merged_multi.png"
-        filename_3 = ROOTDIR + "/../../fingerprints/Canon_Pro_merged_multi.png"
-        filename_4 = ROOTDIR + "/../../fingerprints/HP_merged_multi.png"
-
-        qimg_1.load(filename_1)
-        qimg_2.load(filename_2)
-        qimg_3.load(filename_3)
-        qimg_4.load(filename_4)
-
-        # Create widget
-        fingerprint_1 = QPixmap.fromImage(qimg_1)
-        fingerprint_2 = QPixmap.fromImage(qimg_2)
-        fingerprint_3 = QPixmap.fromImage(qimg_3)
-        fingerprint_4 = QPixmap.fromImage(qimg_4)
-
-
-        self.label_evaluation1.setPixmap(fingerprint_1.scaled(
-            self.label_evaluation1.size(), QtCore.Qt.KeepAspectRatio,
-            QtCore.Qt.SmoothTransformation))
-        self.label_evaluation2.setPixmap(fingerprint_2.scaled(
-            self.label_evaluation2.size(), QtCore.Qt.KeepAspectRatio,
-            QtCore.Qt.SmoothTransformation))
-        self.label_evaluation3.setPixmap(fingerprint_3.scaled(
-            self.label_evaluation3.size(), QtCore.Qt.KeepAspectRatio,
-            QtCore.Qt.SmoothTransformation))
-        self.label_evaluation4.setPixmap(fingerprint_4.scaled(
-            self.label_evaluation4.size(), QtCore.Qt.KeepAspectRatio,
-            QtCore.Qt.SmoothTransformation))
-
-        self.label_evaluation1_text.setText("Brother")
-        self.label_evaluation2_text.setText("Canon_MX870")
-        self.label_evaluation3_text.setText("Canon_Pro")
-        self.label_evaluation4_text.setText("HP")
-
-
-    def loadData(self):
-        # print(DIRS)
-        #filter = "Folder with folders representing each class (*.*)"
-        dialog = QtWidgets.QFileDialog()
-        path = dialog.getExistingDirectory(directory='..', options=QtWidgets.QFileDialog.ShowDirsOnly)
-
-        if path:
-            self.inspector.loadData(path)
-            self.progressBar_loadingData.setValue(100)
-
-            # numbers of loaded data
-            self.loadTable(self.tableWidget_data)
-
-    def loadTable(self, tableWidget):
-        tableWidget.setRowCount(3)
-        # set column count
-        tableWidget.setColumnCount(int(len(self.inspector.printer_types)))
-
-        #name columns
-        for i in range(len(self.inspector.printer_types)):
-            tableWidget.setHorizontalHeaderItem(i, QtWidgets.QTableWidgetItem(self.inspector.printer_types[i]))
-        tableWidget.resizeColumnsToContents()
-
-        #col = []
-        #col.append('number of documents')
-        #col.append('segments:')
-
-        # name rows
-        #for i in range(len(col)):
-        tableWidget.setRowCount(1)
-        tableWidget.setVerticalHeaderItem(0, QtWidgets.QTableWidgetItem('segments:'))
-
-        # compute and write stats for every printer
-        for i in range(len(self.inspector.printer_types)):
-            #tableWidgeta.setItem(0,i, QtWidgets.QTableWidgetItem(str(self.inspector.data_detailed.shape[0]) + "segments"))
-            tableWidget.setItem(0,i, QtWidgets.QTableWidgetItem(str(int(self.inspector.data_detailed.shape[0]/4)))) #ToDo: check segment amount per printer
-
-    def saveSpectra(self):
-
-        self.inspector.saveSpectra()
-
-    def getSpectra(self):
-        filter = "Folder which contains the data_detailed.pkl and data_merged.pkl files. (*.*)"
-        path = QtWidgets.QFileDialog.getExistingDirectory(directory='..', options=QtWidgets.QFileDialog.ShowDirsOnly)
-        print('selected path to get data: ', path)
-
-        if path:
-            self.inspector.getSpectra(path)
-            self.progressBar_loadingData.setValue(100)
-            self.loadTable(self.tableWidget_data)
-
-
-    def training(self):
-
-        self.inspector.training()
-        self.progressBar_loadingTraining.setValue(100)
-        self.tableWidget_learning
-
-    def getCorrelation(self):
-
-        filter = "Folder which contains the data_detailed.pkl and data_merged.pkl files. (*.*)"
-        path = QtWidgets.QFileDialog.getExistingDirectory(directory='..', options=QtWidgets.QFileDialog.ShowDirsOnly)
-        #path = "/Users/resa/Projekte/Korensics/02-Pridentifier/generated_data"
-        print('selected path to get data: ', path)
-
-        if path:
-            self.inspector.getCorrelation(path)
-            self.progressBar_loadingTraining.setValue(100)
-            self.loadTable(self.tableWidget_learning)
-
-
-
-    def saveCorrelation(self):
-
-        self.inspector.saveCorrelation()
-
-
-    def showStat(self):
-
-        self.showFingerprints()
-        newstr = []
-
-        if add_all_fft:
-            col = []
-            col.append('true positive')
-            col.append('false negative')
-            #col.append('fall out')
-            col.append('accuracy')
-            #col.append('failure')
-            col.append('printer')
-
-            #self.tableWidget = QTableWidget()
-            # set row count
-            self.tableWidget_evaluation.setRowCount(int(len(col)-1))
-            # set column count
-            self.tableWidget_evaluation.setColumnCount(int(len(self.inspector.printer_types)))
-
-
-            # name columns
-            for i in range(len(self.inspector.printer_types)):
-                self.tableWidget_evaluation.setHorizontalHeaderItem(i, QtWidgets.QTableWidgetItem(self.inspector.printer_types[i]))
-            self.tableWidget_evaluation.resizeColumnsToContents()
-
-            # name rows
-            for i in range(len(col)-1):
-                self.tableWidget_evaluation.setVerticalHeaderItem(i, QtWidgets.QTableWidgetItem(col[i]))
-
-            # compute and write stats for every printer
-            for i in range(len(self.inspector.printer_types)):
-                amount_pos = self.inspector.correctPositiveTrain[i] + self.inspector.falseNegativeTrain[i]
-                amount_neg = self.inspector.correctNegativeTrain[i] + self.inspector.falsePositiveTrain[i]
-                amount_all = amount_neg + amount_pos
-
-                true_positive = 100*self.inspector.correctPositiveTrain[i] / amount_pos
-                miss_rate = 100*self.inspector.falseNegativeTrain[i] / amount_pos
-                #fall_out = 100*self.inspector.falsePositiveTrain[i] / (self.inspector.falsePositiveTrain[i] + self.inspector.correctNegativeTrain[i])
-                accuracy = 100*(self.inspector.correctPositiveTrain[i]+self.inspector.correctNegativeTrain[i]) / amount_all
-                #failure = 100*(self.inspector.falsePositiveTrain[i] + self.inspector.falseNegativeTrain[i]) / amount_all
-
-                self.tableWidget_evaluation.setItem(0,i, QtWidgets.QTableWidgetItem(str(true_positive) + "%"))
-                self.tableWidget_evaluation.setItem(1,i, QtWidgets.QTableWidgetItem(str(miss_rate) + "%"))
-                #self.tableWidget_evaluation.setItem(2,i, QtWidgets.QTableWidgetItem(str(fall_out) + "%"))
-                self.tableWidget_evaluation.setItem(2,i, QtWidgets.QTableWidgetItem(str(accuracy) + "%"))
-                #self.tableWidget_evaluation.setItem(4,i, QtWidgets.QTableWidgetItem(str(failure) + "%"))
-
-
-
-    def saveStat(self):
-
-        if add_all_fft:
-
-            statistics = pd.DataFrame(columns=col)
-
-            for i in range(0, len(self.inspector.printer_types)):
-                #print("TRAIN SET")
-                amount_pos = self.inspector.correctPositiveTrain[i] + self.inspector.falseNegativeTrain[i]
-                amount_neg = self.inspector.correctNegativeTrain[i] + self.inspector.falsePositiveTrain[i]
-                amount_all = amount_neg + amount_pos
-
-                true_positive = 100*self.inspector.correctPositiveTrain[i] / amount_pos
-                miss_rate = 100*self.inspector.falseNegativeTrain[i] / amount_pos
-                #fall_out = 100*self.inspector.falsePositiveTrain[i] / (self.inspector.falsePositiveTrain[i] + self.inspector.correctNegativeTrain[i])
-                accuracy = 100*(self.inspector.correctPositiveTrain[i]+self.inspector.correctNegativeTrain[i]) / amount_all
-                #failure = 100*(self.inspector.falsePositiveTrain[i] + self.inspector.falseNegativeTrain[i]) / amount_all
-
-                # print(self.inspector.printer_types[i], "############################")
-                print("Hit Rate: %d %s" % (true_positive, "%"))
-                print("Miss Rate: %d %s" % (miss_rate, "%"))
-                #print("Fallout: %d %s" % (fall_out, "%"))
-                print("-------------------------------")
-                print("Accuracy: %d %s" % (accuracy, "%"))
-                #print("Classification Failure: %d %s" % (failure, "%"))
-
-                statistics.loc[i] = np.array([true_positive,miss_rate,accuracy,self.inspector.printer_types[i]])
-
-            statistics.to_pickle(SUBPATH+"/statistics.pkl")
-                #line6 = "TEST SET"
-                #line7 = self.inspector.printer_types[i]
-                #line111 = "Hit Rate: %d %s" % (100*correctPositiveTest[i] / (correctPositiveTest[i] + falseNegativeTest[i]), "%")
-                #line112 = "Accuracy: %d %s" % (100*correctPositiveTest[i] / (correctPositiveTest[i] + falsePositiveTest[i]), "%")
-                #line113 = "Fallout: %d %s" % (100*falsePositiveTest[i] / (falsePositiveTest[i] + correctNegativeTest[i]), "%")
-                #newstr.append("\n".join(("                                                            ".join((line0)),"                                                            ".join((line1)),"          ".join((line2)),"         ".join((line3)),"                    ".join((line4)),"                    ".join((line5)),"                                                        ".join((line6)),"                                                        ".join((line7)))))
-
-
-
-    def loadImg(self):
-
-        filename = QtWidgets.QFileDialog.getOpenFileName(filter='Images (*.png *.xpm *.jpg)')
-        #filename = "/Users/resa/Projekte/Korensics/02-Pridentifier/data/images/id_mini/HP/idcard_11.jpg"
-        #print("load from ", filename)
-
-        if filename:
-            questioned_image = self.inspector.loadImg(filename)
-
-            # Create widget
-            if questioned_image:
-                pixmap = QPixmap.fromImage(questioned_image)
-                #self.label_inspection.setPixmap(pixmap)
-                #self.label_inspection.setScaledContents(True)
-                self.label_inspection.setPixmap(pixmap.scaled(
-                    self.label_inspection.size(), QtCore.Qt.KeepAspectRatio,
-                    QtCore.Qt.SmoothTransformation))
-
-                self.label_inspection.setAlignment(QtCore.Qt.AlignCenter)
-                self.tableWidget_inspection.clear()
-                #self.inspection()
-
-
-
-    def inspection(self):
-
-        hitsPerClassOfInspectedSegments = self.inspector.inspection()
-
-        if hitsPerClassOfInspectedSegments:
-            col = []
-            col.append('Classified Segments')
-            #col.append('false negative')
-            #col.append('fall out')
-            #col.append('accuracy')
-            #col.append('failure')
-            col.append('Probability')
-
-            #self.tableWidget = QTableWidget()
-            # set row count
-            self.tableWidget_inspection.setRowCount(2)
-            # set column count
-            self.tableWidget_inspection.setColumnCount(int(len(self.inspector.printer_types)))
-
-
-            # name columns
-            for i in range(len(self.inspector.printer_types)):
-                self.tableWidget_inspection.setHorizontalHeaderItem(i, QtWidgets.QTableWidgetItem(self.inspector.printer_types[i]))
-            self.tableWidget_inspection.resizeColumnsToContents()
-
-            # name rows
-            for i in range(len(col)):
-                self.tableWidget_inspection.setVerticalHeaderItem(i, QtWidgets.QTableWidgetItem(col[i]))
-
-            all_seg = np.sum(np.sum(hitsPerClassOfInspectedSegments))
-            # compute and write stats for every printer
-            for i in range(len(self.inspector.printer_types)):
-
-                self.tableWidget_inspection.setItem(0,i, QtWidgets.QTableWidgetItem(str(hitsPerClassOfInspectedSegments[i])))
-                self.tableWidget_inspection.setItem(1,i, QtWidgets.QTableWidgetItem(str(hitsPerClassOfInspectedSegments[i]/all_seg *100) + "%"))
-
-
-
-    def saveResult(self):
-
-        self.inspector.saveResult()
-
-
-
-def main():
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    Window = QtWidgets.QMainWindow()
-    ui = Ui_MainWindow()
-    ui.setupUi(Window)
-    Window.show()
-    sys.exit(app.exec_())
-    app.exit()
-
-def code_view():
-
-    inspects = inspector.Inspector()
-    inspects.getCorrelation()
-    inspects.loadImg()
-    inspects.inspection()
-
-    print("This is for testing...")
-    print("This is for testing...")
-
-
-if __name__ == '__main__':
-    main()
-    #code_view()

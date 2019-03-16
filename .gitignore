@@ -3,3 +3,8 @@
 .idea/*
 images/*
 *.pyc
+*.png
+*/*.png
+*/*/*.png
+*/*/*/*.png
+*/*/*/*/*.png
