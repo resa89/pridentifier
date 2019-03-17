@@ -1,24 +1,19 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'pridentifier2.ui'
-#
-# Created by: PyQt5 UI code generator 5.8.2
-#
-# WARNING! All changes made in this file will be lost!
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 import pandas as pd
 from PyQt5.QtGui import QPixmap
 
 from config import *
-from src import inspector
+from src.objects import pridentifier
 
 
 class Ui_MainWindow(object):
     def __init__(self):
         super(Ui_MainWindow, self).__init__()
         print("Number of Pixels: ", NUMBER_PIXELS)
-        self.inspector = inspector.Inspector()
+        self.pridentifier = pridentifier.Pridentifier()
 
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -920,7 +915,7 @@ class Ui_MainWindow(object):
         path = dialog.getExistingDirectory(directory='..', options=QtWidgets.QFileDialog.ShowDirsOnly)
 
         if path:
-            self.inspector.loadData(path)
+            self.pridentifier.load_images(path)
             self.progressBar_loadingData.setValue(100)
 
             # numbers of loaded data

@@ -2,38 +2,40 @@ from matplotlib.pyplot import *
 import os
 from ftplib import FTP
 
-dbimport = False  # True: imgs from ftp server, False: imgs from local folder
+# [1] build parameters (constants)
+DB_IMPORT = False    # True: imgs from ftp server, False: imgs from local folder
+ACCUMULATED_SPECTRA = True  # method: adding spectra
+TRAINING = True     # if False: then generating test dataset statistics
+pca_amount = 20     # method: pca
 
-# parameter for snippet features
-snippet_w = 512
-nr_pixels = 10000
-scale_fft = False
+# [2] user-configurable runtime parameters (constants)
+SNIPPET_WIDTH = 512
+NUMBER_PIXELS = 10000
+SUBPATH = 'data/runtime'
 
-# method: adding spectra
-add_all_fft = True
+# [3] system-configurable runtime parameters (global variables in one module)
+PRINTER_TYPES = np.array(())
+NUMBER_OF_CLASSES = 0
 
-# method: pca
-pca_amount = 20
 
-TRAINING = True  # if False: then generating test dataset statistics
+# path handling
+if DB_IMPORT:
+    #setupDB()
+    ROOTDIR = FTP.pwd()
+    DIRS = FTP.nlst()
+else:
+    pwd = os.getcwd()
+    ROOTDIR = pwd #+ '/../data/images/idcards-testset'  # id #idcards_all
+    #SUBPATH = 'the_same_large'
+    DIRS = os.listdir(ROOTDIR)
 
+
+
+# statistical analysis and result
 col = [i for i in range(1024)]
 col_large = [i for i in range(512*512)]
 col.append('name')
 col_large.append('name')
-
-printer_types = np.array(())
-
-## path handling
-#if dbimport:
-#    #setupDB()
-#    ROOTDIR = FTP.pwd()
-#    DIRS = FTP.nlst()
-#else:
-pwd = os.getcwd()
-ROOTDIR = pwd #+ '/../data/images/idcards-testset'  # id #idcards_all
-SUBPATH = 'the_same_large'
-DIRS = os.listdir(ROOTDIR)
 
 # correctPositiveTrain = [0 for i in xrange(len(dirs))]  statt 5
 correctPositiveTrain = [0 for i in range(len(DIRS))]
@@ -47,6 +49,7 @@ falseNegativeTest = [0 for i in range(len(DIRS))]
 
 hitsPerClassOfInspectedSegments = [0 for i in range(len(DIRS))]
 
-# length of features for each printer
-train_feature_length = [0 for i in range(len(DIRS))]
-test_feature_length = [0 for i in range(len(DIRS))]
+train_feature_length = [0 for i in range(len(DIRS))]    # length of features for each printer
+test_feature_length = [0 for i in range(len(DIRS))]     # length of features for each printer
+
+

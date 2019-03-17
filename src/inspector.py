@@ -1,52 +1,15 @@
 import copy
 import math
-import os
 
 import pandas as pd
 import skimage
 import skimage.io
 from PIL import Image
 from PyQt5 import QtGui, QtWidgets
-from matplotlib.pyplot import *
 
 from src import hka
 
-#from config import *
-
-dbimport = False  # True: imgs from ftp server, False: imgs from local folder
-
-# parameter for snippet features
-snippet_w = 512
-nr_pixels = 10000
-scale_fft = False
-
-# method: adding spectra
-add_all_fft = True
-
-# method: pca
-pca_amount = 20
-
-TRAINING = True  # if False: then generating test dataset statistics
-
-col = [i for i in range(1024)]
-col_large = [i for i in range(512*512)]
-col.append('name')
-col_large.append('name')
-
-
-
-## path handling
-#if dbimport:
-#    #setupDB()
-#    ROOTDIR = FTP.pwd()
-#    DIRS = FTP.nlst()
-#else:
-pwd = os.getcwd()
-ROOTDIR = pwd # + '/../data/images/idcards-testset'  # id #idcards_all
-SUBPATH = 'the_same_large'
-DIRS = os.listdir(ROOTDIR)
-
-
+from config import *
 
 
 class Inspector(object):
@@ -131,8 +94,8 @@ class Inspector(object):
                 imgs = os.listdir(path + '/' + curr)
                 printer_number = np.where(self.printer_types == curr)[0][0]
                 # if len(imgs) >= 70:
-                magnitude_all = np.zeros((snippet_w, snippet_w))
-                magnitude_all_multi = np.ones((snippet_w, snippet_w))
+                magnitude_all = np.zeros((SNIPPET_WIDTH, SNIPPET_WIDTH))
+                magnitude_all_multi = np.ones((SNIPPET_WIDTH, SNIPPET_WIDTH))
 
                 for img in imgs:
                     if img == '.DS_Store':
@@ -156,7 +119,7 @@ class Inspector(object):
                             continue
 
                         # number of pixels per segents
-                        nperseg = [snippet_w, snippet_w]  # [512,512]
+                        nperseg = [SNIPPET_WIDTH, SNIPPET_WIDTH]  # [512,512]
 
                         # number of pixels which overlap
                         noverlap = np.empty([2], dtype=int)
@@ -220,7 +183,7 @@ class Inspector(object):
                                 fshift = np.fft.fftshift(f)
                                 magnitude_spectrum = 20 * np.log(np.abs(fshift))
 
-                                if add_all_fft:
+                                if ACCUMULATED_SPECTRA:
                                     # darken region around axis
                                     middle = int(magnitude_spectrum.shape[0] / 2)
                                     magnitude_spectrum[middle - 5:middle + 5, :] = magnitude_spectrum.min()
@@ -243,23 +206,18 @@ class Inspector(object):
                                     # add class to list
                                     # save spectrum in data (magnitude_spectrum or fshift ?)
                                     # range(241,272,1)
-                                    if not scale_fft:
-                                        magnitude_cut = magnitude_spectrum[:,
-                                                        range(96, 160, 1)]  # 192,320,4 for snippet-size 512,512
-                                        # 64,192,4 for snippet-size: 256,256
-                                        magnitude_cut = magnitude_cut[range(96, 160, 1),
-                                                        :]  # 192,320,4 for snippet-size 512,512
-                                        # 64,192,4 for snippet-size: 256,256
-                                    else:
-                                        magnitude_cut = magnitude_spectrum[:, range(96, 160, 1)]
-                                        magnitude_cut = magnitude_cut[range(96, 160, 1), :]
-                                        magnitude_cut = magnitude_cut.reshape(1024)
+                                    magnitude_cut = magnitude_spectrum[:,
+                                                    range(96, 160, 1)]  # 192,320,4 for snippet-size 512,512
+                                    # 64,192,4 for snippet-size: 256,256
+                                    magnitude_cut = magnitude_cut[range(96, 160, 1),
+                                                    :]  # 192,320,4 for snippet-size 512,512
+                                    # 64,192,4 for snippet-size: 256,256
 
                                     magnitude_list = magnitude_cut.tolist() + [curr]
                                     self.data.loc[a] = magnitude_list
                                 a = a + 1
 
-                if add_all_fft:
+                if ACCUMULATED_SPECTRA:
                     # add class and add one per printer to pandas dataframes
                     # norm additive + multiplied spectras
                     # magnitude_all = np.divide(magnitude_all, magnitude_all.max())
@@ -268,7 +226,7 @@ class Inspector(object):
                     idx = np.argsort(magnitude_all.flatten())
                     b = magnitude_all.flatten()[idx]
 
-                    threshold = b[b.size - nr_pixels]
+                    threshold = b[b.size - NUMBER_PIXELS]
 
                     min = magnitude_all.min()
                     # select only 1000 brightest pixel
@@ -294,7 +252,7 @@ class Inspector(object):
                     idx = np.argsort(magnitude_all_multi.flatten())
                     c = magnitude_all.flatten()[idx]
 
-                    threshold = c[c.size - nr_pixels]
+                    threshold = c[c.size - NUMBER_PIXELS]
                     min = magnitude_all_multi.min()
                     magnitude_all_multi[magnitude_all_multi < threshold] = min
 
@@ -325,7 +283,7 @@ class Inspector(object):
         path = QtWidgets.QFileDialog.getExistingDirectory(directory='..', options=QtWidgets.QFileDialog.ShowDirsOnly)
         print('selected path to save data: ', path)
 
-        if add_all_fft:
+        if ACCUMULATED_SPECTRA:
             if self.data_merged.empty == False:
                 try:
                     self.data_merged.to_pickle(path + "/data_merged.pkl")
@@ -352,7 +310,7 @@ class Inspector(object):
 
     def getSpectra(self, path):
 
-        if add_all_fft:
+        if ACCUMULATED_SPECTRA:
             try:
                 self.data_merged = pd.read_pickle(path + "/data_merged.pkl")
                 # self.data_merged_multi = pd.read_pickle(SUBPATH+"/data_merged_multi.pkl")
@@ -389,8 +347,8 @@ class Inspector(object):
         self.apriori = np.zeros((len(self.printer_types), 2))
 
     def training(self):
-        if add_all_fft:
-            data_normed = np.zeros((self.printer_types.size, snippet_w, snippet_w))
+        if ACCUMULATED_SPECTRA:
+            data_normed = np.zeros((self.printer_types.size, SNIPPET_WIDTH, SNIPPET_WIDTH))
             class_column = self.data_detailed.shape[1] - 1
             sum = np.zeros((self.printer_types.size))
 
@@ -400,7 +358,7 @@ class Inspector(object):
                 for p in range(self.printer_types.size):
                     # vector = np.array(np.divide(self.data_merged.ix[p,:-1],self.snippet_amount_perPrinter[p]))
                     vector = np.array(self.data_merged.ix[p, :-1])
-                    data_normed[p, :, :] = np.reshape(vector, (snippet_w, snippet_w))
+                    data_normed[p, :, :] = np.reshape(vector, (SNIPPET_WIDTH, SNIPPET_WIDTH))
                     sum[p] = np.sum(np.sum(data_normed[p]))
                     # data_normed[p,:,:] = np.divide(data_normed[p,:,:],sum[p])
                     # Training
@@ -572,7 +530,7 @@ class Inspector(object):
 
     def getCorrelation(self, path):
 
-        if add_all_fft:
+        if ACCUMULATED_SPECTRA:
             try:
                 self.data_merged = pd.read_pickle(path + "/data_merged.pkl")
                 # self.data_merged_multi = pd.read_pickle(SUBPATH+"/data_merged_multi.pkl")
@@ -624,7 +582,7 @@ class Inspector(object):
         path = QtWidgets.QFileDialog.getExistingDirectory(directory='..', options=QtWidgets.QFileDialog.ShowDirsOnly)
         print('selected path to save data: ', path)
 
-        if add_all_fft:
+        if ACCUMULATED_SPECTRA:
             if self.data_merged.empty == False:
                 try:
                     self.data_merged.to_pickle(path + "/data_merged.pkl")
@@ -703,8 +661,8 @@ class Inspector(object):
         segment_count[1] = (tmpGrey.shape[1] - noverlap[1]) // step[1]
 
         # if len(imgs) >= 70:
-        magnitude_all = np.zeros((snippet_w, snippet_w))
-        magnitude_all_multi = np.ones((snippet_w, snippet_w))
+        magnitude_all = np.zeros((SNIPPET_WIDTH, SNIPPET_WIDTH))
+        magnitude_all_multi = np.ones((SNIPPET_WIDTH, SNIPPET_WIDTH))
 
 
         # for(each segment in img): cut of segment
@@ -743,7 +701,7 @@ class Inspector(object):
                 fshift = np.fft.fftshift(f)
                 magnitude_spectrum = 20 * np.log(np.abs(fshift))
 
-                if add_all_fft:
+                if ACCUMULATED_SPECTRA:
                     # darken region around axis
                     middle = int(magnitude_spectrum.shape[0] / 2)
                     magnitude_spectrum[middle - 5:middle + 5, :] = magnitude_spectrum.min()
@@ -766,17 +724,12 @@ class Inspector(object):
                     # add class to list
                     # save spectrum in data (magnitude_spectrum or fshift ?)
                     # range(241,272,1)
-                    if not scale_fft:
-                        magnitude_cut = magnitude_spectrum[:,
-                                        range(96, 160, 1)]  # 192,320,4 for snippet-size 512,512
-                        # 64,192,4 for snippet-size: 256,256
-                        magnitude_cut = magnitude_cut[range(96, 160, 1),
-                                        :]  # 192,320,4 for snippet-size 512,512
-                        # 64,192,4 for snippet-size: 256,256
-                    else:
-                        magnitude_cut = magnitude_spectrum[:, range(96, 160, 1)]
-                        magnitude_cut = magnitude_cut[range(96, 160, 1), :]
-                        magnitude_cut = magnitude_cut.reshape(1024)
+                    magnitude_cut = magnitude_spectrum[:,
+                                    range(96, 160, 1)]  # 192,320,4 for snippet-size 512,512
+                    # 64,192,4 for snippet-size: 256,256
+                    magnitude_cut = magnitude_cut[range(96, 160, 1),
+                                    :]  # 192,320,4 for snippet-size 512,512
+                    # 64,192,4 for snippet-size: 256,256
 
                     magnitude_list = magnitude_cut.tolist() + ["Q"]
                     self.questioned.loc[a] = magnitude_list
@@ -798,8 +751,8 @@ class Inspector(object):
         # self.lbl2.show() # show loaded image in screen (too large)
 
     def inspection(self):
-        if add_all_fft:
-            data_normed = np.zeros((self.printer_types.size, snippet_w, snippet_w))
+        if ACCUMULATED_SPECTRA:
+            data_normed = np.zeros((self.printer_types.size, SNIPPET_WIDTH, SNIPPET_WIDTH))
             class_column = self.questioned_detailed.shape[1] - 1
             sum = np.zeros((self.printer_types.size))
 
@@ -808,7 +761,7 @@ class Inspector(object):
                 for p in range(self.printer_types.size):
                     # vector = np.array(np.divide(self.data_merged.ix[p,:-1],self.snippet_amount_perPrinter[p]))
                     vector = np.array(self.data_merged.ix[p, :-1])
-                    data_normed[p, :, :] = np.reshape(vector, (snippet_w, snippet_w))
+                    data_normed[p, :, :] = np.reshape(vector, (SNIPPET_WIDTH, SNIPPET_WIDTH))
                     sum[p] = np.sum(np.sum(data_normed[p]))
                     # data_normed[p,:,:] = np.divide(data_normed[p,:,:],sum[p])
                     # Training
