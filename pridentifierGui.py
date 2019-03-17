@@ -8,8 +8,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 import pandas as pd
-from PyQt5.QtGui import QImage, QPixmap, QIcon
-from PyQt5.QtWidgets import QApplication, QWidget, QLabel
+from PyQt5.QtGui import QPixmap
 
 from config import *
 from src import inspector

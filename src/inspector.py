@@ -42,7 +42,7 @@ col_large.append('name')
 #    DIRS = FTP.nlst()
 #else:
 pwd = os.getcwd()
-ROOTDIR = pwd + '/../data/images/idcards-testset'  # id #idcards_all
+ROOTDIR = pwd # + '/../data/images/idcards-testset'  # id #idcards_all
 SUBPATH = 'the_same_large'
 DIRS = os.listdir(ROOTDIR)
 

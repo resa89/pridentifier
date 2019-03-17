@@ -1,10 +1,6 @@
-from PyQt5 import QtCore, QtGui, QtWidgets
-
 from matplotlib.pyplot import *
 import os
 from ftplib import FTP
-
-from src import inspector
 
 dbimport = False  # True: imgs from ftp server, False: imgs from local folder
 
@@ -35,7 +31,7 @@ printer_types = np.array(())
 #    DIRS = FTP.nlst()
 #else:
 pwd = os.getcwd()
-ROOTDIR = pwd + '/../data/images/idcards-testset'  # id #idcards_all
+ROOTDIR = pwd #+ '/../data/images/idcards-testset'  # id #idcards_all
 SUBPATH = 'the_same_large'
 DIRS = os.listdir(ROOTDIR)
 
