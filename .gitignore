@@ -12,3 +12,4 @@ images/*
 */*.pkl
 */*/*.pkl
 */*/*/*.pkl
+data/*
