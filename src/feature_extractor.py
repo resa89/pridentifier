@@ -63,7 +63,7 @@ class FeatureExtractor(object):
                     # compute the accumulated fingerprint
                     np.add(self.accumulated_spectra, np.divide(spectrum, self.number_of_snippets))
 
-                    self.accumulated_spectra = self.darkenregion(self.accumulated_spectra)
+                    self.accumulated_spectra = self.darken_region(self.accumulated_spectra)
 
                     # save sampled spectra for training analysis later
                     df_all_segments = self.add_train_data(df_all_segments, spectrum, class_name, sample_no)
@@ -81,10 +81,8 @@ class FeatureExtractor(object):
 
         if len(img.shape) == 3 and img.shape[2] == 3:
             weight = [0.2,0.5,0.3] # weights
-            weighted_mean = np.tensordot(img,weihgt, axes=((-1,-1)))[...,None]
-            img[:] = weighted_mean.astype(img.dtype)
-
-        return(img)
+            weighted_mean = np.tensordot(img,weight, axes=((-1,-1)))[...,None]
+        return(weighted_mean)
 
     def compute_window(self, segment):
         # windowing function on segment
@@ -136,20 +134,22 @@ class FeatureExtractor(object):
 
         # preallocate df
         # create dataframe
-        df = pd.DataFrame(index=np.arange(0, number_of_rows), columns=df_header )
+        df = pd.DataFrame(index=np.arange(0, number_of_rows), columns=self.df_header )
         # TODO: check if is initilized with 0 or NAN
 
         return(df)
 
 
-    def add_train_data(self, df, train_data, spectrum, sample_no):
+    def add_train_data(self, train_data, spectrum, class_name, sample_no):
 
         # add segment fft to data_detailed
-        new_sample = spectrum.reshape(spectrum.size).tolist() + [self.class_name]
+        new_sample = spectrum.reshape(spectrum.size).tolist() + [class_name]
 
         #df.append(new_sample, ignore_index = True)
 
-        self.data_detailed.loc[sample_no] = new_sample
+        train_data.loc[sample_no] = new_sample
+
+        return(train_data)
 
 
 
@@ -163,7 +163,7 @@ class FeatureExtractor(object):
             file_name = folder + class_name + "_test.pkl"
 
         if not os.path.exists(folder):
-            os.mkdir(folder)
+            os.makedirs(folder)
 
         if os.path.isfile(file_name):
             unpickled_df = pd.read_pickle(file_name)
@@ -194,7 +194,8 @@ class FeatureExtractor(object):
         # magnitude_all_multi[magnitude_all_multi<threshold] = min
 
         magnitude_all = magnitude_all - magnitude_all.min()
-        magnitude_all = magnitude_all / magnitude_all.sum()
+        magnitude_all = magnitude_all / magnitude_all.max() #sum()
+        #TODO: check what was meant with sum()?
 
         fingerprint_df = pd.DataFrame(index=[0], columns=self.df_header)
         fingerprint_df.loc[0] = magnitude_all.reshape(magnitude_all.size).tolist() + [class_name]
@@ -206,7 +207,7 @@ class FeatureExtractor(object):
         path = SUBPATH + '/fingerprint/'
 
         if not os.path.exists(path):
-            os.mkdir(path)
+            os.makedirs(path)
 
         if train:
             img_path = path + class_name + "_fingerprint.png"
@@ -217,7 +218,13 @@ class FeatureExtractor(object):
 
         f_add.save(img_path, "PNG")
 
-        magnitude_all.to_pickle(data_path)
+        magnitude_df = pd.DataFrame(magnitude_all.reshape(magnitude_all.size).tolist() + [class_name])
+
+        magnitude_df.to_pickle(data_path)
+
+        self.fingerprint_png = f_add
+        self.accumulated_spectra = magnitude_all
+        #TODO: check if accumulated spectra is better before this function computations
 
 
 

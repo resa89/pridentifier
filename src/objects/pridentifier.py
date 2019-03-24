@@ -6,9 +6,9 @@ from ..inspector import Inspector
 
 
 class Pridentifier(object):
-    def __init__(self):
+    def __init__(self, path):
         # [1] classifier data
-        self.path = ''
+        self.path = path
         self.classes = []
         self.number_of_classes = 0
         self.fingerprints = []
@@ -24,9 +24,11 @@ class Pridentifier(object):
         # after test
         # after inspection
 
+        self.load_images(self.path)
+        self.extract_features()
+
 
     def load_images(self, path):
-        self.path = path
 
         # get classes information
         try:

@@ -33,6 +33,7 @@ class Fingerprint(object):
             img_path = self.path_to_images_of_class + '/' + image
             img = Image.open(img_path)
             width, height = img.size
+            # TODO: check order of width and height
             amount_snippets_x_axis = width / SNIPPET_WIDTH
             amount_snippets_y_axis = height / SNIPPET_WIDTH
             amount_snippets += amount_snippets_x_axis * amount_snippets_y_axis
