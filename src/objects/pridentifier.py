@@ -1,8 +1,6 @@
 import os
 
 from .fingerprint import Fingerprint
-from ..image_loader import ImageLoader
-from ..feature_extractor import FeatureExtractor
 from ..evaluator import Evaluator
 from ..inspector import Inspector
 
@@ -60,8 +58,10 @@ class Pridentifier(object):
 
 
     def extract_features(self):
-        self.feature_extractor = FeatureExtractor()
-        pass
+
+        for fingerprint in self.fingerprints:
+            fingerprint.extract_fingerprint()
+
 
 
     def evaluate(self):

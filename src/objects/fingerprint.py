@@ -3,6 +3,7 @@ import numpy as np
 from PIL import Image
 
 from config import SNIPPET_WIDTH
+from ..feature_extractor import FeatureExtractor
 
 
 class Fingerprint(object):
@@ -44,8 +45,15 @@ class Fingerprint(object):
 
 
     def extract_fingerprint(self):
-        pass
-        #self.accumulated_fingerprint =
+
+        feature_extractor = FeatureExtractor(self.path_to_images_of_class, self.img_names, self.number_of_snippets)
+        self.fingerprint = feature_extractor.get_accumulated_spectra()
+
+
+    def get_fingerprint(self):
+
+        return(self.fingerprint)
+
 
     def compare_to_fingerprint(self, questioned_snippet):
         pass

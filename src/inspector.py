@@ -183,95 +183,71 @@ class Inspector(object):
                                 fshift = np.fft.fftshift(f)
                                 magnitude_spectrum = 20 * np.log(np.abs(fshift))
 
-                                if ACCUMULATED_SPECTRA:
-                                    # darken region around axis
-                                    middle = int(magnitude_spectrum.shape[0] / 2)
-                                    magnitude_spectrum[middle - 5:middle + 5, :] = magnitude_spectrum.min()
-                                    magnitude_spectrum[:, middle - 5:middle + 5] = magnitude_spectrum.min()
+                                # darken region around axis
+                                middle = int(magnitude_spectrum.shape[0] / 2)
+                                magnitude_spectrum[middle - 5:middle + 5, :] = magnitude_spectrum.min()
+                                magnitude_spectrum[:, middle - 5:middle + 5] = magnitude_spectrum.min()
 
-                                    # norm: max = 1 (for one segment)
-                                    # mag_normed = np.divide(magnitude_spectrum,magnitude_spectrum.max())
-                                    # mag_shift = mag_normed - mag_normed.mean()
-                                    # mag_shift = np.divide(mag_shift, (mag_shift.max() - mag_shift.min()))
-                                    mag_shift = np.divide(magnitude_spectrum,
-                                                          segment_count[0] * segment_count[1] * len(imgs))
+                                # norm: max = 1 (for one segment)
+                                # mag_normed = np.divide(magnitude_spectrum,magnitude_spectrum.max())
+                                # mag_shift = mag_normed - mag_normed.mean()
+                                # mag_shift = np.divide(mag_shift, (mag_shift.max() - mag_shift.min()))
+                                mag_shift = np.divide(magnitude_spectrum,
+                                                      segment_count[0] * segment_count[1] * len(imgs))
 
-                                    # add and multiply cumulative
-                                    magnitude_all += mag_shift
-                                    magnitude_all_multi *= mag_shift
-                                    # add segment fft to data_detailed
-                                    self.data_detailed.loc[a] = magnitude_spectrum.reshape(
-                                            magnitude_spectrum.size).tolist() + [curr]
-                                else:
-                                    # add class to list
-                                    # save spectrum in data (magnitude_spectrum or fshift ?)
-                                    # range(241,272,1)
-                                    magnitude_cut = magnitude_spectrum[:,
-                                                    range(96, 160, 1)]  # 192,320,4 for snippet-size 512,512
-                                    # 64,192,4 for snippet-size: 256,256
-                                    magnitude_cut = magnitude_cut[range(96, 160, 1),
-                                                    :]  # 192,320,4 for snippet-size 512,512
-                                    # 64,192,4 for snippet-size: 256,256
+                                # add and multiply cumulative
+                                magnitude_all += mag_shift
+                                magnitude_all_multi *= mag_shift
+                                # add segment fft to data_detailed
+                                data_merged
 
-                                    magnitude_list = magnitude_cut.tolist() + [curr]
-                                    self.data.loc[a] = magnitude_list
-                                a = a + 1
+                # add class and add one per printer to pandas dataframes
+                # norm additive + multiplied spectras
+                # magnitude_all = np.divide(magnitude_all, magnitude_all.max())
+                # magnitude_all = magnitude_all - magnitude_all.mean()
+                # magnitude_all = np.divide(magnitude_all, (magnitude_all.max()-magnitude_all.min()))
+                idx = np.argsort(magnitude_all.flatten())
+                b = magnitude_all.flatten()[idx]
 
-                if ACCUMULATED_SPECTRA:
-                    # add class and add one per printer to pandas dataframes
-                    # norm additive + multiplied spectras
-                    # magnitude_all = np.divide(magnitude_all, magnitude_all.max())
-                    # magnitude_all = magnitude_all - magnitude_all.mean()
-                    # magnitude_all = np.divide(magnitude_all, (magnitude_all.max()-magnitude_all.min()))
-                    idx = np.argsort(magnitude_all.flatten())
-                    b = magnitude_all.flatten()[idx]
+                threshold = b[b.size - NUMBER_PIXELS]
 
-                    threshold = b[b.size - NUMBER_PIXELS]
+                min = magnitude_all.min()
+                # select only 1000 brightest pixel
+                magnitude_all[magnitude_all < threshold] = min
+                # magnitude_all_multi[magnitude_all_multi<threshold] = min
 
-                    min = magnitude_all.min()
-                    # select only 1000 brightest pixel
-                    magnitude_all[magnitude_all < threshold] = min
-                    # magnitude_all_multi[magnitude_all_multi<threshold] = min
+                magnitude_all = magnitude_all - magnitude_all.min()
+                magnitude_all = magnitude_all / magnitude_all.sum()
 
-                    magnitude_all = magnitude_all - magnitude_all.min()
-                    magnitude_all = magnitude_all / magnitude_all.sum()
+                self.data_merged.loc[printer_number] = magnitude_all.reshape(magnitude_all.size).tolist() + [curr]
+                # self.data_merged_multi.loc[printer_number] = magnitude_all_multi.reshape(magnitude_all_multi.size).tolist() + [curr]
 
-                    self.data_merged.loc[printer_number] = magnitude_all.reshape(magnitude_all.size).tolist() + [curr]
-                    # self.data_merged_multi.loc[printer_number] = magnitude_all_multi.reshape(magnitude_all_multi.size).tolist() + [curr]
+                # save image: merged frequency spectrum by addition
+                f_add = Image.fromarray(np.divide(magnitude_all, magnitude_all.max()) * 255).convert('RGB')
 
-                    # save image: merged frequency spectrum by addition
-                    f_add = Image.fromarray(np.divide(magnitude_all, magnitude_all.max()) * 255).convert('RGB')
+                # save image: merged frequency spectrum by addition
 
-                    # save image: merged frequency spectrum by addition
+                # use a threshold (only for visualization)
+                self.snippet_amount_perPrinter[printer_number] = segment_count[0] * segment_count[1] * len(imgs)
+                mean = np.divide(magnitude_all_multi.mean(), self.snippet_amount_perPrinter[printer_number])
 
-                    # use a threshold (only for visualization)
-                    self.snippet_amount_perPrinter[printer_number] = segment_count[0] * segment_count[1] * len(imgs)
-                    mean = np.divide(magnitude_all_multi.mean(), self.snippet_amount_perPrinter[printer_number])
+                # do the same for multiplied
+                idx = np.argsort(magnitude_all_multi.flatten())
+                c = magnitude_all.flatten()[idx]
 
-                    # do the same for multiplied
-                    idx = np.argsort(magnitude_all_multi.flatten())
-                    c = magnitude_all.flatten()[idx]
+                threshold = c[c.size - NUMBER_PIXELS]
+                min = magnitude_all_multi.min()
+                magnitude_all_multi[magnitude_all_multi < threshold] = min
 
-                    threshold = c[c.size - NUMBER_PIXELS]
-                    min = magnitude_all_multi.min()
-                    magnitude_all_multi[magnitude_all_multi < threshold] = min
+                magnitude_all_multi = magnitude_all_multi - min
+                magnitude_all_multi = magnitude_all_multi / magnitude_all_multi.sum()
 
-                    magnitude_all_multi = magnitude_all_multi - min
-                    magnitude_all_multi = magnitude_all_multi / magnitude_all_multi.sum()
+                # self.data_merged_multi.loc[printer_number] = magnitude_all_multi.reshape(magnitude_all_multi.size).tolist() + [curr]
 
-                    # self.data_merged_multi.loc[printer_number] = magnitude_all_multi.reshape(magnitude_all_multi.size).tolist() + [curr]
+                f_multi = Image.fromarray(magnitude_all_multi).convert('RGB')
+                f_add.save(curr + "_merged_add.png", "PNG")
+                f_multi.save(curr + "_merged_multi.png", "PNG")
 
-                    f_multi = Image.fromarray(magnitude_all_multi).convert('RGB')
-                    f_add.save(curr + "_merged_add.png", "PNG")
-                    f_multi.save(curr + "_merged_multi.png", "PNG")
-
-
-                else:
-                    if self.data.empty == False:
-                        self.data.to_pickle(curr + "/spectra.pkl")
-                        print("saved spectra!")
-                    else:
-                        print("Data is still empty, press load first.")
 
         print("load and prepare data finished!")
         # self.statusBar().showMessage('images are loaded.')
@@ -530,44 +506,34 @@ class Inspector(object):
 
     def getCorrelation(self, path):
 
-        if ACCUMULATED_SPECTRA:
-            try:
-                self.data_merged = pd.read_pickle(path + "/data_merged.pkl")
-                # self.data_merged_multi = pd.read_pickle(SUBPATH+"/data_merged_multi.pkl")
-                self.data_detailed = pd.read_pickle(path + "/data_detailed.pkl")
-            except FileNotFoundError:
-                print('No folder was selected. Canceled.')
-                return
+        try:
+            self.data_merged = pd.read_pickle(path + "/data_merged.pkl")
+            # self.data_merged_multi = pd.read_pickle(SUBPATH+"/data_merged_multi.pkl")
+            self.data_detailed = pd.read_pickle(path + "/data_detailed.pkl")
+        except FileNotFoundError:
+            print('No folder was selected. Canceled.')
+            return
 
-            class_column = self.data_detailed.shape[1] - 1
-            self.printer_types = []
-            self.printer_types = np.unique([printer for printer in self.data_detailed.ix[:, class_column]])
+        class_column = self.data_detailed.shape[1] - 1
+        self.printer_types = []
+        self.printer_types = np.unique([printer for printer in self.data_detailed.ix[:, class_column]])
 
-            self.printer_types = self.printer_types[np.argsort(self.printer_types[:])]
+        self.printer_types = self.printer_types[np.argsort(self.printer_types[:])]
 
-            if type(self.printer_types[0]) == np.bytes_:
-                self.printer_types = self.printer_types.astype(np.str_)
+        if type(self.printer_types[0]) == np.bytes_:
+            self.printer_types = self.printer_types.astype(np.str_)
 
-            #self.printer_types = self.printer_types[np.argsort(self.printer_types[:])]
-            self.snippet_amount_perPrinter = np.zeros((len(self.printer_types)))
-            for i in range(self.printer_types.shape[0]):
-                self.snippet_amount_perPrinter[i] = \
-                    self.data_detailed[self.data_detailed.ix[:, class_column] == self.printer_types[i]].shape[0]
+        #self.printer_types = self.printer_types[np.argsort(self.printer_types[:])]
+        self.snippet_amount_perPrinter = np.zeros((len(self.printer_types)))
+        for i in range(self.printer_types.shape[0]):
+            self.snippet_amount_perPrinter[i] = \
+                self.data_detailed[self.data_detailed.ix[:, class_column] == self.printer_types[i]].shape[0]
 
-            if self.data_merged.empty:
-                print("No knowledge found.")
-            else:
-                print("Got knowledge!")
-
+        if self.data_merged.empty:
+            print("No knowledge found.")
         else:
-            self.data = pd.read_pickle("B_additiveCorrelation_id_w512_1000px/spectra.pkl")
-            self.printer_types = np.unique([printer for printer in self.data.ix[:, 1024]])
-            self.printer_types = self.printer_types[np.argsort(self.printer_types[:])]
-            self.snippet_amount_perPrinter = np.zeros((len(self.printer_types)))
-            if self.data.empty:
-                print("No knowledge found.")
-            else:
-                print("Got knowlegde!")
+            print("Got knowledge!")
+
 
         self.mean = np.zeros((len(self.printer_types), pca_amount, 2))
         self.std = np.zeros((len(self.printer_types), pca_amount, 2))
@@ -582,30 +548,18 @@ class Inspector(object):
         path = QtWidgets.QFileDialog.getExistingDirectory(directory='..', options=QtWidgets.QFileDialog.ShowDirsOnly)
         print('selected path to save data: ', path)
 
-        if ACCUMULATED_SPECTRA:
-            if self.data_merged.empty == False:
-                try:
-                    self.data_merged.to_pickle(path + "/data_merged.pkl")
-                    # self.data_merged_multi.to_pickle(SUBPATH,"/data_merged_multi.pkl")
-                    self.data_detailed.to_pickle(path + "/data_detailed.pkl")
-                    print("saved merged spectra!")
-                except FileNotFoundError:
-                    print('No folder was selected. Canceled.')
-                    return
+        if self.data_merged.empty == False:
+            try:
+                self.data_merged.to_pickle(path + "/data_merged.pkl")
+                # self.data_merged_multi.to_pickle(SUBPATH,"/data_merged_multi.pkl")
+                self.data_detailed.to_pickle(path + "/data_detailed.pkl")
+                print("saved merged spectra!")
+            except FileNotFoundError:
+                print('No folder was selected. Canceled.')
+                return
 
-            else:
-                print("Data is still empty, press load first.")
         else:
-            if self.data.empty == False:
-                try:
-                    self.data.to_pickle(path + "/spectra.pkl")
-                    print("saved spectra!")
-                except FileNotFoundError:
-                    print('No folder was selected. Canceled.')
-                    return
-
-            else:
-                print("Data is still empty, press load first.")
+            print("Data is still empty, press load first.")
 
 
 
@@ -701,47 +655,25 @@ class Inspector(object):
                 fshift = np.fft.fftshift(f)
                 magnitude_spectrum = 20 * np.log(np.abs(fshift))
 
-                if ACCUMULATED_SPECTRA:
-                    # darken region around axis
-                    middle = int(magnitude_spectrum.shape[0] / 2)
-                    magnitude_spectrum[middle - 5:middle + 5, :] = magnitude_spectrum.min()
-                    magnitude_spectrum[:, middle - 5:middle + 5] = magnitude_spectrum.min()
+                # darken region around axis
+                middle = int(magnitude_spectrum.shape[0] / 2)
+                magnitude_spectrum[middle - 5:middle + 5, :] = magnitude_spectrum.min()
+                magnitude_spectrum[:, middle - 5:middle + 5] = magnitude_spectrum.min()
 
-                    # norm: max = 1 (for one segment)
-                    # mag_normed = np.divide(magnitude_spectrum,magnitude_spectrum.max())
-                    # mag_shift = mag_normed - mag_normed.mean()
-                    # mag_shift = np.divide(mag_shift, (mag_shift.max() - mag_shift.min()))
-                    mag_shift = np.divide(magnitude_spectrum,
-                                          segment_count[0] * segment_count[1] )
+                # norm: max = 1 (for one segment)
+                # mag_normed = np.divide(magnitude_spectrum,magnitude_spectrum.max())
+                # mag_shift = mag_normed - mag_normed.mean()
+                # mag_shift = np.divide(mag_shift, (mag_shift.max() - mag_shift.min()))
+                mag_shift = np.divide(magnitude_spectrum,
+                                      segment_count[0] * segment_count[1] )
 
-                    # add and multiply cumulative
-                    magnitude_all += mag_shift
-                    magnitude_all_multi *= mag_shift
-                    # add segment fft to data_detailed
-                    self.questioned_detailed.loc[a] = magnitude_spectrum.reshape(
-                            magnitude_spectrum.size).tolist() + ["Q"]
-                else:
-                    # add class to list
-                    # save spectrum in data (magnitude_spectrum or fshift ?)
-                    # range(241,272,1)
-                    magnitude_cut = magnitude_spectrum[:,
-                                    range(96, 160, 1)]  # 192,320,4 for snippet-size 512,512
-                    # 64,192,4 for snippet-size: 256,256
-                    magnitude_cut = magnitude_cut[range(96, 160, 1),
-                                    :]  # 192,320,4 for snippet-size 512,512
-                    # 64,192,4 for snippet-size: 256,256
+                # add and multiply cumulative
+                magnitude_all += mag_shift
+                magnitude_all_multi *= mag_shift
+                # add segment fft to data_detailed
+                self.questioned_detailed.loc[a] = magnitude_spectrum.reshape(
+                        magnitude_spectrum.size).tolist() + ["Q"]
 
-                    magnitude_list = magnitude_cut.tolist() + ["Q"]
-                    self.questioned.loc[a] = magnitude_list
-
-
-                    # save spectrum in data (magnitude_spectrum or fshift ?)
-                    # range(241,272,1)
-                    magnitude_cut = magnitude_spectrum[:, range(192, 320, 4)]
-                    magnitude_cut = magnitude_cut[range(192, 320, 4), :]
-                    magnitude_cut = magnitude_cut.reshape(1024)
-                    magnitude_cut = magnitude_cut.tolist() + ["Q"]
-                    self.questioned.loc[a] = magnitude_cut
                 a = a + 1
 
         # after all segments are computed and saved as frequencies
@@ -751,163 +683,54 @@ class Inspector(object):
         # self.lbl2.show() # show loaded image in screen (too large)
 
     def inspection(self):
-        if ACCUMULATED_SPECTRA:
-            data_normed = np.zeros((self.printer_types.size, SNIPPET_WIDTH, SNIPPET_WIDTH))
-            class_column = self.questioned_detailed.shape[1] - 1
-            sum = np.zeros((self.printer_types.size))
+        data_normed = np.zeros((self.printer_types.size, SNIPPET_WIDTH, SNIPPET_WIDTH))
+        class_column = self.questioned_detailed.shape[1] - 1
+        sum = np.zeros((self.printer_types.size))
 
-            self.printer_types = self.printer_types[np.argsort(self.printer_types[:])]
-            if TRAINING == True:
-                for p in range(self.printer_types.size):
-                    # vector = np.array(np.divide(self.data_merged.ix[p,:-1],self.snippet_amount_perPrinter[p]))
-                    vector = np.array(self.data_merged.ix[p, :-1])
-                    data_normed[p, :, :] = np.reshape(vector, (SNIPPET_WIDTH, SNIPPET_WIDTH))
-                    sum[p] = np.sum(np.sum(data_normed[p]))
-                    # data_normed[p,:,:] = np.divide(data_normed[p,:,:],sum[p])
-                    # Training
-                    pd.DataFrame(data_normed[p]).to_pickle(SUBPATH + "/corr_" + self.printer_types[p] + ".pkl")
-            else:
-                # Test data
-                for p in range(self.printer_types.size):
-                    data_normed[p] = pd.read_pickle("knowledge/corr_" + self.printer_types[p] + ".pkl")
-
-            nr_segments = self.questioned_detailed.shape[0]
-            correlation_list = np.zeros((nr_segments, self.printer_types.size + 1))
-
-            printers_nr = np.arange(self.printer_types.size)
-
-            for i in range(self.questioned_detailed.shape[0]):
-                #p_id = self.questioned_detailed.ix[i, class_column]
-                #printer_number = np.where(self.printer_types == p_id)[0][0]
-                printer_number = -1
-
-                # prove similarity - correlation of segment ffts with additive spcectras
-                for p in range(len(self.printer_types)):
-                    correlation_list[i, p] = np.dot(self.questioned_detailed.ix[i, :class_column],
-                                                    data_normed[p, :, :].reshape(class_column))
-
-                    correlation_list[i, p + 1] = printer_number
-
-            for p in range(len(self.printer_types)):
-                self.hitsPerClassOfInspectedSegments[p] = 0
-
-            #for all segments
-            questioned_list = correlation_list[correlation_list[:, -1] == -1] # :-1, because without lable and == value -1 because set for questioned
-            # for each segment from one questioned print
-            for row in range(questioned_list.shape[0]):
-                likeliest_class = np.where(questioned_list[row, :] == questioned_list[row, :].max())[0][0]
-
-                self.hitsPerClassOfInspectedSegments[likeliest_class] += 1
-
-
+        self.printer_types = self.printer_types[np.argsort(self.printer_types[:])]
+        if TRAINING == True:
+            for p in range(self.printer_types.size):
+                # vector = np.array(np.divide(self.data_merged.ix[p,:-1],self.snippet_amount_perPrinter[p]))
+                vector = np.array(self.data_merged.ix[p, :-1])
+                data_normed[p, :, :] = np.reshape(vector, (SNIPPET_WIDTH, SNIPPET_WIDTH))
+                sum[p] = np.sum(np.sum(data_normed[p]))
+                # data_normed[p,:,:] = np.divide(data_normed[p,:,:],sum[p])
+                # Training
+                pd.DataFrame(data_normed[p]).to_pickle(SUBPATH + "/corr_" + self.printer_types[p] + ".pkl")
         else:
-            self.train = pd.DataFrame()
-            self.test = pd.DataFrame()
+            # Test data
+            for p in range(self.printer_types.size):
+                data_normed[p] = pd.read_pickle("knowledge/corr_" + self.printer_types[p] + ".pkl")
 
-            # randomly reorder data
-            data_rand = self.data.reindex(np.random.permutation(self.data.index))
-            data_rand.index = range(0, len(data_rand))
+        nr_segments = self.questioned_detailed.shape[0]
+        correlation_list = np.zeros((nr_segments, self.printer_types.size + 1))
 
-            self.printer_types = self.printer_types[np.argsort(self.printer_types[:])]
-            # chose same amount of data from each class
-            for printer in self.printer_types:
-                printer_data = data_rand[data_rand['name'] == printer].copy()
-                printer_data.index = range(0, len(printer_data))
-                splitpoint = int(round(printer_data.shape[0] * 0.6))
+        printers_nr = np.arange(self.printer_types.size)
 
-                self.train = self.train.append(printer_data.ix[0:splitpoint, :])
-                self.train.index = range(0, len(self.train))
-                self.test = self.test.append(printer_data.ix[splitpoint + 1:, :])
-                self.test.index = range(0, len(self.test))
+        for i in range(self.questioned_detailed.shape[0]):
+            #p_id = self.questioned_detailed.ix[i, class_column]
+            #printer_number = np.where(self.printer_types == p_id)[0][0]
+            printer_number = -1
 
-            # PCA
-            self.axis, self.eigenData, s = hka.hka(self.train.transpose().ix[:1024, :])
+            # prove similarity - correlation of segment ffts with additive spcectras
+            for p in range(len(self.printer_types)):
+                correlation_list[i, p] = np.dot(self.questioned_detailed.ix[i, :class_column],
+                                                data_normed[p, :, :].reshape(class_column))
 
-            # export hka
-            name_eigen = SUBPATH + "/eigenData.pkl"
-            pd.DataFrame(self.eigenData).to_pickle(name_eigen)
+                correlation_list[i, p + 1] = printer_number
 
-            print("pca finished!")
-            # Eigen-Spektren
-            # for i in range(7):
-            #     self.pic = self.eigenData[:,i].reshape(32,32)
-            # plt.figure()
-            # plt.imshow(pic, cmap=plt.cm.gray)
-            # plt.show()
+        for p in range(len(self.printer_types)):
+            self.hitsPerClassOfInspectedSegments[p] = 0
 
-            # split up into train and test set
-            z = 0
-            self.printer_types = self.printer_types[np.argsort(self.printer_types[:])]
+        #for all segments
+        questioned_list = correlation_list[correlation_list[:, -1] == -1] # :-1, because without lable and == value -1 because set for questioned
+        # for each segment from one questioned print
+        for row in range(questioned_list.shape[0]):
+            likeliest_class = np.where(questioned_list[row, :] == questioned_list[row, :].max())[0][0]
 
-            for printer in self.printer_types:
-                print("Start learning ", printer)
-                printer_number = np.where(self.printer_types == printer)[0][0]
-                # Feature Extraction
-                train_feature = pd.DataFrame()
-                for j in range(len(self.train)):
-                    feature = np.zeros(pca_amount + 1)
-                    if self.train['name'].ix[j] == printer:
-                        feature[pca_amount] = 1
-                    else:
-                        feature[pca_amount] = -1
+            self.hitsPerClassOfInspectedSegments[likeliest_class] += 1
 
-                    for i in range(pca_amount):
-                        feature[i] = self.eigenData[:, i].T * np.matrix(self.train.ix[j, :1024]).T
-                    train_feature[j] = feature
 
-                test_feature = pd.DataFrame()
-                for j in range(len(self.test)):
-                    feature = np.zeros(pca_amount + 1)
-                    if self.test['name'].ix[j] == printer:
-                        feature[pca_amount] = 1
-                    else:
-                        feature[pca_amount] = -1
-
-                    for i in range(pca_amount):
-                        feature[i] = self.eigenData[:, i].T * np.matrix(self.test.ix[j, :1024]).T
-                    test_feature[j] = feature
-
-                train_feature = train_feature.transpose()
-                test_feature = test_feature.transpose()
-
-                train_feature.rename(columns={pca_amount: 'label'}, inplace=True)
-                test_feature.rename(columns={pca_amount: 'label'}, inplace=True)
-
-                # Gaussian Naive Bayes - Training
-                mean = pd.DataFrame()
-                mean[0] = np.matrix(train_feature[train_feature['label'] == 1].mean()[0:pca_amount]).tolist()[0]
-                mean[1] = np.matrix(train_feature[train_feature['label'] == -1].mean()[0:pca_amount]).tolist()[0]
-
-                std = pd.DataFrame()
-                std[0] = np.matrix(train_feature[train_feature['label'] == 1].std()[0:pca_amount]).tolist()[0]
-                std[1] = np.matrix(train_feature[train_feature['label'] == -1].std()[0:pca_amount]).tolist()[0]
-
-                apriori = np.array([len(train_feature[train_feature['label'] == 1]) / float(len(train_feature)),
-                                    len(train_feature[train_feature['label'] == -1]) / float(len(train_feature))])
-
-                self.mean[printer_number, :, :] = mean
-                self.std[printer_number, :, :] = std
-                self.apriori[printer_number, :] = apriori
-
-                # export gaussian naive bayes
-                name_mean = SUBPATH + "/" + printer + "_mean.pkl"
-                mean.to_pickle(name_mean)
-                name_std = SUBPATH + "/" + printer + "_std.pkl"
-                std.to_pickle(name_std)
-                name_apriori = SUBPATH + "/" + printer + "_apriori.pkl"
-                a = pd.DataFrame(apriori)
-                a.to_pickle(name_apriori)
-
-                # Train Set
-                [self.correctPositiveTrain[z], self.correctNegativeTrain[z], self.falsePositiveTrain[z], self.falseNegativeTrain[z], tmp,
-                 tmp] = GNBMatch(train_feature, mean, std, apriori, 1)
-                self.train_feature_length[z] = len(train_feature)
-                # Test Set
-                [self.correctPositiveTest[z], self.correctNegativeTest[z], self.falsePositiveTest[z], self.falseNegativeTest[z], tmp,
-                 tmp] = GNBMatch(test_feature, mean, std, apriori, 1)
-                self.test_feature_length[z] = len(test_feature)
-                print("GNB training finished.")
-                z = z + 1
 
         print("Training for all printers finished.")
         return self.hitsPerClassOfInspectedSegments

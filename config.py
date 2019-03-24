@@ -40,7 +40,7 @@ col_large.append('name')
 # correctPositiveTrain = [0 for i in xrange(len(dirs))]  statt 5
 correctPositiveTrain = [0 for i in range(len(DIRS))]
 correctNegativeTrain = [0 for i in range(len(DIRS))]
-falsePositiveTrain = [0 for i in range(len(DIRS))]
+ACCUMULATED_SPECTRAfalsePositiveTrain = [0 for i in range(len(DIRS))]
 falseNegativeTrain = [0 for i in range(len(DIRS))]
 correctPositiveTest = [0 for i in range(len(DIRS))]
 correctNegativeTest = [0 for i in range(len(DIRS))]
@@ -53,3 +53,4 @@ train_feature_length = [0 for i in range(len(DIRS))]    # length of features for
 test_feature_length = [0 for i in range(len(DIRS))]     # length of features for each printer
 
 
+#RUNTIME_PATH = SUBPATH
