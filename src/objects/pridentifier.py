@@ -12,6 +12,7 @@ class Pridentifier(object):
         self.classes = []
         self.number_of_classes = 0
         self.fingerprints = []
+        self.traindata = []
 
         # [2] classification configuration
 
@@ -26,6 +27,7 @@ class Pridentifier(object):
 
         self.load_images(self.path)
         self.extract_features()
+        self.evaluate()
 
 
     def load_images(self, path):
@@ -66,9 +68,12 @@ class Pridentifier(object):
 
 
 
+
     def evaluate(self):
-        self.evaluator = Evaluator()
-        pass
+        self.evaluator = Evaluator(self.classes,self.fingerprints)
+        result = self.evaluator.get_evaluation()
+
+        print(result)
 
 
     def inspect(self):
