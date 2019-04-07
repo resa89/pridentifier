@@ -34,8 +34,8 @@ class Fingerprint(object):
             img = Image.open(img_path)
             width, height = img.size
             # TODO: check order of width and height
-            amount_snippets_x_axis = width / SNIPPET_WIDTH
-            amount_snippets_y_axis = height / SNIPPET_WIDTH
+            amount_snippets_x_axis = width // SNIPPET_WIDTH
+            amount_snippets_y_axis = height // SNIPPET_WIDTH
             amount_snippets += amount_snippets_x_axis * amount_snippets_y_axis
 
         self.number_of_snippets = amount_snippets
@@ -54,9 +54,4 @@ class Fingerprint(object):
     def get_fingerprint(self):
 
         return(self.fingerprint)
-
-
-    def compare_to_fingerprint(self, questioned_snippet):
-        pass
-        # return correlation value
 

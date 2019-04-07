@@ -10,7 +10,7 @@ pca_amount = 20     # method: pca
 
 # [2] user-configurable runtime parameters (constants)
 SNIPPET_WIDTH = 512
-NUMBER_PIXELS = 10000
+NUMBER_PIXELS = 10000 #TODO: make number of pixels configurable
 SUBPATH = 'data/runtime'
 
 # [3] system-configurable runtime parameters (global variables in one module)

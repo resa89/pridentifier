@@ -16,6 +16,7 @@ class FeatureExtractor(object):
         self.path_to_class = path
         self.img_names = img_names
         self.number_of_snippets = number_of_snippets
+        self.train = train
         self.accumulated_spectra = np.zeros((SNIPPET_WIDTH, SNIPPET_WIDTH))
         # df header
         self.df_header = [i for i in range(SNIPPET_WIDTH*SNIPPET_WIDTH)]
@@ -26,25 +27,11 @@ class FeatureExtractor(object):
         self.fingerprint_df = pd.DataFrame()
 
 
-        # for all segments needed for evaluation later
-        max_snippet_amount_per_image = 0
-        #snippets_over_all = 0
-        for image in self.img_names:
-            img_path = self.path_to_class + '/' + image
-            img = misc.imread(img_path)
-            x, y, z = img.shape
-            #snippets_over_all += x//SNIPPET_WIDTH * y//SNIPPET_WIDTH
-            snippet_amount = x//SNIPPET_WIDTH * y//SNIPPET_WIDTH
-            if snippet_amount > max_snippet_amount_per_image:
-                max_snippet_amount_per_image = snippet_amount
-
-        #self.train_data = pd.DataFrame(index=np.arange(0, max_snippet_amount_per_image), columns=self.df_header )
         self.train_data = pd.DataFrame()
 
         #check if all are NANs
 
         self.compute_accumulated_spectra(train)
-
 
         #if snippets_over_all == self.number_of_snippets:
         #    return("TEST: True. The snippet amount computed in advance is the same than after feature computation.")
@@ -100,10 +87,12 @@ class FeatureExtractor(object):
                     shift = fftpack.fftshift(spectrum)
                     spectrum = 20 * np.log( np.abs(shift))
 
-                    # compute the accumulated fingerprint
-                    self.accumulated_spectra = np.add(self.accumulated_spectra, np.divide(spectrum, self.number_of_snippets))
+                    spectrum = self.darken_region(spectrum)
 
-                    self.accumulated_spectra = self.darken_region(self.accumulated_spectra)
+                    mag_shift = np.divide(spectrum, self.number_of_snippets)
+
+                    # compute the accumulated fingerprint
+                    self.accumulated_spectra = np.add(self.accumulated_spectra, mag_shift)
 
                     # save sampled spectra for training analysis later
                     self.add_train_data(spectrum, class_name, sample_no)
@@ -217,7 +206,7 @@ class FeatureExtractor(object):
 
         if os.path.isfile(file_name) and not first:
             unpickled_df = pd.read_pickle(file_name)
-            df_all_segments = unpickled_df.append(df_all_segments.dropna(axis=0), ignore_index=True)
+            df_all_segments = unpickled_df.append(df_all_segments, ignore_index=True)
             df_all_segments.to_pickle(file_name)
         else:
             df_all_segments.to_pickle(file_name)
@@ -244,8 +233,8 @@ class FeatureExtractor(object):
         # magnitude_all_multi[magnitude_all_multi<threshold] = min
 
         magnitude_all = magnitude_all - magnitude_all.min()
-        magnitude_all = magnitude_all / magnitude_all.max() #sum()
-        #TODO: check what was meant with sum()?
+        magnitude_all = magnitude_all / magnitude_all.sum() # divide by sum, to make fingerprints comparable
+
         # self.fingerprint_df.fillna() or something to refill all values with NANs
         #self.fingerprint_df.loc[0] = magnitude_all.reshape(magnitude_all.size).tolist() + [class_name]
         #self.fingerprint_df.append(magnitude_all.reshape(magnitude_all.size).tolist() + [class_name])
