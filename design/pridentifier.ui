@@ -1,0 +1,1529 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>937</width>
+    <height>630</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Pridentifier</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: #222222;</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QWidget" name="gridLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>9</x>
+      <y>9</y>
+      <width>911</width>
+      <height>611</height>
+     </rect>
+    </property>
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="0" column="0">
+      <widget class="QTabWidget" name="tabWidget">
+       <property name="styleSheet">
+        <string notr="true">QTabWidget::pane {
+    border-top: 4px solid #fff;
+    background-color: #fff;
+}
+
+QTabWidget::tab-bar:top {
+    top: 1px;
+}
+
+QTabWidget::tab-bar:bottom {
+    bottom: 1px;
+}
+
+QTabWidget::tab-bar:left {
+    right: 1px;
+}
+
+QTabWidget::tab-bar:right {
+    left: 1px;
+}
+
+QTabBar::tab {
+    border: 0px solid #fff;
+	background-color: #393939;
+	color: #fff;
+	
+
+}
+
+QTabBar::tab:selected {
+    background: white;
+	color: #000;
+}
+
+QTabBar::tab:!selected {
+    background: silver;
+}
+
+QTabBar::tab:!selected:hover {
+    background: #777777;
+}
+
+QTabBar::tab:top:!selected {
+    margin-top: 3px;
+}
+
+QTabBar::tab:bottom:!selected {
+    margin-bottom: 3px;
+}
+
+QTabBar::tab:top, QTabBar::tab:bottom {
+    min-width: 8ex;
+    margin-right: -1px;
+    padding: 5px 10px 5px 10px;
+}
+
+QTabBar::tab:top:selected {
+    border-bottom-color: none;
+}
+
+QTabBar::tab:bottom:selected {
+    border-top-color: none;
+}
+
+QTabBar::tab:top:last, QTabBar::tab:bottom:last,
+QTabBar::tab:top:only-one, QTabBar::tab:bottom:only-one {
+    margin-right: 0;
+}
+
+QTabBar::tab:left:!selected {
+    margin-right: 3px;
+}
+
+QTabBar::tab:right:!selected {
+    margin-left: 3px;
+}
+
+QTabBar::tab:left, QTabBar::tab:right {
+    min-height: 8ex;
+    margin-bottom: -1px;
+    padding: 10px 5px 10px 5px;
+
+}
+
+QTabBar::tab:left:selected {
+    border-left-color: none;
+}
+
+QTabBar::tab:right:selected {
+    border-right-color: none;
+}
+
+QTabBar::tab:left:last, QTabBar::tab:right:last,
+QTabBar::tab:left:only-one, QTabBar::tab:right:only-one {
+    margin-bottom: 0;
+}</string>
+       </property>
+       <property name="currentIndex">
+        <number>0</number>
+       </property>
+       <widget class="QWidget" name="tab_data">
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
+        <attribute name="title">
+         <string>Data</string>
+        </attribute>
+        <widget class="QWidget" name="horizontalLayoutWidget">
+         <property name="geometry">
+          <rect>
+           <x>0</x>
+           <y>0</y>
+           <width>911</width>
+           <height>591</height>
+          </rect>
+         </property>
+         <layout class="QHBoxLayout" name="horizontalLayout_6">
+          <item>
+           <layout class="QVBoxLayout" name="verticalLayout_7">
+            <property name="spacing">
+             <number>-1</number>
+            </property>
+            <property name="leftMargin">
+             <number>15</number>
+            </property>
+            <property name="topMargin">
+             <number>30</number>
+            </property>
+            <property name="rightMargin">
+             <number>15</number>
+            </property>
+            <property name="bottomMargin">
+             <number>15</number>
+            </property>
+            <item>
+             <widget class="QLabel" name="label_3">
+              <property name="styleSheet">
+               <string notr="true">color: #fff;
+font: 12pt &quot;Helvetica&quot;;</string>
+              </property>
+              <property name="text">
+               <string>Segment width:</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QSpinBox" name="spinBox_2">
+              <property name="styleSheet">
+               <string notr="true">	background-color: #777777;
+	min-width: 160px;
+	color: #fff;
+</string>
+              </property>
+              <property name="minimum">
+               <number>64</number>
+              </property>
+              <property name="maximum">
+               <number>1024</number>
+              </property>
+              <property name="singleStep">
+               <number>64</number>
+              </property>
+              <property name="value">
+               <number>512</number>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="button_loadData">
+              <property name="styleSheet">
+               <string notr="true">QPushButton {
+background-color: #009999;
+min-width: 160px;
+padding: 12px 16px;
+border: 2px solid #fff;
+color: #fff;
+}
+QPushButton:hover {
+	background-color: #75bdc3;
+}</string>
+              </property>
+              <property name="text">
+               <string>LOAD</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="verticalSpacer_12">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QVBoxLayout" name="verticalLayout">
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_5">
+              <item>
+               <spacer name="horizontalSpacer">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="QLabel" name="label_2">
+                <property name="styleSheet">
+                 <string notr="true">color: #fff;
+font: 12pt &quot;Helvetica&quot;;</string>
+                </property>
+                <property name="text">
+                 <string>Loading:</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QProgressBar" name="progressBar_loadingData">
+                <property name="styleSheet">
+                 <string notr="true">QProgressBar {
+    background-color: #333333;
+    color: #fff;
+	text-align: center;
+	padding: 10px 20px 10px 20px;
+
+    background-color: #646464;
+    
+    font-size: 14pt;
+	max-width: 250px;
+    gridline-color: #fffff8;
+    font-size: 10pt;
+	border: 0px solid #fffff8;
+    background-color: #646464;
+    }</string>
+                </property>
+                <property name="value">
+                 <number>0</number>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_2">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <widget class="QTableWidget" name="tableWidget_data">
+              <property name="styleSheet">
+               <string notr="true">QWidget {
+    background-color: #333333;
+    color: #fff;
+}
+
+QHeaderView::section {
+    background-color: #646464;
+    padding: 4px;
+    border: 1px solid #fffff8;
+    font-size: 14pt;
+}
+
+QTableWidget::item {
+	width: 130px;
+	text-align: center;
+}
+
+QTableWidget {
+    gridline-color: #fffff8;
+    font-size: 12pt;
+	padding-top: 30px;
+	padding-left: 30px;
+}
+
+QTableWidget QTableCornerButton::section {
+    background-color: #646464;
+    border: 1px solid #fffff8;
+}</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
+       </widget>
+       <widget class="QWidget" name="tab_learning">
+        <attribute name="title">
+         <string>Analysis</string>
+        </attribute>
+        <widget class="QWidget" name="horizontalLayoutWidget_2">
+         <property name="geometry">
+          <rect>
+           <x>0</x>
+           <y>0</y>
+           <width>911</width>
+           <height>591</height>
+          </rect>
+         </property>
+         <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <item>
+           <layout class="QVBoxLayout" name="verticalLayout_3">
+            <property name="leftMargin">
+             <number>15</number>
+            </property>
+            <property name="topMargin">
+             <number>30</number>
+            </property>
+            <property name="rightMargin">
+             <number>15</number>
+            </property>
+            <property name="bottomMargin">
+             <number>15</number>
+            </property>
+            <item>
+             <widget class="QLabel" name="label">
+              <property name="styleSheet">
+               <string notr="true">color: #fff;
+font: 12pt &quot;Helvetica&quot;;
+</string>
+              </property>
+              <property name="text">
+               <string>Feature count:</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QSpinBox" name="spinBox">
+              <property name="styleSheet">
+               <string notr="true">	background-color: #777777;
+	min-width: 160px;
+	color: #fff;
+</string>
+              </property>
+              <property name="minimum">
+               <number>10</number>
+              </property>
+              <property name="maximum">
+               <number>10000</number>
+              </property>
+              <property name="singleStep">
+               <number>100</number>
+              </property>
+              <property name="value">
+               <number>1000</number>
+              </property>
+              <property name="displayIntegerBase">
+               <number>10</number>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="button_train">
+              <property name="styleSheet">
+               <string notr="true">QPushButton{
+	background-color: #009999;
+	min-width: 160px;
+	padding: 12px 16px;
+	border: 2px solid #fff;
+	color: #fff;
+}
+
+QPushButton:hover {
+	background-color: #75bdc3;
+}</string>
+              </property>
+              <property name="text">
+               <string>ANALYZE</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="button_importKnowledge">
+              <property name="styleSheet">
+               <string notr="true">QPushButton {
+	background-color: #393939;
+	min-width: 160px;
+	padding: 12px 16px;
+	border: 2px solid #fff;
+	color: #fff;
+}
+
+QPushButton:hover {
+	background-color: #777777;
+}</string>
+              </property>
+              <property name="text">
+               <string>import analysis</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="button_exportKnowledge">
+              <property name="styleSheet">
+               <string notr="true">QPushButton {
+	background-color: #393939;
+	min-width: 160px;
+	padding: 12px 16px;
+	border: 2px solid #fff;
+	color: #fff;
+}
+
+QPushButton:hover {
+	background-color: #777777;
+}</string>
+              </property>
+              <property name="text">
+               <string>export analysis</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="verticalSpacer_13">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QVBoxLayout" name="verticalLayout_8">
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_11">
+              <item>
+               <spacer name="horizontalSpacer_11">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="QLabel" name="label_7">
+                <property name="styleSheet">
+                 <string notr="true">color: #fff;
+font: 12pt &quot;Helvetica&quot;;</string>
+                </property>
+                <property name="text">
+                 <string>Training:</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QProgressBar" name="progressBar_loadingTraining">
+                <property name="styleSheet">
+                 <string notr="true">QProgressBar {
+    background-color: #333333;
+    color: #fff;
+	text-align: center;
+	padding: 10px 20px 10px 20px;
+
+    background-color: #646464;
+    
+    font-size: 14pt;
+	max-width: 250px;
+    gridline-color: #fffff8;
+    font-size: 10pt;
+	border: 0px solid #fffff8;
+    background-color: #646464;
+    }</string>
+                </property>
+                <property name="value">
+                 <number>0</number>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_12">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <widget class="QTableWidget" name="tableWidget_learning">
+              <property name="styleSheet">
+               <string notr="true">QWidget {
+    background-color: #333333;
+    color: #fff;
+}
+
+QHeaderView::section {
+    background-color: #646464;
+    padding: 4px;
+    border: 1px solid #fffff8;
+    font-size: 14pt;
+}
+
+QTableWidget::item {
+	width: 130px;
+}
+
+QTableWidget {
+    gridline-color: #fffff8;
+    font-size: 12pt;
+	padding-top: 30px;
+	padding-left: 30px;
+}
+
+QTableWidget QTableCornerButton::section {
+    background-color: #646464;
+    border: 1px solid #fffff8;
+}</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
+       </widget>
+       <widget class="QWidget" name="tab_evaluation">
+        <attribute name="title">
+         <string>Evaluation</string>
+        </attribute>
+        <widget class="QWidget" name="horizontalLayoutWidget_3">
+         <property name="geometry">
+          <rect>
+           <x>0</x>
+           <y>0</y>
+           <width>911</width>
+           <height>738</height>
+          </rect>
+         </property>
+         <layout class="QHBoxLayout" name="horizontalLayout_3">
+          <item>
+           <layout class="QVBoxLayout" name="verticalLayout_4">
+            <property name="leftMargin">
+             <number>15</number>
+            </property>
+            <property name="topMargin">
+             <number>30</number>
+            </property>
+            <property name="rightMargin">
+             <number>15</number>
+            </property>
+            <property name="bottomMargin">
+             <number>15</number>
+            </property>
+            <item>
+             <widget class="QPushButton" name="button_evaluate">
+              <property name="styleSheet">
+               <string notr="true">QPushButton{
+	background-color: #009999;
+	min-width: 160px;
+	padding: 12px 16px;
+	border: 2px solid #fff;
+	color: #fff;
+}
+
+QPushButton:hover {
+	background-color: #75bdc3;
+}</string>
+              </property>
+              <property name="text">
+               <string>EVALUATE</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="button_saveStatistics">
+              <property name="styleSheet">
+               <string notr="true">QPushButton {
+	background-color: #393939;
+	min-width: 160px;
+	padding: 12px 16px;
+	border: 2px solid #fff;
+	color: #fff;
+}
+
+QPushButton:hover {
+	background-color: #777777;
+}</string>
+              </property>
+              <property name="text">
+               <string>save statistics</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="verticalSpacer_5">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QVBoxLayout" name="verticalLayout_10">
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_7">
+              <item>
+               <widget class="QLabel" name="label_evaluation1">
+                <property name="styleSheet">
+                 <string notr="true">QLabel {
+    background-color: #333333;
+    color: #fff;
+    background-color: #646464;
+    padding: 4px;
+    border: 0px solid #fffff8;
+    font-size: 14pt;
+
+	width: 130px;
+	min-height: 150px;
+    gridline-color: #fffff8;
+    font-size: 12pt;
+
+    background-color: #646464;
+    border: 0px solid #fffff8;
+}</string>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="label_evaluation2">
+                <property name="styleSheet">
+                 <string notr="true">QLabel {
+    background-color: #333333;
+    color: #fff;
+    background-color: #646464;
+    padding: 4px;
+    border: 0px solid #fffff8;
+    font-size: 14pt;
+
+	width: 130px;
+	min-height: 150px;
+    gridline-color: #fffff8;
+    font-size: 12pt;
+
+    background-color: #646464;
+    border: 0px solid #fffff8;
+}</string>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="label_evaluation3">
+                <property name="styleSheet">
+                 <string notr="true">QLabel {
+    background-color: #333333;
+    color: #fff;
+    background-color: #646464;
+    padding: 4px;
+    border: 0px solid #fffff8;
+    font-size: 14pt;
+
+	width: 130px;
+	min-height: 150px;
+    gridline-color: #fffff8;
+    font-size: 12pt;
+
+    background-color: #646464;
+    border: 0px solid #fffff8;
+}</string>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="label_evaluation4">
+                <property name="styleSheet">
+                 <string notr="true">QLabel {
+    background-color: #333333;
+    color: #fff;
+    background-color: #646464;
+    padding: 4px;
+    border: 0px solid #fffff8;
+    font-size: 14pt;
+
+	width: 130px;
+	min-height: 150px;
+    gridline-color: #fffff8;
+    font-size: 12pt;
+
+    background-color: #646464;
+    border: 0px solid #fffff8;
+}</string>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout">
+              <item>
+               <widget class="QLabel" name="label_evaluation1_text">
+                <property name="styleSheet">
+                 <string notr="true">QLabel {
+    background-color: #333333;
+    color: #fff;
+    background-color: #646464;
+    padding: 4px;
+    border: 0px solid #fffff8;
+    font-size: 14pt;
+
+	width: 130px;
+	min-height: 20px;
+    gridline-color: #fffff8;
+    font-size: 12pt;
+
+    background-color: #646464;
+    border: 0px solid #fffff8;
+}</string>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="label_evaluation2_text">
+                <property name="styleSheet">
+                 <string notr="true">QLabel {
+    background-color: #333333;
+    color: #fff;
+    background-color: #646464;
+    padding: 4px;
+    border: 0px solid #fffff8;
+    font-size: 14pt;
+
+	width: 130px;
+	min-height: 20px;
+    gridline-color: #fffff8;
+    font-size: 12pt;
+
+    background-color: #646464;
+    border: 0px solid #fffff8;
+}</string>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="label_evaluation3_text">
+                <property name="styleSheet">
+                 <string notr="true">QLabel {
+    background-color: #333333;
+    color: #fff;
+    background-color: #646464;
+    padding: 4px;
+    border: 0px solid #fffff8;
+    font-size: 14pt;
+
+	width: 130px;
+	min-height: 20px;
+    gridline-color: #fffff8;
+    font-size: 12pt;
+
+    background-color: #646464;
+    border: 0px solid #fffff8;
+}</string>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="label_evaluation4_text">
+                <property name="styleSheet">
+                 <string notr="true">QLabel {
+    background-color: #333333;
+    color: #fff;
+    background-color: #646464;
+    padding: 4px;
+    border: 0px solid #fffff8;
+    font-size: 14pt;
+
+	width: 130px;
+	min-height: 20px;
+    gridline-color: #fffff8;
+    font-size: 12pt;
+
+    background-color: #646464;
+    border: 0px solid #fffff8;
+}</string>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <widget class="QTableWidget" name="tableWidget_evaluation">
+              <property name="styleSheet">
+               <string notr="true">QWidget {
+    background-color: #333333;
+    color: #fff;
+}
+
+QHeaderView::section {
+    background-color: #646464;
+    padding: 4px;
+    border: 1px solid #fffff8;
+    font-size: 14pt;
+}
+
+QTableWidget::item {
+	width: 130px;
+}
+
+QTableWidget {
+    gridline-color: #fffff8;
+    font-size: 12pt;
+	padding-top: 30px;
+	padding-left: 30px;
+}
+
+QTableWidget QTableCornerButton::section {
+    background-color: #646464;
+    border: 1px solid #fffff8;
+}</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
+       </widget>
+       <widget class="QWidget" name="tab_inspection">
+        <attribute name="title">
+         <string>Inspection</string>
+        </attribute>
+        <widget class="QWidget" name="horizontalLayoutWidget_4">
+         <property name="geometry">
+          <rect>
+           <x>0</x>
+           <y>0</y>
+           <width>911</width>
+           <height>1532</height>
+          </rect>
+         </property>
+         <layout class="QHBoxLayout" name="horizontalLayout_4">
+          <item>
+           <layout class="QVBoxLayout" name="verticalLayout_5">
+            <property name="spacing">
+             <number>-1</number>
+            </property>
+            <property name="leftMargin">
+             <number>15</number>
+            </property>
+            <property name="topMargin">
+             <number>30</number>
+            </property>
+            <property name="rightMargin">
+             <number>15</number>
+            </property>
+            <property name="bottomMargin">
+             <number>15</number>
+            </property>
+            <item>
+             <widget class="QPushButton" name="button_loadImage">
+              <property name="styleSheet">
+               <string notr="true">QPushButton{
+	background-color: #009999;
+	min-width: 160px;
+	padding: 12px 16px;
+	border: 2px solid #fff;
+	color: #fff;
+}
+
+QPushButton:hover {
+	background-color: #75bdc3;
+}</string>
+              </property>
+              <property name="text">
+               <string>LOAD IMAGE</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="button_inspect">
+              <property name="styleSheet">
+               <string notr="true">QPushButton{
+	background-color: #009999;
+	min-width: 160px;
+	padding: 12px 16px;
+	border: 2px solid #fff;
+	color: #fff;
+}
+
+QPushButton:hover {
+	background-color: #75bdc3;
+}</string>
+              </property>
+              <property name="text">
+               <string>INSPECT</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="button_saveResults">
+              <property name="styleSheet">
+               <string notr="true">QPushButton {
+	background-color: #393939;
+	min-width: 160px;
+	padding: 12px 16px;
+	border: 2px solid #fff;
+	color: #fff;
+}
+
+QPushButton:hover {
+	background-color: #777777;
+}</string>
+              </property>
+              <property name="text">
+               <string>save results</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="verticalSpacer_8">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QVBoxLayout" name="verticalLayout_9">
+            <item>
+             <widget class="QLabel" name="label_inspection">
+              <property name="styleSheet">
+               <string notr="true">QLabel {
+    background-color: #333333;
+    color: #fff;
+    background-color: #646464;
+    padding: 4px;
+    border: 0px solid #fffff8;
+    font-size: 14pt;
+
+	width: 130px;
+	min-height: 250px;
+    gridline-color: #fffff8;
+    font-size: 12pt;
+	text-align: center;
+
+    background-color: #646464;
+    border: 0px solid #fffff8;
+}</string>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QTableWidget" name="tableWidget_inspection">
+              <property name="styleSheet">
+               <string notr="true">QWidget {
+    background-color: #333333;
+    color: #fff;
+}
+
+QHeaderView::section {
+    background-color: #646464;
+    padding: 4px;
+    border: 1px solid #fffff8;
+    font-size: 14pt;
+}
+
+QTableWidget::item {
+	width: 130px;
+}
+
+QTableWidget {
+    gridline-color: #fffff8;
+    font-size: 12pt;
+	padding-top: 30px;
+	padding-left: 30px;
+}
+
+QTableWidget QTableCornerButton::section {
+    background-color: #646464;
+    border: 1px solid #fffff8;
+}</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
+       </widget>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>937</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="autoFillBackground">
+    <bool>false</bool>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
+   <widget class="QMenu" name="menuData">
+    <property name="styleSheet">
+     <string notr="true">background-color: #fff;
+color: #393939;</string>
+    </property>
+    <property name="title">
+     <string>Data</string>
+    </property>
+    <addaction name="actionExample"/>
+    <addaction name="actionExperiment"/>
+   </widget>
+   <widget class="QMenu" name="menuAnalysis">
+    <property name="styleSheet">
+     <string notr="true">background-color: #fff;
+color: #393939;</string>
+    </property>
+    <property name="title">
+     <string>Analysis</string>
+    </property>
+    <addaction name="actionExample_2"/>
+    <addaction name="actionMethod"/>
+   </widget>
+   <widget class="QMenu" name="menuTest">
+    <property name="styleSheet">
+     <string notr="true">background-color: #fff;
+color: #393939;</string>
+    </property>
+    <property name="title">
+     <string>Evaluation</string>
+    </property>
+    <addaction name="actionExample_3"/>
+    <addaction name="actionResult"/>
+   </widget>
+   <widget class="QMenu" name="menuInspection">
+    <property name="styleSheet">
+     <string notr="true">background-color: #fff;
+color: #393939;</string>
+    </property>
+    <property name="title">
+     <string>Inspection</string>
+    </property>
+    <addaction name="actionExample_4"/>
+    <addaction name="actionResult_2"/>
+   </widget>
+   <widget class="QMenu" name="menuInfo">
+    <property name="styleSheet">
+     <string notr="true">background-color: #fff;
+color: #393939;</string>
+    </property>
+    <property name="title">
+     <string>Info</string>
+    </property>
+    <addaction name="actionDevelopment"/>
+    <addaction name="actionCredits"/>
+    <addaction name="actionLicence"/>
+    <addaction name="separator"/>
+    <addaction name="actionTroubleshooting"/>
+    <addaction name="actionFeedback"/>
+    <addaction name="actionContact"/>
+   </widget>
+   <widget class="QMenu" name="menuIntroduction">
+    <property name="styleSheet">
+     <string notr="true">background-color: #fff;
+color: #393939;</string>
+    </property>
+    <property name="title">
+     <string>Instruction</string>
+    </property>
+    <addaction name="actionPurpose"/>
+    <addaction name="actionUse_Cases"/>
+   </widget>
+   <addaction name="menuIntroduction"/>
+   <addaction name="menuData"/>
+   <addaction name="menuAnalysis"/>
+   <addaction name="menuTest"/>
+   <addaction name="menuInspection"/>
+   <addaction name="menuInfo"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionload">
+   <property name="text">
+    <string>load</string>
+   </property>
+  </action>
+  <action name="actionimport">
+   <property name="text">
+    <string>import data</string>
+   </property>
+  </action>
+  <action name="actiontrain">
+   <property name="text">
+    <string>train</string>
+   </property>
+  </action>
+  <action name="actionimport_2">
+   <property name="text">
+    <string>import knowledge</string>
+   </property>
+  </action>
+  <action name="actionevaluate">
+   <property name="text">
+    <string>evaluate</string>
+   </property>
+  </action>
+  <action name="actionload_document">
+   <property name="text">
+    <string>load image</string>
+   </property>
+  </action>
+  <action name="actioninspect">
+   <property name="text">
+    <string>inspect</string>
+   </property>
+  </action>
+  <action name="actionDevelopment">
+   <property name="text">
+    <string>Development</string>
+   </property>
+  </action>
+  <action name="actionCredits">
+   <property name="text">
+    <string>Credits</string>
+   </property>
+  </action>
+  <action name="actionLicence">
+   <property name="text">
+    <string>Licence</string>
+   </property>
+  </action>
+  <action name="actionTroubleshooting">
+   <property name="text">
+    <string>Troubleshooting</string>
+   </property>
+  </action>
+  <action name="actionFeedback">
+   <property name="text">
+    <string>Feedback</string>
+   </property>
+  </action>
+  <action name="actionContact">
+   <property name="text">
+    <string>Contact</string>
+   </property>
+  </action>
+  <action name="actionPurpose">
+   <property name="text">
+    <string>Purpose</string>
+   </property>
+  </action>
+  <action name="actionUse_Cases">
+   <property name="text">
+    <string>Use Cases</string>
+   </property>
+  </action>
+  <action name="actionExample">
+   <property name="text">
+    <string>Example</string>
+   </property>
+  </action>
+  <action name="actionExperiment">
+   <property name="text">
+    <string>Method</string>
+   </property>
+  </action>
+  <action name="actionExample_2">
+   <property name="text">
+    <string>Example</string>
+   </property>
+  </action>
+  <action name="actionMethod">
+   <property name="text">
+    <string>Method</string>
+   </property>
+  </action>
+  <action name="actionExample_3">
+   <property name="text">
+    <string>Example</string>
+   </property>
+  </action>
+  <action name="actionResult">
+   <property name="text">
+    <string>Result</string>
+   </property>
+  </action>
+  <action name="actionExample_4">
+   <property name="text">
+    <string>Example</string>
+   </property>
+  </action>
+  <action name="actionResult_2">
+   <property name="text">
+    <string>Result</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>button_loadData</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>loadData()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>221</x>
+     <y>196</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-2</x>
+     <y>120</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>button_evaluate</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>showStat()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>49</x>
+     <y>138</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>155</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>button_loadImage</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>loadImg()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>38</x>
+     <y>113</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>6</x>
+     <y>116</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>button_importKnowledge</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>getCorrelation()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>83</x>
+     <y>214</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-19</x>
+     <y>278</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>button_exportKnowledge</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>saveCorrelation()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>145</x>
+     <y>312</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-3</x>
+     <y>224</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>button_saveStatistics</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>saveStat()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>48</x>
+     <y>171</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>8</x>
+     <y>234</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>button_saveResults</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>saveResult()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>85</x>
+     <y>214</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-2</x>
+     <y>317</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>button_train</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>training()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>66</x>
+     <y>196</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>0</x>
+     <y>99</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>button_inspect</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>inspection()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>63</x>
+     <y>157</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>6</x>
+     <y>183</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>spinBox_2</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>changeSegmentSize()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>65</x>
+     <y>132</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>9</x>
+     <y>162</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>spinBox</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>changeFeatureCount()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>85</x>
+     <y>126</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>8</x>
+     <y>149</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>menubar</sender>
+   <signal>hovered(QAction*)</signal>
+   <receiver>progressBar_loadingData</receiver>
+   <slot>reset()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>647</x>
+     <y>13</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>682</x>
+     <y>98</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>menubar</sender>
+   <signal>hovered(QAction*)</signal>
+   <receiver>progressBar_loadingTraining</receiver>
+   <slot>reset()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>664</x>
+     <y>16</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>686</x>
+     <y>100</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>saveSpectra()</slot>
+  <slot>getSpectra()</slot>
+  <slot>showStat()</slot>
+  <slot>loadImg()</slot>
+  <slot>getCorrelation()</slot>
+  <slot>saveCorrelation()</slot>
+  <slot>saveStat()</slot>
+  <slot>saveResult()</slot>
+  <slot>training()</slot>
+  <slot>loadData()</slot>
+  <slot>inspection()</slot>
+  <slot>changeSegmentSize()</slot>
+  <slot>changeFeatureCount()</slot>
+ </slots>
+</ui>
