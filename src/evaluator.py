@@ -3,13 +3,14 @@ import os.path
 import numpy as np
 import pandas as pd
 
-from config import SUBPATH, SNIPPET_WIDTH, NUMBER_PIXELS
+from config import SUBPATH
 
 
 class Evaluator(object):
-    def __init__(self, classes, fingerprints, train=True):
+    def __init__(self, classes, fingerprints, SNIPPET_WIDTH, train=True):
         self.classes = classes
         self.fingerprints = fingerprints
+        self.SNIPPET_WIDTH = SNIPPET_WIDTH
         self.result = []
 
         if train:
@@ -89,7 +90,7 @@ class Evaluator(object):
         for i in range(amount_classes):
             fi_print = fingerprints[i].get_fingerprint()
             #fi_print_normed = fi_print / fi_print.sum()
-            fi_print_sample = np.array(sample)[:-1].reshape(SNIPPET_WIDTH,SNIPPET_WIDTH).astype(np.float64)
+            fi_print_sample = np.array(sample)[:-1].reshape(self.SNIPPET_WIDTH,self.SNIPPET_WIDTH).astype(np.float64)
 
 
             ######

@@ -2,12 +2,11 @@ import os
 import numpy as np
 from PIL import Image
 
-from config import SNIPPET_WIDTH
 from ..feature_extractor import FeatureExtractor
 
 
 class Fingerprint(object):
-    def __init__(self, path):
+    def __init__(self, path, SNIPPET_WIDTH, NUMBER_PIXELS):
         self.path_to_images_of_class = path
         self.class_name = os.path.split(path)[-1]
         self.image_names = []
@@ -15,6 +14,8 @@ class Fingerprint(object):
         self.number_of_images = 0
         self.number_of_snippets = 0
         self.fingerprint = np.array(())
+        self.SNIPPET_WIDTH = SNIPPET_WIDTH
+        self.NUMBER_PIXELS = NUMBER_PIXELS
 
         self.load_images()
 
@@ -34,8 +35,8 @@ class Fingerprint(object):
             img = Image.open(img_path)
             width, height = img.size
             # TODO: check order of width and height
-            amount_snippets_x_axis = width // SNIPPET_WIDTH
-            amount_snippets_y_axis = height // SNIPPET_WIDTH
+            amount_snippets_x_axis = width // self.SNIPPET_WIDTH
+            amount_snippets_y_axis = height // self.SNIPPET_WIDTH
             amount_snippets += amount_snippets_x_axis * amount_snippets_y_axis
 
         self.number_of_snippets = amount_snippets
@@ -47,7 +48,8 @@ class Fingerprint(object):
 
     def extract_fingerprint(self):
 
-        feature_extractor = FeatureExtractor(self.path_to_images_of_class, self.img_names, self.number_of_snippets)
+        feature_extractor = FeatureExtractor(self.path_to_images_of_class, self.img_names, self.number_of_snippets,
+                                             self.SNIPPET_WIDTH, self.NUMBER_PIXELS)
         self.fingerprint = feature_extractor.get_accumulated_spectra()
 
 

@@ -11,15 +11,13 @@ from .fingerprint import Fingerprint
 from ..evaluator import Evaluator
 from ..feature_extractor import FeatureExtractor
 
-from config import SNIPPET_WIDTH
-
 
 class Pridentifier(QObject):
 
     # signals
     changedValue = pyqtSignal(int)
 
-    def __init__(self):
+    def __init__(self, SNIPPET_WIDTH, NUMBER_PIXELS):
 
         super(Pridentifier, self).__init__()
 
@@ -31,6 +29,8 @@ class Pridentifier(QObject):
         self.traindata = []
         self.evaluation_result = pd.DataFrame()
         self.test_result = pd.DataFrame()
+        self.SNIPPET_WIDTH = SNIPPET_WIDTH
+        self.NUMBER_PIXELS = NUMBER_PIXELS
         #self.changedValue = 0
 
 
@@ -55,12 +55,26 @@ class Pridentifier(QObject):
         #self.extract_features()
         #self.evaluate()
 
+    def update_snippetSize(self, SNIPPET_WIDTH):
+
+        self.SNIPPET_WIDTH = SNIPPET_WIDTH
+        #TODO: update through all sub-objects
+
+
+    def update_pixelSize(self, NUMBER_PIXELS):
+
+        # TODO: inform user that feature amount is larger than snippet size
+        if self.SNIPPET_WIDTH*self.SNIPPET_WIDTH < NUMBER_PIXELS:
+            self.NUMBER_PIXELS = self.SNIPPET_WIDTH*self.SNIPPET_WIDTH
+        else:
+            self.NUMBER_PIXELS = NUMBER_PIXELS
+
 
 
     def load_images(self, path):
 
         self.path = path
-        calc = ProgressLoadData(path)
+        calc = ProgressLoadData(path, self.SNIPPET_WIDTH, self.NUMBER_PIXELS)
 
         return(calc)
 
@@ -94,7 +108,7 @@ class Pridentifier(QObject):
 
 
     def evaluate(self):
-        calc = ProgressEvaluateData(self.classes, self.fingerprints)
+        calc = ProgressEvaluateData(self.classes, self.fingerprints, self.SNIPPET_WIDTH)
         return(calc)
 
 
@@ -112,7 +126,8 @@ class Pridentifier(QObject):
 
 
     def inspect(self):
-        calc = ProgressInspectData(self.inspection_path, self.classes, self.fingerprints)
+        calc = ProgressInspectData(self.inspection_path, self.classes, self.fingerprints, self.SNIPPET_WIDTH,
+                                   self.NUMBER_PIXELS)
         return(calc)
 
 
@@ -211,9 +226,11 @@ class ProgressLoadData(QtCore.QThread, QtCore.QObject):
     """
     imageUploadStatusChanged = pyqtSignal(int, object)
 
-    def __init__(self, path):
+    def __init__(self, path, SNIPPET_WIDTH, NUMBER_PIXELS):
         super(ProgressLoadData, self).__init__()
         self.path = path
+        self.SNIPPET_WIDTH = SNIPPET_WIDTH
+        self.NUMBER_PIXELS = NUMBER_PIXELS
 
     def run(self):
         fingerprints = []
@@ -245,7 +262,7 @@ class ProgressLoadData(QtCore.QThread, QtCore.QObject):
 
         for class_name in classes:
             class_path = self.path + '/' + class_name
-            fingerprint = Fingerprint(class_path)
+            fingerprint = Fingerprint(class_path, self.SNIPPET_WIDTH, self.NUMBER_PIXELS)
             fingerprints.append(fingerprint)
             amount_images, amount_snippets = fingerprint.get_numbers()
             amount_images_per_class.append(amount_images)
@@ -290,16 +307,17 @@ class ProgressEvaluateData(QtCore.QThread, QtCore.QObject):
     """
     evaluateDataStatusChanged = pyqtSignal(int, object)
 
-    def __init__(self, classes, fingerprints):
+    def __init__(self, classes, fingerprints, SNIPPET_WIDTH):
         super(ProgressEvaluateData, self).__init__()
         self.classes = classes
         self.fingerprints = fingerprints
+        self.SNIPPET_WIDTH = SNIPPET_WIDTH
 
     def run(self):
 
         count = 0
 
-        evaluator = Evaluator(self.classes,self.fingerprints, train=True)
+        evaluator = Evaluator(self.classes,self.fingerprints, self.SNIPPET_WIDTH, train=True)
         evaluation_result = evaluator.get_evaluation()
 
         count = 100
@@ -317,11 +335,13 @@ class ProgressInspectData(QtCore.QThread, QtCore.QObject):
     """
     inspectDataStatusChanged = pyqtSignal(int, object)
 
-    def __init__(self, inspection_path, classes, fingerprints):
+    def __init__(self, inspection_path, classes, fingerprints, SNIPPET_WIDTH, NUMBER_PIXELS):
         super(ProgressInspectData, self).__init__()
         self.inspection_path = inspection_path
         self.classes = classes
         self.fingerprints = fingerprints
+        self.SNIPPET_WIDTH = SNIPPET_WIDTH
+        self.NUMBER_PIXELS = NUMBER_PIXELS
 
     def run(self):
 
@@ -334,14 +354,14 @@ class ProgressInspectData(QtCore.QThread, QtCore.QObject):
         img = Image.open(self.inspection_path)
         width, height = img.size
         # TODO: check order of width and height
-        amount_snippets_x_axis = width // SNIPPET_WIDTH
-        amount_snippets_y_axis = height // SNIPPET_WIDTH
+        amount_snippets_x_axis = width // self.SNIPPET_WIDTH
+        amount_snippets_y_axis = height // self.SNIPPET_WIDTH
         amount_snippets = amount_snippets_x_axis * amount_snippets_y_axis
 
         # extract features of test sample
-        inspector = FeatureExtractor(path, [file], amount_snippets, train=False)
+        inspector = FeatureExtractor(path, [file], amount_snippets, self.SNIPPET_WIDTH, self.NUMBER_PIXELS, train=False)
 
-        inspection_evaluator = Evaluator(self.classes,self.fingerprints, train=False)
+        inspection_evaluator = Evaluator(self.classes,self.fingerprints, self.SNIPPET_WIDTH, train=False)
         test_result = inspection_evaluator.get_evaluation()
 
 

@@ -11,6 +11,7 @@ import numpy as np
 import config
 from src.objects import pridentifier
 
+
 #TODO: remove dropdown menu/training method
 #TODO: make window responsive
 #TODO: make loading bars show iterative process
@@ -18,8 +19,14 @@ from src.objects import pridentifier
 class Ui_Pridentifier(object):
     def __init__(self):
         super(Ui_Pridentifier, self).__init__()
-        print("Number of Pixels: ", config.NUMBER_PIXELS)
-        self.pridentifier = pridentifier.Pridentifier()
+        # runtime parameters
+        self.SNIPPET_WIDTH = config.SNIPPET_WIDTH
+        self.NUMBER_PIXELS = config.NUMBER_PIXELS
+        self.SNIPPET_WIDTH_last_upload = config.SNIPPET_WIDTH
+        self.NUMBER_PIXELS_last_analysis = config.NUMBER_PIXELS
+
+        print("Number of Pixels: ", self.NUMBER_PIXELS)
+        self.pridentifier = pridentifier.Pridentifier(self.SNIPPET_WIDTH_last_upload, self.NUMBER_PIXELS_last_analysis)
         #self.make_connection(pridentifier)
 
     #def make_connection(self, pridentifier):
@@ -1075,9 +1082,13 @@ class Ui_Pridentifier(object):
         dialog = QtWidgets.QFileDialog()
         path = dialog.getExistingDirectory(directory='..', options=QtWidgets.QFileDialog.ShowDirsOnly)
 
-
         if path:
+
             self.progressBar_loadingData.setValue(0)
+
+            # use the last set snippet size in ui
+            self.SNIPPET_WIDTH_last_upload = self.SNIPPET_WIDTH
+            self.pridentifier.update_snippetSize(self.SNIPPET_WIDTH_last_upload)
 
             #####
             self.calc = self.pridentifier.load_images(path)
@@ -1139,6 +1150,12 @@ class Ui_Pridentifier(object):
     def training(self):
 
         self.progressBar_loadingTraining.setValue(0)
+
+        # use the last set snippet size in ui
+        self.NUMBER_PIXELS_last_analysis = self.NUMBER_PIXELS
+        self.pridentifier.update_pixelSize(self.NUMBER_PIXELS_last_analysis)
+
+
         #####
         self.calc2 = self.pridentifier.extract_features()
         self.calc2.analyzeDataStatusChanged.connect(self.onAnalyzeDataUpdate)
@@ -1344,12 +1361,12 @@ class Ui_Pridentifier(object):
 
 
     def changeSegmentSize(self, size):
-        config.SNIPPET_WIDTH = size #TODO: change constants
+        self.SNIPPET_WIDTH = size #TODO: change constants
 
 
 
     def changeFeatureCount(self, count):
-        config.NUMBER_PIXELS = count #TODO: change constants
+        self.NUMBER_PIXELS = count #TODO: change constants
 
 def main():
     import sys

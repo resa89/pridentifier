@@ -32,25 +32,7 @@ else:
 
 
 # statistical analysis and result
-col = [i for i in range(1024)]
-col_large = [i for i in range(512*512)]
-col.append('name')
-col_large.append('name')
-
-# correctPositiveTrain = [0 for i in xrange(len(dirs))]  statt 5
-correctPositiveTrain = [0 for i in range(len(DIRS))]
-correctNegativeTrain = [0 for i in range(len(DIRS))]
-ACCUMULATED_SPECTRAfalsePositiveTrain = [0 for i in range(len(DIRS))]
-falseNegativeTrain = [0 for i in range(len(DIRS))]
-correctPositiveTest = [0 for i in range(len(DIRS))]
-correctNegativeTest = [0 for i in range(len(DIRS))]
-falsePositiveTest = [0 for i in range(len(DIRS))]
-falseNegativeTest = [0 for i in range(len(DIRS))]
-
-hitsPerClassOfInspectedSegments = [0 for i in range(len(DIRS))]
-
-train_feature_length = [0 for i in range(len(DIRS))]    # length of features for each printer
-test_feature_length = [0 for i in range(len(DIRS))]     # length of features for each printer
-
-
-#RUNTIME_PATH = SUBPATH
+#col = [i for i in range(1024)]
+#col_large = [i for i in range(512*512)]
+#col.append('name')
+#col_large.append('name')

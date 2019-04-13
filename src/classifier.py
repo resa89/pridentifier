@@ -1,30 +1,31 @@
 import numpy as np
 import pandas as pd
 
-from config import *
+from config import SUBPATH
 
 
 class Classifier():
 
-    def __init__(self, path, img_names, number_of_snippets, classes, train=False):
+    def __init__(self, path, img_names, number_of_snippets, classes, SNIPPET_WIDTH, train=False):
         self.path_to_class = path
         self.img_names = img_names
         self.number_of_snippets = number_of_snippets
         self.number_classes = len(classes)
         self.classes = classes
+        self.SNIPPET_WIDTH = SNIPPET_WIDTH
 
-        self.accumulated_spectra = np.zeros((SNIPPET_WIDTH, SNIPPET_WIDTH))
+        self.accumulated_spectra = np.zeros((self.SNIPPET_WIDTH, self.SNIPPET_WIDTH))
         self.df_header = []
 
         self.inspect(train)
 
 
     def inspect(self, train):
-        data_normed = np.zeros((self.number_classes, SNIPPET_WIDTH, SNIPPET_WIDTH))
+        data_normed = np.zeros((self.number_classes, self.SNIPPET_WIDTH, self.SNIPPET_WIDTH))
 
 
 
-        class_column = SNIPPET_WIDTH*SNIPPET_WIDTH - 1 + 1
+        class_column = self.SNIPPET_WIDTH*self.SNIPPET_WIDTH - 1 + 1
         sum = np.zeros((self.number_classes))
 
         if train:
@@ -36,7 +37,7 @@ class Classifier():
                 vector = np.array(fingerprint_df[:-1])
                 #TODO: Check if -1 or -2 necessary
 
-                data_normed[printer_id, :, :] = np.reshape(vector, (SNIPPET_WIDTH, SNIPPET_WIDTH))
+                data_normed[printer_id, :, :] = np.reshape(vector, (self.SNIPPET_WIDTH, self.SNIPPET_WIDTH))
                 sum[printer_id] = np.sum(np.sum(data_normed[printer_id]))
 
                 # Training

@@ -7,19 +7,21 @@ import pandas as pd
 from scipy import fftpack
 from scipy import signal
 
-from config import *
+from config import SUBPATH
 
 
 class FeatureExtractor(object):
 
-    def __init__(self, path, img_names, number_of_snippets, train=True):
+    def __init__(self, path, img_names, number_of_snippets, SNIPPET_WIDTH, NUMBER_PIXELS, train=True):
         self.path_to_class = path
         self.img_names = img_names
         self.number_of_snippets = number_of_snippets
         self.train = train
-        self.accumulated_spectra = np.zeros((SNIPPET_WIDTH, SNIPPET_WIDTH))
+        self.SNIPPET_WIDTH = SNIPPET_WIDTH
+        self.NUMBER_PIXELS = NUMBER_PIXELS
+        self.accumulated_spectra = np.zeros((self.SNIPPET_WIDTH, self.SNIPPET_WIDTH))
         # df header
-        self.df_header = [i for i in range(SNIPPET_WIDTH*SNIPPET_WIDTH)]
+        self.df_header = [i for i in range(self.SNIPPET_WIDTH*self.SNIPPET_WIDTH)]
         self.df_header = self.df_header  + ['class']
         # allocate memory
         #self.fingerprint_df = pd.DataFrame(index=[0], columns=self.df_header, dtype=float)
@@ -50,8 +52,8 @@ class FeatureExtractor(object):
 
         # number of pixels to move each segment
         step = np.empty([2], dtype=int)
-        step[0] = SNIPPET_WIDTH
-        step[1] = SNIPPET_WIDTH
+        step[0] = self.SNIPPET_WIDTH
+        step[1] = self.SNIPPET_WIDTH
 
         segment_count = np.empty([2], dtype=int)
 
@@ -73,9 +75,9 @@ class FeatureExtractor(object):
             for i in range(0, segment_count[0]):
                 for j in range(0, segment_count[1]):
                     # segment as copy of img snippet
-                    start_i = i * SNIPPET_WIDTH
-                    start_j = j * SNIPPET_WIDTH
-                    segment = grey_img[start_i:(start_i + SNIPPET_WIDTH), start_j:(start_j + SNIPPET_WIDTH), 0]
+                    start_i = i * self.SNIPPET_WIDTH
+                    start_j = j * self.SNIPPET_WIDTH
+                    segment = grey_img[start_i:(start_i + self.SNIPPET_WIDTH), start_j:(start_j + self.SNIPPET_WIDTH), 0]
 
                     # fft only with numpy
                     #segment_windowed = self.compute_window(segment)
@@ -225,7 +227,14 @@ class FeatureExtractor(object):
         idx = np.argsort(magnitude_all.flatten())
         b = magnitude_all.flatten()[idx]
 
-        threshold = b[b.size - NUMBER_PIXELS]
+        # feature count can only be as large as snippet pixels amount
+        #TODO: return message to inform user
+        if b.size <= self.NUMBER_PIXELS:
+            features = b.size-1
+        else:
+            features = b.size - self.NUMBER_PIXELS
+
+        threshold = b[features]
 
         min = magnitude_all.min()
         # select only 1000 brightest pixel
