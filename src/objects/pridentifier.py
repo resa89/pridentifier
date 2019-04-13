@@ -77,22 +77,25 @@ class Pridentifier(QObject):
     def write_training_results(self, args):
         self.fingerprints = args
 
+    def write_evaluation_results(self, args):
+        self.evaluator = args[0]
+        self.evaluation_result = args[1]
+
+    def write_inspection_results(self, args):
+        #self.inspector = args[0]
+        self.test_result = args
+
 
     def extract_features(self):
-
         calc = ProgressAnalyzeData(self.fingerprints)
-
         return(calc)
 
 
 
 
     def evaluate(self):
-        self.evaluator = Evaluator(self.classes,self.fingerprints, train=True)
-        self.evaluation_result = self.evaluator.get_evaluation()
-
-        return()
-        #print(result)
+        calc = ProgressEvaluateData(self.classes, self.fingerprints)
+        return(calc)
 
 
     def save_fingerprints(self):
@@ -109,22 +112,8 @@ class Pridentifier(QObject):
 
 
     def inspect(self):
-        path, file = os.path.split(self.inspection_path)
-        #TODO: Allow image or folder
-
-        # compute snippet_amount
-        img = Image.open(self.inspection_path)
-        width, height = img.size
-        # TODO: check order of width and height
-        amount_snippets_x_axis = width // SNIPPET_WIDTH
-        amount_snippets_y_axis = height // SNIPPET_WIDTH
-        amount_snippets = amount_snippets_x_axis * amount_snippets_y_axis
-
-        # extract features of test sample
-        self.inspector = FeatureExtractor(path, [file], amount_snippets, train=False)
-
-        inspection_evaluator = Evaluator(self.classes,self.fingerprints, train=False)
-        self.test_result = inspection_evaluator.get_evaluation()
+        calc = ProgressInspectData(self.inspection_path, self.classes, self.fingerprints)
+        return(calc)
 
 
     def save_results(self):
@@ -292,4 +281,73 @@ class ProgressAnalyzeData(QtCore.QThread, QtCore.QObject):
 
         args = self.fingerprints
         self.analyzeDataStatusChanged.emit(count, args)
+
+
+
+class ProgressEvaluateData(QtCore.QThread, QtCore.QObject):
+    """
+    Runs a counter object.
+    """
+    evaluateDataStatusChanged = pyqtSignal(int, object)
+
+    def __init__(self, classes, fingerprints):
+        super(ProgressEvaluateData, self).__init__()
+        self.classes = classes
+        self.fingerprints = fingerprints
+
+    def run(self):
+
+        count = 0
+
+        evaluator = Evaluator(self.classes,self.fingerprints, train=True)
+        evaluation_result = evaluator.get_evaluation()
+
+        count = 100
+
+        args = evaluator, evaluation_result
+        self.evaluateDataStatusChanged.emit(count, args)
+
+
+
+
+
+class ProgressInspectData(QtCore.QThread, QtCore.QObject):
+    """
+    Runs a counter object.
+    """
+    inspectDataStatusChanged = pyqtSignal(int, object)
+
+    def __init__(self, inspection_path, classes, fingerprints):
+        super(ProgressInspectData, self).__init__()
+        self.inspection_path = inspection_path
+        self.classes = classes
+        self.fingerprints = fingerprints
+
+    def run(self):
+
+        count = 0
+
+        path, file = os.path.split(self.inspection_path)
+        #TODO: Allow image or folder
+
+        # compute snippet_amount
+        img = Image.open(self.inspection_path)
+        width, height = img.size
+        # TODO: check order of width and height
+        amount_snippets_x_axis = width // SNIPPET_WIDTH
+        amount_snippets_y_axis = height // SNIPPET_WIDTH
+        amount_snippets = amount_snippets_x_axis * amount_snippets_y_axis
+
+        # extract features of test sample
+        inspector = FeatureExtractor(path, [file], amount_snippets, train=False)
+
+        inspection_evaluator = Evaluator(self.classes,self.fingerprints, train=False)
+        test_result = inspection_evaluator.get_evaluation()
+
+
+        count = 100
+
+        args = test_result
+        self.inspectDataStatusChanged.emit(count, args)
+
 

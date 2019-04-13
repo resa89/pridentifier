@@ -522,7 +522,9 @@ font: 12pt &quot;Helvetica&quot;;</string>
     font-size: 10pt;
 	border: 0px solid #fffff8;
     background-color: #646464;
-    }</string>
+    }
+
+</string>
                 </property>
                 <property name="value">
                  <number>0</number>
@@ -667,6 +669,73 @@ QPushButton:hover {
           </item>
           <item>
            <layout class="QVBoxLayout" name="verticalLayout_10">
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_8">
+              <item>
+               <spacer name="horizontalSpacer_3">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="QLabel" name="label_4">
+                <property name="styleSheet">
+                 <string notr="true">color: #fff;
+font: 12pt &quot;Helvetica&quot;;</string>
+                </property>
+                <property name="text">
+                 <string>Evaluation:</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QProgressBar" name="progressBar_evaluation">
+                <property name="styleSheet">
+                 <string notr="true">QProgressBar {
+    background-color: #333333;
+    color: #fff;
+	text-align: center;
+	padding: 10px 20px 10px 20px;
+
+    background-color: #646464;
+    
+    font-size: 14pt;
+	max-width: 250px;
+    gridline-color: #fffff8;
+    font-size: 10pt;
+	border: 0px solid #fffff8;
+    background-color: #646464;
+    }
+
+</string>
+                </property>
+                <property name="value">
+                 <number>0</number>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_4">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </item>
             <item>
              <layout class="QHBoxLayout" name="horizontalLayout_7">
               <item>
@@ -1021,6 +1090,74 @@ QPushButton:hover {
           </item>
           <item>
            <layout class="QVBoxLayout" name="verticalLayout_9">
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_9">
+              <item>
+               <spacer name="horizontalSpacer_6">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="QLabel" name="label_5">
+                <property name="styleSheet">
+                 <string notr="true">color: #fff;
+font: 12pt &quot;Helvetica&quot;;</string>
+                </property>
+                <property name="text">
+                 <string>Inspection:</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QProgressBar" name="progressBar_inspection">
+                <property name="styleSheet">
+                 <string notr="true">QProgressBar {
+    background-color: #333333;
+    color: #fff;
+	text-align: center;
+	padding: 10px 20px 10px 20px;
+
+    background-color: #646464;
+    
+    font-size: 14pt;
+	max-width: 250px;
+    gridline-color: #fffff8;
+    font-size: 10pt;
+	border: 0px solid #fffff8;
+    background-color: #646464;
+    }
+
+
+</string>
+                </property>
+                <property name="value">
+                 <number>0</number>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_5">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </item>
             <item>
              <widget class="QLabel" name="label_inspection">
               <property name="styleSheet">
