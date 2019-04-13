@@ -152,37 +152,6 @@ class Ui_MainWindow(object):
         self.verticalLayout_7 = QtWidgets.QVBoxLayout()
         self.verticalLayout_7.setContentsMargins(15, 30, 15, 15)
         self.verticalLayout_7.setObjectName("verticalLayout_7")
-        self.label = QtWidgets.QLabel(self.horizontalLayoutWidget)
-        self.label.setStyleSheet("color: #fff;\n"
-"font: 14pt \"Helvetica\";")
-        self.label.setObjectName("label")
-        self.verticalLayout_7.addWidget(self.label)
-        self.dropdown_dataMethod = QtWidgets.QComboBox(self.horizontalLayoutWidget)
-        self.dropdown_dataMethod.setStyleSheet("QComboBox {\n"
-"    background-color: #777777;\n"
-"    min-width: 160px;\n"
-"    padding: 12px 4px;\n"
-"    border: 2px solid #fff;\n"
-"    color: #fff;\n"
-"}\n"
-"\n"
-"\n"
-"QComboBox::drop-down {\n"
-"    border-left-width: 0px;\n"
-"    border-left-color: none;\n"
-"    border-left-style: solid; /* just a single line */\n"
-"    margin-right: 10px;\n"
-"\n"
-"}\n"
-"\n"
-"QComboBox::down-arrow {\n"
-"    image: url(/Users/resa/Projekte/Korensics/arrow.png);\n"
-"    height: 100px;\n"
-"}")
-        self.dropdown_dataMethod.setObjectName("dropdown_dataMethod")
-        self.dropdown_dataMethod.addItem("")
-        self.dropdown_dataMethod.addItem("")
-        self.verticalLayout_7.addWidget(self.dropdown_dataMethod)
         self.button_loadData = QtWidgets.QPushButton(self.horizontalLayoutWidget)
         self.button_loadData.setStyleSheet("QPushButton {\n"
 "background-color: #009999;\n"
@@ -196,71 +165,11 @@ class Ui_MainWindow(object):
 "}")
         self.button_loadData.setObjectName("button_loadData")
         self.verticalLayout_7.addWidget(self.button_loadData)
-        self.button_exportData = QtWidgets.QPushButton(self.horizontalLayoutWidget)
-        self.button_exportData.setStyleSheet("QPushButton {\n"
-"    background-color: #393939;\n"
-"    min-width: 160px;\n"
-"    padding: 12px 16px;\n"
-"    border: 2px solid #fff;\n"
-"    color: #fff;\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"    background-color: #777777;\n"
-"}")
-        self.button_exportData.setObjectName("button_exportData")
-        self.verticalLayout_7.addWidget(self.button_exportData)
-        self.button_importData = QtWidgets.QPushButton(self.horizontalLayoutWidget)
-        self.button_importData.setStyleSheet("QPushButton{\n"
-"    background-color: #393939;\n"
-"    min-width: 160px;\n"
-"    padding: 12px 16px;\n"
-"    border: 2px solid #fff;\n"
-"    color: #fff;\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"    background-color: #777777;\n"
-"}")
-        self.button_importData.setObjectName("button_importData")
-        self.verticalLayout_7.addWidget(self.button_importData)
         spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.verticalLayout_7.addItem(spacerItem)
         self.horizontalLayout_6.addLayout(self.verticalLayout_7)
-        self.verticalLayout = QtWidgets.QVBoxLayout()
-        self.verticalLayout.setObjectName("verticalLayout")
-        self.horizontalLayout_5 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_5.setObjectName("horizontalLayout_5")
-        spacerItem1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_5.addItem(spacerItem1)
-        self.label_2 = QtWidgets.QLabel(self.horizontalLayoutWidget)
-        self.label_2.setStyleSheet("color: #fff;")
-        self.label_2.setObjectName("label_2")
-        self.horizontalLayout_5.addWidget(self.label_2)
-        self.progressBar_loadingData = QtWidgets.QProgressBar(self.horizontalLayoutWidget)
-        self.progressBar_loadingData.setStyleSheet("QProgressBar {\n"
-"    background-color: #333333;\n"
-"    color: #fff;\n"
-"    text-align: center;\n"
-"    padding: 10px 20px 10px 20px;\n"
-"\n"
-"    background-color: #646464;\n"
-"    \n"
-"    font-size: 14pt;\n"
-"    max-width: 250px;\n"
-"    gridline-color: #fffff8;\n"
-"    font-size: 10pt;\n"
-"    border: 0px solid #fffff8;\n"
-"    background-color: #646464;\n"
-"    }")
-        self.progressBar_loadingData.setProperty("value", 0)
-        self.progressBar_loadingData.setObjectName("progressBar_loadingData")
-        self.horizontalLayout_5.addWidget(self.progressBar_loadingData)
-        spacerItem2 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_5.addItem(spacerItem2)
-        self.verticalLayout.addLayout(self.horizontalLayout_5)
-        self.tableWidget_data = QtWidgets.QTableWidget(self.horizontalLayoutWidget)
-        self.tableWidget_data.setStyleSheet("QWidget {\n"
+        self.listWidget = QtWidgets.QListWidget(self.horizontalLayoutWidget)
+        self.listWidget.setStyleSheet("QWidget {\n"
 "    background-color: #333333;\n"
 "    color: #fff;\n"
 "}\n"
@@ -274,7 +183,6 @@ class Ui_MainWindow(object):
 "\n"
 "QTableWidget::item {\n"
 "    width: 130px;\n"
-"    text-align: center;\n"
 "}\n"
 "\n"
 "QTableWidget {\n"
@@ -288,11 +196,8 @@ class Ui_MainWindow(object):
 "    background-color: #646464;\n"
 "    border: 1px solid #fffff8;\n"
 "}")
-        self.tableWidget_data.setObjectName("tableWidget_data")
-        self.tableWidget_data.setColumnCount(0)
-        self.tableWidget_data.setRowCount(0)
-        self.verticalLayout.addWidget(self.tableWidget_data)
-        self.horizontalLayout_6.addLayout(self.verticalLayout)
+        self.listWidget.setObjectName("listWidget")
+        self.horizontalLayout_6.addWidget(self.listWidget)
         self.tabWidget.addTab(self.tab_data, "")
         self.tab_learning = QtWidgets.QWidget()
         self.tab_learning.setObjectName("tab_learning")
@@ -305,6 +210,43 @@ class Ui_MainWindow(object):
         self.verticalLayout_3 = QtWidgets.QVBoxLayout()
         self.verticalLayout_3.setContentsMargins(15, 30, 15, 15)
         self.verticalLayout_3.setObjectName("verticalLayout_3")
+        self.label_2 = QtWidgets.QLabel(self.horizontalLayoutWidget_2)
+        self.label_2.setStyleSheet("color: #fff;\n"
+"font: 12pt \"Helvetica\";")
+        self.label_2.setObjectName("label_2")
+        self.verticalLayout_3.addWidget(self.label_2)
+        self.spinBox = QtWidgets.QSpinBox(self.horizontalLayoutWidget_2)
+        self.spinBox.setStyleSheet("    background-color: #777777;\n"
+"    min-width: 160px;\n"
+"    color: #fff;\n"
+"")
+        self.spinBox.setMinimum(10)
+        self.spinBox.setMaximum(10000)
+        self.spinBox.setSingleStep(100)
+        self.spinBox.setProperty("value", 1000)
+        self.spinBox.setObjectName("spinBox")
+        self.verticalLayout_3.addWidget(self.spinBox)
+        self.label_3 = QtWidgets.QLabel(self.horizontalLayoutWidget_2)
+        self.label_3.setStyleSheet("color: #fff;\n"
+"font: 12pt \"Helvetica\";")
+        self.label_3.setObjectName("label_3")
+        self.verticalLayout_3.addWidget(self.label_3)
+        self.spinBox_2 = QtWidgets.QSpinBox(self.horizontalLayoutWidget_2)
+        self.spinBox_2.setStyleSheet("    background-color: #777777;\n"
+"    min-width: 160px;\n"
+"    color: #fff;\n"
+"")
+        self.spinBox_2.setMinimum(64)
+        self.spinBox_2.setMaximum(1024)
+        self.spinBox_2.setSingleStep(64)
+        self.spinBox_2.setProperty("value", 512)
+        self.spinBox_2.setObjectName("spinBox_2")
+        self.verticalLayout_3.addWidget(self.spinBox_2)
+        self.line = QtWidgets.QFrame(self.horizontalLayoutWidget_2)
+        self.line.setFrameShape(QtWidgets.QFrame.HLine)
+        self.line.setFrameShadow(QtWidgets.QFrame.Sunken)
+        self.line.setObjectName("line")
+        self.verticalLayout_3.addWidget(self.line)
         self.button_train = QtWidgets.QPushButton(self.horizontalLayoutWidget_2)
         self.button_train.setStyleSheet("QPushButton{\n"
 "    background-color: #009999;\n"
@@ -321,6 +263,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_3.addWidget(self.button_train)
         self.button_exportKnowledge = QtWidgets.QPushButton(self.horizontalLayoutWidget_2)
         self.button_exportKnowledge.setStyleSheet("QPushButton {\n"
+"    display: none;\n"
 "    background-color: #393939;\n"
 "    min-width: 160px;\n"
 "    padding: 12px 16px;\n"
@@ -335,6 +278,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_3.addWidget(self.button_exportKnowledge)
         self.button_importKnowledge = QtWidgets.QPushButton(self.horizontalLayoutWidget_2)
         self.button_importKnowledge.setStyleSheet("QPushButton {\n"
+"    display: none;\n"
 "    background-color: #393939;\n"
 "    min-width: 160px;\n"
 "    padding: 12px 16px;\n"
@@ -347,43 +291,11 @@ class Ui_MainWindow(object):
 "}")
         self.button_importKnowledge.setObjectName("button_importKnowledge")
         self.verticalLayout_3.addWidget(self.button_importKnowledge)
-        spacerItem3 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
-        self.verticalLayout_3.addItem(spacerItem3)
+        spacerItem1 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        self.verticalLayout_3.addItem(spacerItem1)
         self.horizontalLayout_2.addLayout(self.verticalLayout_3)
-        self.verticalLayout_8 = QtWidgets.QVBoxLayout()
-        self.verticalLayout_8.setObjectName("verticalLayout_8")
-        self.horizontalLayout_11 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_11.setObjectName("horizontalLayout_11")
-        spacerItem4 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_11.addItem(spacerItem4)
-        self.label_7 = QtWidgets.QLabel(self.horizontalLayoutWidget_2)
-        self.label_7.setStyleSheet("color: #fff;")
-        self.label_7.setObjectName("label_7")
-        self.horizontalLayout_11.addWidget(self.label_7)
-        self.progressBar_loadingTraining = QtWidgets.QProgressBar(self.horizontalLayoutWidget_2)
-        self.progressBar_loadingTraining.setStyleSheet("QProgressBar {\n"
-"    background-color: #333333;\n"
-"    color: #fff;\n"
-"    text-align: center;\n"
-"    padding: 10px 20px 10px 20px;\n"
-"\n"
-"    background-color: #646464;\n"
-"    \n"
-"    font-size: 14pt;\n"
-"    max-width: 250px;\n"
-"    gridline-color: #fffff8;\n"
-"    font-size: 10pt;\n"
-"    border: 0px solid #fffff8;\n"
-"    background-color: #646464;\n"
-"    }")
-        self.progressBar_loadingTraining.setProperty("value", 0)
-        self.progressBar_loadingTraining.setObjectName("progressBar_loadingTraining")
-        self.horizontalLayout_11.addWidget(self.progressBar_loadingTraining)
-        spacerItem5 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_11.addItem(spacerItem5)
-        self.verticalLayout_8.addLayout(self.horizontalLayout_11)
-        self.tableWidget_learning = QtWidgets.QTableWidget(self.horizontalLayoutWidget_2)
-        self.tableWidget_learning.setStyleSheet("QWidget {\n"
+        self.listWidget_2 = QtWidgets.QListWidget(self.horizontalLayoutWidget_2)
+        self.listWidget_2.setStyleSheet("QWidget {\n"
 "    background-color: #333333;\n"
 "    color: #fff;\n"
 "}\n"
@@ -410,16 +322,13 @@ class Ui_MainWindow(object):
 "    background-color: #646464;\n"
 "    border: 1px solid #fffff8;\n"
 "}")
-        self.tableWidget_learning.setObjectName("tableWidget_learning")
-        self.tableWidget_learning.setColumnCount(0)
-        self.tableWidget_learning.setRowCount(0)
-        self.verticalLayout_8.addWidget(self.tableWidget_learning)
-        self.horizontalLayout_2.addLayout(self.verticalLayout_8)
+        self.listWidget_2.setObjectName("listWidget_2")
+        self.horizontalLayout_2.addWidget(self.listWidget_2)
         self.tabWidget.addTab(self.tab_learning, "")
         self.tab_evaluation = QtWidgets.QWidget()
         self.tab_evaluation.setObjectName("tab_evaluation")
         self.horizontalLayoutWidget_3 = QtWidgets.QWidget(self.tab_evaluation)
-        self.horizontalLayoutWidget_3.setGeometry(QtCore.QRect(0, 0, 911, 738))
+        self.horizontalLayoutWidget_3.setGeometry(QtCore.QRect(0, 0, 911, 591))
         self.horizontalLayoutWidget_3.setObjectName("horizontalLayoutWidget_3")
         self.horizontalLayout_3 = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget_3)
         self.horizontalLayout_3.setContentsMargins(0, 0, 0, 0)
@@ -443,6 +352,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_4.addWidget(self.button_evaluate)
         self.button_saveStatistics = QtWidgets.QPushButton(self.horizontalLayoutWidget_3)
         self.button_saveStatistics.setStyleSheet("QPushButton {\n"
+"    display: none;\n"
 "    background-color: #393939;\n"
 "    min-width: 160px;\n"
 "    padding: 12px 16px;\n"
@@ -455,179 +365,11 @@ class Ui_MainWindow(object):
 "}")
         self.button_saveStatistics.setObjectName("button_saveStatistics")
         self.verticalLayout_4.addWidget(self.button_saveStatistics)
-        spacerItem6 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
-        self.verticalLayout_4.addItem(spacerItem6)
+        spacerItem2 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        self.verticalLayout_4.addItem(spacerItem2)
         self.horizontalLayout_3.addLayout(self.verticalLayout_4)
-        self.verticalLayout_10 = QtWidgets.QVBoxLayout()
-        self.verticalLayout_10.setObjectName("verticalLayout_10")
-        self.horizontalLayout_7 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_7.setObjectName("horizontalLayout_7")
-        self.label_evaluation1 = QtWidgets.QLabel(self.horizontalLayoutWidget_3)
-        self.label_evaluation1.setStyleSheet("QLabel {\n"
-"    background-color: #333333;\n"
-"    color: #fff;\n"
-"    background-color: #646464;\n"
-"    padding: 4px;\n"
-"    border: 0px solid #fffff8;\n"
-"    font-size: 14pt;\n"
-"\n"
-"    width: 130px;\n"
-"    min-height: 150px;\n"
-"    gridline-color: #fffff8;\n"
-"    font-size: 12pt;\n"
-"\n"
-"    background-color: #646464;\n"
-"    border: 0px solid #fffff8;\n"
-"}")
-        self.label_evaluation1.setText("")
-        self.label_evaluation1.setObjectName("label_evaluation1")
-        self.horizontalLayout_7.addWidget(self.label_evaluation1)
-        self.label_evaluation2 = QtWidgets.QLabel(self.horizontalLayoutWidget_3)
-        self.label_evaluation2.setStyleSheet("QLabel {\n"
-"    background-color: #333333;\n"
-"    color: #fff;\n"
-"    background-color: #646464;\n"
-"    padding: 4px;\n"
-"    border: 0px solid #fffff8;\n"
-"    font-size: 14pt;\n"
-"\n"
-"    width: 130px;\n"
-"    min-height: 150px;\n"
-"    gridline-color: #fffff8;\n"
-"    font-size: 12pt;\n"
-"\n"
-"    background-color: #646464;\n"
-"    border: 0px solid #fffff8;\n"
-"}")
-        self.label_evaluation2.setText("")
-        self.label_evaluation2.setObjectName("label_evaluation2")
-        self.horizontalLayout_7.addWidget(self.label_evaluation2)
-        self.label_evaluation3 = QtWidgets.QLabel(self.horizontalLayoutWidget_3)
-        self.label_evaluation3.setStyleSheet("QLabel {\n"
-"    background-color: #333333;\n"
-"    color: #fff;\n"
-"    background-color: #646464;\n"
-"    padding: 4px;\n"
-"    border: 0px solid #fffff8;\n"
-"    font-size: 14pt;\n"
-"\n"
-"    width: 130px;\n"
-"    min-height: 150px;\n"
-"    gridline-color: #fffff8;\n"
-"    font-size: 12pt;\n"
-"\n"
-"    background-color: #646464;\n"
-"    border: 0px solid #fffff8;\n"
-"}")
-        self.label_evaluation3.setText("")
-        self.label_evaluation3.setObjectName("label_evaluation3")
-        self.horizontalLayout_7.addWidget(self.label_evaluation3)
-        self.label_evaluation4 = QtWidgets.QLabel(self.horizontalLayoutWidget_3)
-        self.label_evaluation4.setStyleSheet("QLabel {\n"
-"    background-color: #333333;\n"
-"    color: #fff;\n"
-"    background-color: #646464;\n"
-"    padding: 4px;\n"
-"    border: 0px solid #fffff8;\n"
-"    font-size: 14pt;\n"
-"\n"
-"    width: 130px;\n"
-"    min-height: 150px;\n"
-"    gridline-color: #fffff8;\n"
-"    font-size: 12pt;\n"
-"\n"
-"    background-color: #646464;\n"
-"    border: 0px solid #fffff8;\n"
-"}")
-        self.label_evaluation4.setText("")
-        self.label_evaluation4.setObjectName("label_evaluation4")
-        self.horizontalLayout_7.addWidget(self.label_evaluation4)
-        self.verticalLayout_10.addLayout(self.horizontalLayout_7)
-        self.horizontalLayout = QtWidgets.QHBoxLayout()
-        self.horizontalLayout.setObjectName("horizontalLayout")
-        self.label_evaluation1_text = QtWidgets.QLabel(self.horizontalLayoutWidget_3)
-        self.label_evaluation1_text.setStyleSheet("QLabel {\n"
-"    background-color: #333333;\n"
-"    color: #fff;\n"
-"    background-color: #646464;\n"
-"    padding: 4px;\n"
-"    border: 0px solid #fffff8;\n"
-"    font-size: 14pt;\n"
-"\n"
-"    width: 130px;\n"
-"    min-height: 20px;\n"
-"    gridline-color: #fffff8;\n"
-"    font-size: 12pt;\n"
-"\n"
-"    background-color: #646464;\n"
-"    border: 0px solid #fffff8;\n"
-"}")
-        self.label_evaluation1_text.setText("")
-        self.label_evaluation1_text.setObjectName("label_evaluation1_text")
-        self.horizontalLayout.addWidget(self.label_evaluation1_text)
-        self.label_evaluation2_text = QtWidgets.QLabel(self.horizontalLayoutWidget_3)
-        self.label_evaluation2_text.setStyleSheet("QLabel {\n"
-"    background-color: #333333;\n"
-"    color: #fff;\n"
-"    background-color: #646464;\n"
-"    padding: 4px;\n"
-"    border: 0px solid #fffff8;\n"
-"    font-size: 14pt;\n"
-"\n"
-"    width: 130px;\n"
-"    min-height: 20px;\n"
-"    gridline-color: #fffff8;\n"
-"    font-size: 12pt;\n"
-"\n"
-"    background-color: #646464;\n"
-"    border: 0px solid #fffff8;\n"
-"}")
-        self.label_evaluation2_text.setText("")
-        self.label_evaluation2_text.setObjectName("label_evaluation2_text")
-        self.horizontalLayout.addWidget(self.label_evaluation2_text)
-        self.label_evaluation3_text = QtWidgets.QLabel(self.horizontalLayoutWidget_3)
-        self.label_evaluation3_text.setStyleSheet("QLabel {\n"
-"    background-color: #333333;\n"
-"    color: #fff;\n"
-"    background-color: #646464;\n"
-"    padding: 4px;\n"
-"    border: 0px solid #fffff8;\n"
-"    font-size: 14pt;\n"
-"\n"
-"    width: 130px;\n"
-"    min-height: 20px;\n"
-"    gridline-color: #fffff8;\n"
-"    font-size: 12pt;\n"
-"\n"
-"    background-color: #646464;\n"
-"    border: 0px solid #fffff8;\n"
-"}")
-        self.label_evaluation3_text.setText("")
-        self.label_evaluation3_text.setObjectName("label_evaluation3_text")
-        self.horizontalLayout.addWidget(self.label_evaluation3_text)
-        self.label_evaluation4_text = QtWidgets.QLabel(self.horizontalLayoutWidget_3)
-        self.label_evaluation4_text.setStyleSheet("QLabel {\n"
-"    background-color: #333333;\n"
-"    color: #fff;\n"
-"    background-color: #646464;\n"
-"    padding: 4px;\n"
-"    border: 0px solid #fffff8;\n"
-"    font-size: 14pt;\n"
-"\n"
-"    width: 130px;\n"
-"    min-height: 20px;\n"
-"    gridline-color: #fffff8;\n"
-"    font-size: 12pt;\n"
-"\n"
-"    background-color: #646464;\n"
-"    border: 0px solid #fffff8;\n"
-"}")
-        self.label_evaluation4_text.setText("")
-        self.label_evaluation4_text.setObjectName("label_evaluation4_text")
-        self.horizontalLayout.addWidget(self.label_evaluation4_text)
-        self.verticalLayout_10.addLayout(self.horizontalLayout)
-        self.tableWidget_evaluation = QtWidgets.QTableWidget(self.horizontalLayoutWidget_3)
-        self.tableWidget_evaluation.setStyleSheet("QWidget {\n"
+        self.tableWidget = QtWidgets.QTableWidget(self.horizontalLayoutWidget_3)
+        self.tableWidget.setStyleSheet("QWidget {\n"
 "    background-color: #333333;\n"
 "    color: #fff;\n"
 "}\n"
@@ -654,16 +396,15 @@ class Ui_MainWindow(object):
 "    background-color: #646464;\n"
 "    border: 1px solid #fffff8;\n"
 "}")
-        self.tableWidget_evaluation.setObjectName("tableWidget_evaluation")
-        self.tableWidget_evaluation.setColumnCount(0)
-        self.tableWidget_evaluation.setRowCount(0)
-        self.verticalLayout_10.addWidget(self.tableWidget_evaluation)
-        self.horizontalLayout_3.addLayout(self.verticalLayout_10)
+        self.tableWidget.setObjectName("tableWidget")
+        self.tableWidget.setColumnCount(0)
+        self.tableWidget.setRowCount(0)
+        self.horizontalLayout_3.addWidget(self.tableWidget)
         self.tabWidget.addTab(self.tab_evaluation, "")
         self.tab_inspection = QtWidgets.QWidget()
         self.tab_inspection.setObjectName("tab_inspection")
         self.horizontalLayoutWidget_4 = QtWidgets.QWidget(self.tab_inspection)
-        self.horizontalLayoutWidget_4.setGeometry(QtCore.QRect(0, 0, 911, 1532))
+        self.horizontalLayoutWidget_4.setGeometry(QtCore.QRect(0, 0, 911, 591))
         self.horizontalLayoutWidget_4.setObjectName("horizontalLayoutWidget_4")
         self.horizontalLayout_4 = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget_4)
         self.horizontalLayout_4.setContentsMargins(0, 0, 0, 0)
@@ -701,6 +442,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_5.addWidget(self.button_inspect)
         self.button_saveResults = QtWidgets.QPushButton(self.horizontalLayoutWidget_4)
         self.button_saveResults.setStyleSheet("QPushButton {\n"
+"    display: none;\n"
 "    background-color: #393939;\n"
 "    min-width: 160px;\n"
 "    padding: 12px 16px;\n"
@@ -713,34 +455,11 @@ class Ui_MainWindow(object):
 "}")
         self.button_saveResults.setObjectName("button_saveResults")
         self.verticalLayout_5.addWidget(self.button_saveResults)
-        spacerItem7 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
-        self.verticalLayout_5.addItem(spacerItem7)
+        spacerItem3 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        self.verticalLayout_5.addItem(spacerItem3)
         self.horizontalLayout_4.addLayout(self.verticalLayout_5)
-        self.verticalLayout_9 = QtWidgets.QVBoxLayout()
-        self.verticalLayout_9.setObjectName("verticalLayout_9")
-        self.label_inspection = QtWidgets.QLabel(self.horizontalLayoutWidget_4)
-        self.label_inspection.setStyleSheet("QLabel {\n"
-"    background-color: #333333;\n"
-"    color: #fff;\n"
-"    background-color: #646464;\n"
-"    padding: 4px;\n"
-"    border: 0px solid #fffff8;\n"
-"    font-size: 14pt;\n"
-"\n"
-"    width: 130px;\n"
-"    min-height: 250px;\n"
-"    gridline-color: #fffff8;\n"
-"    font-size: 12pt;\n"
-"    text-align: center;\n"
-"\n"
-"    background-color: #646464;\n"
-"    border: 0px solid #fffff8;\n"
-"}")
-        self.label_inspection.setText("")
-        self.label_inspection.setObjectName("label_inspection")
-        self.verticalLayout_9.addWidget(self.label_inspection)
-        self.tableWidget_inspection = QtWidgets.QTableWidget(self.horizontalLayoutWidget_4)
-        self.tableWidget_inspection.setStyleSheet("QWidget {\n"
+        self.listWidget_4 = QtWidgets.QListWidget(self.horizontalLayoutWidget_4)
+        self.listWidget_4.setStyleSheet("QWidget {\n"
 "    background-color: #333333;\n"
 "    color: #fff;\n"
 "}\n"
@@ -767,11 +486,8 @@ class Ui_MainWindow(object):
 "    background-color: #646464;\n"
 "    border: 1px solid #fffff8;\n"
 "}")
-        self.tableWidget_inspection.setObjectName("tableWidget_inspection")
-        self.tableWidget_inspection.setColumnCount(0)
-        self.tableWidget_inspection.setRowCount(0)
-        self.verticalLayout_9.addWidget(self.tableWidget_inspection)
-        self.horizontalLayout_4.addLayout(self.verticalLayout_9)
+        self.listWidget_4.setObjectName("listWidget_4")
+        self.horizontalLayout_4.addWidget(self.listWidget_4)
         self.tabWidget.addTab(self.tab_inspection, "")
         self.gridLayout.addWidget(self.tabWidget, 0, 0, 1, 1)
         MainWindow.setCentralWidget(self.centralwidget)
@@ -781,16 +497,29 @@ class Ui_MainWindow(object):
         self.menubar.setStyleSheet("")
         self.menubar.setObjectName("menubar")
         self.menuData = QtWidgets.QMenu(self.menubar)
+        self.menuData.setGeometry(QtCore.QRect(287, 139, 153, 56))
+        self.menuData.setStyleSheet("background-color: #fff;\n"
+"color: #000;")
         self.menuData.setObjectName("menuData")
         self.menuKnowledge = QtWidgets.QMenu(self.menubar)
+        self.menuKnowledge.setStyleSheet("background-color: #fff;\n"
+"color: #000;")
         self.menuKnowledge.setObjectName("menuKnowledge")
         self.menuTest = QtWidgets.QMenu(self.menubar)
+        self.menuTest.setStyleSheet("background-color: #fff;\n"
+"color: #000;")
         self.menuTest.setObjectName("menuTest")
         self.menuInspection = QtWidgets.QMenu(self.menubar)
+        self.menuInspection.setStyleSheet("background-color: #fff;\n"
+"color: #000;")
         self.menuInspection.setObjectName("menuInspection")
         self.menuAbout = QtWidgets.QMenu(self.menubar)
+        self.menuAbout.setStyleSheet("background-color: #fff;\n"
+"color: #000;")
         self.menuAbout.setObjectName("menuAbout")
         self.menuIntroduction = QtWidgets.QMenu(self.menubar)
+        self.menuIntroduction.setStyleSheet("background-color: #fff;\n"
+"color: #000;")
         self.menuIntroduction.setObjectName("menuIntroduction")
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
@@ -810,13 +539,62 @@ class Ui_MainWindow(object):
         self.actionload_document.setObjectName("actionload_document")
         self.actioninspect = QtWidgets.QAction(MainWindow)
         self.actioninspect.setObjectName("actioninspect")
+        self.actionGeneral_Purpose = QtWidgets.QAction(MainWindow)
+        self.actionGeneral_Purpose.setObjectName("actionGeneral_Purpose")
+        self.actionData = QtWidgets.QAction(MainWindow)
+        self.actionData.setObjectName("actionData")
+        self.actionAnalysis = QtWidgets.QAction(MainWindow)
+        self.actionAnalysis.setObjectName("actionAnalysis")
+        self.actionEvaluation = QtWidgets.QAction(MainWindow)
+        self.actionEvaluation.setObjectName("actionEvaluation")
+        self.actionInspection = QtWidgets.QAction(MainWindow)
+        self.actionInspection.setObjectName("actionInspection")
+        self.actionUse_Case = QtWidgets.QAction(MainWindow)
+        self.actionUse_Case.setObjectName("actionUse_Case")
+        self.actionOther_Use_Cases = QtWidgets.QAction(MainWindow)
+        self.actionOther_Use_Cases.setObjectName("actionOther_Use_Cases")
+        self.actionInstruction = QtWidgets.QAction(MainWindow)
+        self.actionInstruction.setObjectName("actionInstruction")
+        self.actionResearch = QtWidgets.QAction(MainWindow)
+        self.actionResearch.setObjectName("actionResearch")
+        self.actionInterpretation = QtWidgets.QAction(MainWindow)
+        self.actionInterpretation.setObjectName("actionInterpretation")
+        self.actionResult = QtWidgets.QAction(MainWindow)
+        self.actionResult.setObjectName("actionResult")
+        self.actionResult_2 = QtWidgets.QAction(MainWindow)
+        self.actionResult_2.setObjectName("actionResult_2")
+        self.actionInteraction = QtWidgets.QAction(MainWindow)
+        self.actionInteraction.setObjectName("actionInteraction")
+        self.actionCredits = QtWidgets.QAction(MainWindow)
+        self.actionCredits.setObjectName("actionCredits")
+        self.actionDevelopment = QtWidgets.QAction(MainWindow)
+        self.actionDevelopment.setObjectName("actionDevelopment")
+        self.actionLicence = QtWidgets.QAction(MainWindow)
+        self.actionLicence.setObjectName("actionLicence")
+        self.actionIdea = QtWidgets.QAction(MainWindow)
+        self.actionIdea.setObjectName("actionIdea")
+        self.actionFeedback = QtWidgets.QAction(MainWindow)
+        self.actionFeedback.setObjectName("actionFeedback")
+        self.actionTroubleshooting = QtWidgets.QAction(MainWindow)
+        self.actionTroubleshooting.setObjectName("actionTroubleshooting")
+        self.actionContact = QtWidgets.QAction(MainWindow)
+        self.actionContact.setObjectName("actionContact")
         self.menuData.addAction(self.actionload)
-        self.menuData.addAction(self.actionimport)
-        self.menuKnowledge.addAction(self.actiontrain)
-        self.menuKnowledge.addAction(self.actionimport_2)
+        self.menuKnowledge.addAction(self.actionInstruction)
+        self.menuKnowledge.addAction(self.actionResearch)
         self.menuTest.addAction(self.actionevaluate)
-        self.menuInspection.addAction(self.actionload_document)
-        self.menuInspection.addAction(self.actioninspect)
+        self.menuInspection.addAction(self.actionInteraction)
+        self.menuAbout.addAction(self.actionDevelopment)
+        self.menuAbout.addAction(self.actionCredits)
+        self.menuAbout.addAction(self.actionLicence)
+        self.menuAbout.addSeparator()
+        self.menuAbout.addAction(self.actionFeedback)
+        self.menuAbout.addAction(self.actionTroubleshooting)
+        self.menuAbout.addAction(self.actionContact)
+        self.menuIntroduction.addAction(self.actionUse_Case)
+        self.menuIntroduction.addSeparator()
+        self.menuIntroduction.addAction(self.actionGeneral_Purpose)
+        self.menuIntroduction.addAction(self.actionOther_Use_Cases)
         self.menubar.addAction(self.menuIntroduction.menuAction())
         self.menubar.addAction(self.menuData.menuAction())
         self.menubar.addAction(self.menuKnowledge.menuAction())
@@ -825,10 +603,8 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.menuAbout.menuAction())
 
         self.retranslateUi(MainWindow)
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(3)
         self.button_loadData.clicked.connect(self.loadData)
-        self.button_exportData.clicked.connect(self.saveSpectra)
-        self.button_importData.clicked.connect(self.getSpectra)
         self.button_evaluate.clicked.connect(self.showStat)
         self.button_loadImage.clicked.connect(self.loadImg)
         #self.button_importKnowledge.clicked.connect(self.getCorrelation)
@@ -842,19 +618,14 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "Pridentifier"))
-        self.label.setText(_translate("MainWindow", "Training method: "))
-        self.dropdown_dataMethod.setItemText(0, _translate("MainWindow", "FFT Fingerprint"))
-        self.dropdown_dataMethod.setItemText(1, _translate("MainWindow", "images only"))
         self.button_loadData.setText(_translate("MainWindow", "LOAD"))
-        self.button_exportData.setText(_translate("MainWindow", "export data"))
-        self.button_importData.setText(_translate("MainWindow", "import data"))
-        self.label_2.setText(_translate("MainWindow", "Loading:"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_data), _translate("MainWindow", "Data"))
-        self.button_train.setText(_translate("MainWindow", "TRAIN"))
-        self.button_exportKnowledge.setText(_translate("MainWindow", "export knowledge"))
-        self.button_importKnowledge.setText(_translate("MainWindow", "import knowledge"))
-        self.label_7.setText(_translate("MainWindow", "Training:"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_learning), _translate("MainWindow", "Learning"))
+        self.label_2.setText(_translate("MainWindow", "Feature count:"))
+        self.label_3.setText(_translate("MainWindow", "Segment width:"))
+        self.button_train.setText(_translate("MainWindow", "ANALYZE"))
+        self.button_exportKnowledge.setText(_translate("MainWindow", "export analysis"))
+        self.button_importKnowledge.setText(_translate("MainWindow", "import analysis"))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_learning), _translate("MainWindow", "Analysis"))
         self.button_evaluate.setText(_translate("MainWindow", "EVALUATE"))
         self.button_saveStatistics.setText(_translate("MainWindow", "save statistics"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_evaluation), _translate("MainWindow", "Evaluation"))
@@ -863,19 +634,38 @@ class Ui_MainWindow(object):
         self.button_saveResults.setText(_translate("MainWindow", "save results"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_inspection), _translate("MainWindow", "Inspection"))
         self.menuData.setTitle(_translate("MainWindow", "Data"))
-        self.menuKnowledge.setTitle(_translate("MainWindow", "Learning"))
+        self.menuKnowledge.setTitle(_translate("MainWindow", "Analysis"))
         self.menuTest.setTitle(_translate("MainWindow", "Evaluation"))
         self.menuInspection.setTitle(_translate("MainWindow", "Inspection"))
-        self.menuAbout.setTitle(_translate("MainWindow", "About"))
+        self.menuAbout.setTitle(_translate("MainWindow", "Info"))
         self.menuIntroduction.setTitle(_translate("MainWindow", "Instruction"))
-        self.actionload.setText(_translate("MainWindow", "load"))
+        self.actionload.setText(_translate("MainWindow", "Usage"))
         self.actionimport.setText(_translate("MainWindow", "import data"))
         self.actiontrain.setText(_translate("MainWindow", "train"))
         self.actionimport_2.setText(_translate("MainWindow", "import knowledge"))
-        self.actionevaluate.setText(_translate("MainWindow", "evaluate"))
+        self.actionevaluate.setText(_translate("MainWindow", "Usage"))
         self.actionload_document.setText(_translate("MainWindow", "load image"))
         self.actioninspect.setText(_translate("MainWindow", "inspect"))
-
+        self.actionGeneral_Purpose.setText(_translate("MainWindow", "Purpose"))
+        self.actionData.setText(_translate("MainWindow", "Data"))
+        self.actionAnalysis.setText(_translate("MainWindow", "Analysis"))
+        self.actionEvaluation.setText(_translate("MainWindow", "Evaluation"))
+        self.actionInspection.setText(_translate("MainWindow", "Inspection"))
+        self.actionUse_Case.setText(_translate("MainWindow", "Example"))
+        self.actionOther_Use_Cases.setText(_translate("MainWindow", "Other Use Cases"))
+        self.actionInstruction.setText(_translate("MainWindow", "Uasge"))
+        self.actionResearch.setText(_translate("MainWindow", "Method"))
+        self.actionInterpretation.setText(_translate("MainWindow", "Interpretation"))
+        self.actionResult.setText(_translate("MainWindow", "Result"))
+        self.actionResult_2.setText(_translate("MainWindow", "Result"))
+        self.actionInteraction.setText(_translate("MainWindow", "Usage"))
+        self.actionCredits.setText(_translate("MainWindow", "Credits"))
+        self.actionDevelopment.setText(_translate("MainWindow", "Development"))
+        self.actionLicence.setText(_translate("MainWindow", "Licence"))
+        self.actionIdea.setText(_translate("MainWindow", "Idea"))
+        self.actionFeedback.setText(_translate("MainWindow", "Feedback"))
+        self.actionTroubleshooting.setText(_translate("MainWindow", "Troubleshooting"))
+        self.actionContact.setText(_translate("MainWindow", "Contact"))
 
 
 

@@ -1,7 +1,11 @@
 import os
+import time
+
 import pandas as pd
 from PIL import Image
-
+from PyQt5.QtCore import pyqtSignal
+from PyQt5.QtCore import QObject, pyqtSlot
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 from .fingerprint import Fingerprint
 from ..evaluator import Evaluator
@@ -10,8 +14,15 @@ from ..feature_extractor import FeatureExtractor
 from config import SNIPPET_WIDTH
 
 
-class Pridentifier(object):
+class Pridentifier(QObject):
+
+    # signals
+    changedValue = pyqtSignal(int)
+
     def __init__(self):
+
+        super(Pridentifier, self).__init__()
+
         # [1] classifier data
         self.path = ""
         self.classes = []
@@ -20,6 +31,7 @@ class Pridentifier(object):
         self.traindata = []
         self.evaluation_result = pd.DataFrame()
         self.test_result = pd.DataFrame()
+        #self.changedValue = 0
 
 
         # [2] classification configuration
@@ -33,48 +45,44 @@ class Pridentifier(object):
         # after test
         # after inspection
 
+
+        #self.emit(pyqtSignal('extract_features(int)'), self.extract_features)
+
+        # Setting a connection between slider position change and on_changed_value function
+        #self.connect(self.get_thread, pyqtSignal("extract_features(int)"), self.extract_features)
+
         #self.load_images(self.path)
         #self.extract_features()
         #self.evaluate()
 
 
+
     def load_images(self, path):
 
         self.path = path
+        calc = ProgressLoadData(path)
 
-        # get classes information
-        try:
-            self.classes = os.listdir(path)
-        except FileNotFoundError:
-            print('No folder was selected. Canceled.')
-            return
+        return(calc)
 
-        # remove hidden folders and only count folders
-        self.classes = [folder for folder in self.classes if not folder.startswith('.') and os.path.isdir(path + '/' + \
-                                                                                                          folder)]
-        # sort classes alphabetically
-        self.classes.sort()
+    # to write data from calculation object (signal/slot)
+    def write_image_infos(self, args):
+        self.classes = args[0]
+        self.number_of_classes = args[1]
+        self.fingerprints = args[2]
+        self.amount_images_per_class = args[3]
+        self.amount_snippets_per_class = args[4]
+        return()
 
-        print('classes: ', self.classes)
-        print('path: ', path)
-
-        self.number_of_classes = len(self.classes)
-
-        for class_name in self.classes:
-            class_path = path + '/' + class_name
-            fingerprint = Fingerprint(class_path)
-            self.fingerprints.append(fingerprint)
-            amount_images, amount_snippets = fingerprint.get_numbers()
-            self.amount_images_per_class.append(amount_images)
-            self.amount_snippets_per_class.append(amount_snippets)
-
-
+    # to write data from calculation object (signal/slot)
+    def write_training_results(self, args):
+        self.fingerprints = args
 
 
     def extract_features(self):
 
-        for fingerprint in self.fingerprints:
-            fingerprint.extract_fingerprint()
+        calc = ProgressAnalyzeData(self.fingerprints)
+
+        return(calc)
 
 
 
@@ -207,4 +215,81 @@ class Pridentifier(object):
 
 
 
+
+class ProgressLoadData(QtCore.QObject):
+    """
+    Runs a counter object.
+    """
+    imageUploadStatusChanged = pyqtSignal(int, object)
+
+    def __init__(self, path):
+        super(ProgressLoadData, self).__init__()
+        self.path = path
+
+    def run(self):
+        fingerprints = []
+        amount_images_per_class = []
+        amount_snippets_per_class = []
+
+        count = 0
+        # get classes information
+        try:
+            classes = os.listdir(self.path)
+        except FileNotFoundError:
+            print('No folder was selected. Canceled.')
+            return
+
+        # remove hidden folders and only count folders
+        classes = [folder for folder in classes if not folder.startswith('.') and os.path.isdir(self.path
+                                                                                                          + '/' +
+                                                                                                          folder)]
+        # sort classes alphabetically
+        classes.sort()
+
+        count += 10
+        self.imageUploadStatusChanged.emit(count, None)
+
+
+        print('classes: ', classes)
+
+        number_of_classes = len(classes)
+
+        for class_name in classes:
+            class_path = self.path + '/' + class_name
+            fingerprint = Fingerprint(class_path)
+            fingerprints.append(fingerprint)
+            amount_images, amount_snippets = fingerprint.get_numbers()
+            amount_images_per_class.append(amount_images)
+            amount_snippets_per_class.append(amount_snippets)
+
+            count += 90 //number_of_classes
+            self.imageUploadStatusChanged.emit(count, None)
+
+        count = 100
+        args = classes, number_of_classes, fingerprints, amount_images_per_class, amount_snippets_per_class
+        self.imageUploadStatusChanged.emit(count, args)
+
+
+
+class ProgressAnalyzeData(QtCore.QThread, QtCore.QObject):
+    """
+    Runs a counter object.
+    """
+    analyzeDataStatusChanged = pyqtSignal(int, object)
+
+    def __init__(self, fingerprints):
+        super(ProgressAnalyzeData, self).__init__()
+        self.fingerprints = fingerprints
+
+    def run(self):
+
+        count = 0
+
+        for fingerprint in self.fingerprints:
+            fingerprint.extract_fingerprint()
+            count += 100//len(self.fingerprints)
+            self.analyzeDataStatusChanged.emit(count, None)
+
+        args = self.fingerprints
+        self.analyzeDataStatusChanged.emit(count, args)
 

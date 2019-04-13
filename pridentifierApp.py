@@ -4,6 +4,8 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 import pandas as pd
 from PyQt5.QtGui import QPixmap
+from PyQt5.QtCore import QObject, pyqtSlot
+
 
 from config import *
 from src.objects import pridentifier
@@ -17,6 +19,16 @@ class Ui_MainWindow(object):
         super(Ui_MainWindow, self).__init__()
         print("Number of Pixels: ", NUMBER_PIXELS)
         self.pridentifier = pridentifier.Pridentifier()
+        #self.make_connection(pridentifier)
+
+    #def make_connection(self, pridentifier):
+    #    pridentifier.connect(self.get_slider_value)
+
+    #@pyqtSlot(int)
+    #def get_slider_value(self, val):
+    #    self.progressBar_loadingTraining.setValue(val)
+
+
 
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")

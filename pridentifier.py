@@ -15,9 +15,9 @@ from src.objects import pridentifier
 #TODO: make window responsive
 #TODO: make loading bars show iterative process
 
-class Ui_MainWindow(object):
+class Ui_Pridentifier(object):
     def __init__(self):
-        super(Ui_MainWindow, self).__init__()
+        super(Ui_Pridentifier, self).__init__()
         print("Number of Pixels: ", config.NUMBER_PIXELS)
         self.pridentifier = pridentifier.Pridentifier()
         #self.make_connection(pridentifier)
@@ -28,6 +28,20 @@ class Ui_MainWindow(object):
     #@pyqtSlot(int)
     #def get_slider_value(self, val):
     #    self.progressBar_loadingTraining.setValue(val)
+
+    #slot
+    def onImageLoadUpdate(self, value, args=None):
+        self.progressBar_loadingData.setValue(value)
+        if args:
+            self.pridentifier.write_image_infos(args)
+        return()
+
+    #slot
+    def onAnalyzeDataUpdate(self, value, args=None):
+        self.progressBar_loadingTraining.setValue(value)
+        if args:
+            self.pridentifier.write_training_results(args)
+        return()
 
 
 
@@ -869,7 +883,8 @@ class Ui_MainWindow(object):
         self.button_inspect.clicked.connect(self.inspection)
         self.spinBox_2.valueChanged['int'].connect(self.changeSegmentSize)
         self.spinBox.valueChanged['int'].connect(self.changeFeatureCount)
-        self.menubar.hovered['QAction*'].connect(self.progressBar_loadingData.setValue)
+        #self.menubar.hovered['QAction*'].connect(self.progressBar_loadingData.setValue)
+        #self.progressView.countChanged['int'].connect(self.__updateProgressBar)
         self.menubar.hovered['QAction*'].connect(self.progressBar_loadingTraining.setValue)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
@@ -973,9 +988,18 @@ class Ui_MainWindow(object):
         dialog = QtWidgets.QFileDialog()
         path = dialog.getExistingDirectory(directory='..', options=QtWidgets.QFileDialog.ShowDirsOnly)
 
+
         if path:
-            self.pridentifier.load_images(path)
-            self.progressBar_loadingData.setValue(100)
+            self.progressBar_loadingData.setValue(0)
+
+            #####
+            self.calc = self.pridentifier.load_images(path)
+            self.calc.imageUploadStatusChanged.connect(self.onImageLoadUpdate)
+            self.calc.run()
+            #####
+
+            #self.progressBar_loadingData.setValue(100)
+
 
             # numbers of loaded data
             self.loadTable(self.tableWidget_data)
@@ -1028,9 +1052,14 @@ class Ui_MainWindow(object):
 
     def training(self):
 
-        self.pridentifier.extract_features()
-        self.pridentifier.evaluate()
-        self.progressBar_loadingTraining.setValue(100)
+        self.progressBar_loadingTraining.setValue(0)
+        #####
+        self.calc2 = self.pridentifier.extract_features()
+        self.calc2.analyzeDataStatusChanged.connect(self.onAnalyzeDataUpdate)
+        self.calc2.start()
+        #####
+
+        #self.progressBar_loadingTraining.setValue(100)
         self.tableWidget_learning
 
 
@@ -1056,6 +1085,8 @@ class Ui_MainWindow(object):
     '''
 
     def showStat(self):
+
+        self.pridentifier.evaluate()
 
         # show computed fingerprint images
         self.showFingerprints()
@@ -1225,7 +1256,7 @@ def main():
     import sys
     app = QtWidgets.QApplication(sys.argv)
     Window = QtWidgets.QMainWindow()
-    ui = Ui_MainWindow()
+    ui = Ui_Pridentifier()
     ui.setupUi(Window)
     Window.show()
     sys.exit(app.exec_())
