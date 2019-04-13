@@ -205,7 +205,7 @@ class Pridentifier(QObject):
 
 
 
-class ProgressLoadData(QtCore.QObject):
+class ProgressLoadData(QtCore.QThread, QtCore.QObject):
     """
     Runs a counter object.
     """

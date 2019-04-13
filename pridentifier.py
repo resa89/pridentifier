@@ -34,6 +34,7 @@ class Ui_Pridentifier(object):
         self.progressBar_loadingData.setValue(value)
         if args:
             self.pridentifier.write_image_infos(args)
+            self.showLoadedData()
         return()
 
     #slot
@@ -1081,12 +1082,11 @@ class Ui_Pridentifier(object):
             #####
             self.calc = self.pridentifier.load_images(path)
             self.calc.imageUploadStatusChanged.connect(self.onImageLoadUpdate)
-            self.calc.run()
+            self.calc.start()
             #####
-
             #self.progressBar_loadingData.setValue(100)
 
-
+    def showLoadedData(self):
             # numbers of loaded data
             self.loadTable(self.tableWidget_data)
             # TODO: rewrite table when data is loaded a second time
