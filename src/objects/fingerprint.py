@@ -20,6 +20,15 @@ class Fingerprint(object):
         self.load_images()
 
 
+    def update_pixelSize(self, NUMBER_PIXELS):
+
+        # TODO: inform user that feature amount is larger than snippet size
+        if self.SNIPPET_WIDTH*self.SNIPPET_WIDTH < NUMBER_PIXELS:
+            self.NUMBER_PIXELS = self.SNIPPET_WIDTH*self.SNIPPET_WIDTH
+        else:
+            self.NUMBER_PIXELS = NUMBER_PIXELS
+
+
     def load_images(self):
 
         self.img_names = os.listdir(self.path_to_images_of_class)

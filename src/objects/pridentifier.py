@@ -101,7 +101,7 @@ class Pridentifier(QObject):
 
 
     def extract_features(self):
-        calc = ProgressAnalyzeData(self.fingerprints)
+        calc = ProgressAnalyzeData(self.fingerprints, self.NUMBER_PIXELS)
         return(calc)
 
 
@@ -283,15 +283,17 @@ class ProgressAnalyzeData(QtCore.QThread, QtCore.QObject):
     """
     analyzeDataStatusChanged = pyqtSignal(int, object)
 
-    def __init__(self, fingerprints):
+    def __init__(self, fingerprints, NUMBER_PIXELS):
         super(ProgressAnalyzeData, self).__init__()
         self.fingerprints = fingerprints
+        self.NUMBER_PIXELS = NUMBER_PIXELS
 
     def run(self):
 
         count = 0
 
         for fingerprint in self.fingerprints:
+            fingerprint.update_pixelSize(self.NUMBER_PIXELS)
             fingerprint.extract_fingerprint()
             count += 100//len(self.fingerprints)
             self.analyzeDataStatusChanged.emit(count, None)

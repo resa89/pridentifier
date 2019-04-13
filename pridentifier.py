@@ -1244,6 +1244,8 @@ class Ui_Pridentifier(object):
         list_of_texts = [self.label_analysis1_class, self.label_analysis2_class, self.label_analysis3_class,
                          self.label_analysis4_class, self.label_analysis5_class, self.label_analysis6_class,
                          self.label_analysis7_class, self.label_analysis8_class]
+        test_label = self.label_inspection_fingerprint
+
         #TODO: make size of widgets dynamic
 
         # prepare path to fingerprint images
@@ -1261,19 +1263,29 @@ class Ui_Pridentifier(object):
                 img_path = path + class_name + "_fingerprint.png"
                 #data_path = path + class_name + "_fingerprint.pkl"
             else:
-                img_path = path + "test_" + class_name + "_fingerprint.png"
+                img_path = path + "test_Q_fingerprint.png"
                 #data_path = path + "test_" + class_name + "_fingerprint.pkl"
 
             qimg.load(img_path)
             #create widget
             fingerprint = QPixmap.fromImage(qimg)
 
-            label = list_of_labels[i]
-            text = list_of_texts[i]
+            if train:
+                label = list_of_labels[i]
+                text = list_of_texts[i]
+            else:
+                label = test_label
+                text = ''
 
             label.setPixmap(fingerprint.scaled(
                     label.size(), QtCore.Qt.KeepAspectRatio,QtCore.Qt.SmoothTransformation))
-            text.setText(class_name)
+
+            label.setAlignment(QtCore.Qt.AlignCenter)
+            #self.tableWidget_inspection.clear()
+
+
+            if train:
+                text.setText(class_name)
 
 
 
@@ -1512,6 +1524,8 @@ class Ui_Pridentifier(object):
 
     def inspection(self):
 
+
+
         self.progressBar_inspection.setValue(0)
         #####
         self.calc3 = self.pridentifier.inspect()
@@ -1521,6 +1535,8 @@ class Ui_Pridentifier(object):
 
 
     def showInspectionResults(self):
+        # show computed fingerprint images
+        self.showFingerprints(train=False)
         # get computed statistcs for test image
         statistics = self.pridentifier.get_stats(train=False)
         classified_as_class = statistics[0]
