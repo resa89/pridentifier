@@ -123,7 +123,7 @@ class Ui_MainWindow(object):
         self.tab_data.setStyleSheet("")
         self.tab_data.setObjectName("tab_data")
         self.horizontalLayoutWidget = QtWidgets.QWidget(self.tab_data)
-        self.horizontalLayoutWidget.setGeometry(QtCore.QRect(0, 0, 911, 591))
+        self.horizontalLayoutWidget.setGeometry(QtCore.QRect(0, 0, 911, 656))
         self.horizontalLayoutWidget.setObjectName("horizontalLayoutWidget")
         self.horizontalLayout_6 = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget)
         self.horizontalLayout_6.setContentsMargins(0, 0, 0, 0)
@@ -197,6 +197,8 @@ class Ui_MainWindow(object):
         self.horizontalLayout_5.addItem(spacerItem2)
         self.verticalLayout.addLayout(self.horizontalLayout_5)
         self.tableWidget_data = QtWidgets.QTableWidget(self.horizontalLayoutWidget)
+        self.tableWidget_data.setMinimumSize(QtCore.QSize(300, 200))
+        self.tableWidget_data.setMaximumSize(QtCore.QSize(3000, 2000))
         self.tableWidget_data.setStyleSheet("QWidget {\n"
 "    background-color: #333333;\n"
 "    color: #fff;\n"
@@ -234,7 +236,7 @@ class Ui_MainWindow(object):
         self.tab_learning = QtWidgets.QWidget()
         self.tab_learning.setObjectName("tab_learning")
         self.horizontalLayoutWidget_2 = QtWidgets.QWidget(self.tab_learning)
-        self.horizontalLayoutWidget_2.setGeometry(QtCore.QRect(0, 0, 911, 591))
+        self.horizontalLayoutWidget_2.setGeometry(QtCore.QRect(0, 0, 911, 645))
         self.horizontalLayoutWidget_2.setObjectName("horizontalLayoutWidget_2")
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget_2)
         self.horizontalLayout_2.setContentsMargins(0, 0, 0, 0)
@@ -340,6 +342,336 @@ class Ui_MainWindow(object):
         spacerItem5 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_11.addItem(spacerItem5)
         self.verticalLayout_8.addLayout(self.horizontalLayout_11)
+        spacerItem6 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        self.verticalLayout_8.addItem(spacerItem6)
+        self.label_evaluation4c = QtWidgets.QHBoxLayout()
+        self.label_evaluation4c.setObjectName("label_evaluation4c")
+        self.label_analysis1 = QtWidgets.QLabel(self.horizontalLayoutWidget_2)
+        self.label_analysis1.setStyleSheet("QLabel {\n"
+"    background-color: #333333;\n"
+"    color: #fff;\n"
+"    background-color: #646464;\n"
+"    padding: 4px;\n"
+"    border: 0px solid #fffff8;\n"
+"    font-size: 14pt;\n"
+"\n"
+"    width: 130px;\n"
+"    min-height: 150px;\n"
+"    gridline-color: #fffff8;\n"
+"    font-size: 12pt;\n"
+"\n"
+"    background-color: #646464;\n"
+"    border: 0px solid #fffff8;\n"
+"}")
+        self.label_analysis1.setText("")
+        self.label_analysis1.setObjectName("label_analysis1")
+        self.label_evaluation4c.addWidget(self.label_analysis1)
+        self.label_analysis2 = QtWidgets.QLabel(self.horizontalLayoutWidget_2)
+        self.label_analysis2.setStyleSheet("QLabel {\n"
+"    background-color: #333333;\n"
+"    color: #fff;\n"
+"    background-color: #646464;\n"
+"    padding: 4px;\n"
+"    border: 0px solid #fffff8;\n"
+"    font-size: 14pt;\n"
+"\n"
+"    width: 130px;\n"
+"    min-height: 150px;\n"
+"    gridline-color: #fffff8;\n"
+"    font-size: 12pt;\n"
+"\n"
+"    background-color: #646464;\n"
+"    border: 0px solid #fffff8;\n"
+"}")
+        self.label_analysis2.setText("")
+        self.label_analysis2.setObjectName("label_analysis2")
+        self.label_evaluation4c.addWidget(self.label_analysis2)
+        self.label_analysis3 = QtWidgets.QLabel(self.horizontalLayoutWidget_2)
+        self.label_analysis3.setStyleSheet("QLabel {\n"
+"    background-color: #333333;\n"
+"    color: #fff;\n"
+"    background-color: #646464;\n"
+"    padding: 4px;\n"
+"    border: 0px solid #fffff8;\n"
+"    font-size: 14pt;\n"
+"\n"
+"    width: 130px;\n"
+"    min-height: 150px;\n"
+"    gridline-color: #fffff8;\n"
+"    font-size: 12pt;\n"
+"\n"
+"    background-color: #646464;\n"
+"    border: 0px solid #fffff8;\n"
+"}")
+        self.label_analysis3.setText("")
+        self.label_analysis3.setObjectName("label_analysis3")
+        self.label_evaluation4c.addWidget(self.label_analysis3)
+        self.label_analysis4 = QtWidgets.QLabel(self.horizontalLayoutWidget_2)
+        self.label_analysis4.setStyleSheet("QLabel {\n"
+"    background-color: #333333;\n"
+"    color: #fff;\n"
+"    background-color: #646464;\n"
+"    padding: 4px;\n"
+"    border: 0px solid #fffff8;\n"
+"    font-size: 14pt;\n"
+"\n"
+"    width: 130px;\n"
+"    min-height: 150px;\n"
+"    gridline-color: #fffff8;\n"
+"    font-size: 12pt;\n"
+"\n"
+"    background-color: #646464;\n"
+"    border: 0px solid #fffff8;\n"
+"}")
+        self.label_analysis4.setText("")
+        self.label_analysis4.setObjectName("label_analysis4")
+        self.label_evaluation4c.addWidget(self.label_analysis4)
+        self.verticalLayout_8.addLayout(self.label_evaluation4c)
+        self.horizontalLayout_12 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_12.setObjectName("horizontalLayout_12")
+        self.label_analysis1_class = QtWidgets.QLabel(self.horizontalLayoutWidget_2)
+        self.label_analysis1_class.setStyleSheet("QLabel {\n"
+"    background-color: #333333;\n"
+"    color: #fff;\n"
+"    background-color: #646464;\n"
+"    padding: 4px;\n"
+"    border: 0px solid #fffff8;\n"
+"\n"
+"    width: 130px;\n"
+"    min-height: 20px;\n"
+"    gridline-color: #fffff8;\n"
+"    font: 13pt \"Helvetica\";\n"
+"\n"
+"    background-color: #646464;\n"
+"    border: 0px solid #fffff8;\n"
+"}")
+        self.label_analysis1_class.setText("")
+        self.label_analysis1_class.setObjectName("label_analysis1_class")
+        self.horizontalLayout_12.addWidget(self.label_analysis1_class)
+        self.label_analysis2_class = QtWidgets.QLabel(self.horizontalLayoutWidget_2)
+        self.label_analysis2_class.setStyleSheet("QLabel {\n"
+"    background-color: #333333;\n"
+"    color: #fff;\n"
+"    background-color: #646464;\n"
+"    padding: 4px;\n"
+"    border: 0px solid #fffff8;\n"
+"\n"
+"    width: 130px;\n"
+"    min-height: 20px;\n"
+"    gridline-color: #fffff8;\n"
+"    font: 13pt \"Helvetica\";\n"
+"\n"
+"    background-color: #646464;\n"
+"    border: 0px solid #fffff8;\n"
+"}")
+        self.label_analysis2_class.setText("")
+        self.label_analysis2_class.setObjectName("label_analysis2_class")
+        self.horizontalLayout_12.addWidget(self.label_analysis2_class)
+        self.label_analysis3_class = QtWidgets.QLabel(self.horizontalLayoutWidget_2)
+        self.label_analysis3_class.setStyleSheet("QLabel {\n"
+"    background-color: #333333;\n"
+"    color: #fff;\n"
+"    background-color: #646464;\n"
+"    padding: 4px;\n"
+"    border: 0px solid #fffff8;\n"
+"\n"
+"    width: 130px;\n"
+"    min-height: 20px;\n"
+"    gridline-color: #fffff8;\n"
+"    font: 13pt \"Helvetica\";\n"
+"\n"
+"    background-color: #646464;\n"
+"    border: 0px solid #fffff8;\n"
+"}")
+        self.label_analysis3_class.setText("")
+        self.label_analysis3_class.setObjectName("label_analysis3_class")
+        self.horizontalLayout_12.addWidget(self.label_analysis3_class)
+        self.label_analysis4_class = QtWidgets.QLabel(self.horizontalLayoutWidget_2)
+        self.label_analysis4_class.setStyleSheet("QLabel {\n"
+"    background-color: #333333;\n"
+"    color: #fff;\n"
+"    background-color: #646464;\n"
+"    padding: 4px;\n"
+"    border: 0px solid #fffff8;\n"
+"\n"
+"    width: 130px;\n"
+"    min-height: 20px;\n"
+"    gridline-color: #fffff8;\n"
+"    font: 13pt \"Helvetica\";\n"
+"\n"
+"    background-color: #646464;\n"
+"    border: 0px solid #fffff8;\n"
+"}")
+        self.label_analysis4_class.setText("")
+        self.label_analysis4_class.setObjectName("label_analysis4_class")
+        self.horizontalLayout_12.addWidget(self.label_analysis4_class)
+        self.verticalLayout_8.addLayout(self.horizontalLayout_12)
+        spacerItem7 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        self.verticalLayout_8.addItem(spacerItem7)
+        spacerItem8 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        self.verticalLayout_8.addItem(spacerItem8)
+        self.horizontalLayout = QtWidgets.QHBoxLayout()
+        self.horizontalLayout.setObjectName("horizontalLayout")
+        self.label_analysis5 = QtWidgets.QLabel(self.horizontalLayoutWidget_2)
+        self.label_analysis5.setStyleSheet("QLabel {\n"
+"    background-color: #333333;\n"
+"    color: #fff;\n"
+"    background-color: #646464;\n"
+"    padding: 4px;\n"
+"    border: 0px solid #fffff8;\n"
+"    font-size: 14pt;\n"
+"\n"
+"    width: 130px;\n"
+"    min-height: 150px;\n"
+"    gridline-color: #fffff8;\n"
+"    font-size: 12pt;\n"
+"\n"
+"    background-color: #646464;\n"
+"    border: 0px solid #fffff8;\n"
+"}")
+        self.label_analysis5.setText("")
+        self.label_analysis5.setObjectName("label_analysis5")
+        self.horizontalLayout.addWidget(self.label_analysis5)
+        self.label_analysis6 = QtWidgets.QLabel(self.horizontalLayoutWidget_2)
+        self.label_analysis6.setStyleSheet("QLabel {\n"
+"    background-color: #333333;\n"
+"    color: #fff;\n"
+"    background-color: #646464;\n"
+"    padding: 4px;\n"
+"    border: 0px solid #fffff8;\n"
+"    font-size: 14pt;\n"
+"\n"
+"    width: 130px;\n"
+"    min-height: 150px;\n"
+"    gridline-color: #fffff8;\n"
+"    font-size: 12pt;\n"
+"\n"
+"    background-color: #646464;\n"
+"    border: 0px solid #fffff8;\n"
+"}")
+        self.label_analysis6.setText("")
+        self.label_analysis6.setObjectName("label_analysis6")
+        self.horizontalLayout.addWidget(self.label_analysis6)
+        self.label_analysis7 = QtWidgets.QLabel(self.horizontalLayoutWidget_2)
+        self.label_analysis7.setStyleSheet("QLabel {\n"
+"    background-color: #333333;\n"
+"    color: #fff;\n"
+"    background-color: #646464;\n"
+"    padding: 4px;\n"
+"    border: 0px solid #fffff8;\n"
+"    font-size: 14pt;\n"
+"\n"
+"    width: 130px;\n"
+"    min-height: 150px;\n"
+"    gridline-color: #fffff8;\n"
+"    font-size: 12pt;\n"
+"\n"
+"    background-color: #646464;\n"
+"    border: 0px solid #fffff8;\n"
+"}")
+        self.label_analysis7.setText("")
+        self.label_analysis7.setObjectName("label_analysis7")
+        self.horizontalLayout.addWidget(self.label_analysis7)
+        self.label_analysis8 = QtWidgets.QLabel(self.horizontalLayoutWidget_2)
+        self.label_analysis8.setStyleSheet("QLabel {\n"
+"    background-color: #333333;\n"
+"    color: #fff;\n"
+"    background-color: #646464;\n"
+"    padding: 4px;\n"
+"    border: 0px solid #fffff8;\n"
+"    font-size: 14pt;\n"
+"\n"
+"    width: 130px;\n"
+"    min-height: 150px;\n"
+"    gridline-color: #fffff8;\n"
+"    font-size: 12pt;\n"
+"\n"
+"    background-color: #646464;\n"
+"    border: 0px solid #fffff8;\n"
+"}")
+        self.label_analysis8.setText("")
+        self.label_analysis8.setObjectName("label_analysis8")
+        self.horizontalLayout.addWidget(self.label_analysis8)
+        self.verticalLayout_8.addLayout(self.horizontalLayout)
+        self.horizontalLayout_7 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_7.setObjectName("horizontalLayout_7")
+        self.label_analysis5_class = QtWidgets.QLabel(self.horizontalLayoutWidget_2)
+        self.label_analysis5_class.setStyleSheet("QLabel {\n"
+"    background-color: #333333;\n"
+"    color: #fff;\n"
+"    background-color: #646464;\n"
+"    padding: 4px;\n"
+"    border: 0px solid #fffff8;\n"
+"\n"
+"    width: 130px;\n"
+"    min-height: 20px;\n"
+"    gridline-color: #fffff8;\n"
+"    font: 13pt \"Helvetica\";\n"
+"\n"
+"    background-color: #646464;\n"
+"    border: 0px solid #fffff8;\n"
+"}")
+        self.label_analysis5_class.setText("")
+        self.label_analysis5_class.setObjectName("label_analysis5_class")
+        self.horizontalLayout_7.addWidget(self.label_analysis5_class)
+        self.label_analysis6_class = QtWidgets.QLabel(self.horizontalLayoutWidget_2)
+        self.label_analysis6_class.setStyleSheet("QLabel {\n"
+"    background-color: #333333;\n"
+"    color: #fff;\n"
+"    background-color: #646464;\n"
+"    padding: 4px;\n"
+"    border: 0px solid #fffff8;\n"
+"\n"
+"    width: 130px;\n"
+"    min-height: 20px;\n"
+"    gridline-color: #fffff8;\n"
+"    font: 13pt \"Helvetica\";\n"
+"\n"
+"    background-color: #646464;\n"
+"    border: 0px solid #fffff8;\n"
+"}")
+        self.label_analysis6_class.setText("")
+        self.label_analysis6_class.setObjectName("label_analysis6_class")
+        self.horizontalLayout_7.addWidget(self.label_analysis6_class)
+        self.label_analysis7_class = QtWidgets.QLabel(self.horizontalLayoutWidget_2)
+        self.label_analysis7_class.setStyleSheet("QLabel {\n"
+"    background-color: #333333;\n"
+"    color: #fff;\n"
+"    background-color: #646464;\n"
+"    padding: 4px;\n"
+"    border: 0px solid #fffff8;\n"
+"\n"
+"    width: 130px;\n"
+"    min-height: 20px;\n"
+"    gridline-color: #fffff8;\n"
+"    font: 13pt \"Helvetica\";\n"
+"\n"
+"    background-color: #646464;\n"
+"    border: 0px solid #fffff8;\n"
+"}")
+        self.label_analysis7_class.setText("")
+        self.label_analysis7_class.setObjectName("label_analysis7_class")
+        self.horizontalLayout_7.addWidget(self.label_analysis7_class)
+        self.label_analysis8_class = QtWidgets.QLabel(self.horizontalLayoutWidget_2)
+        self.label_analysis8_class.setStyleSheet("QLabel {\n"
+"    background-color: #333333;\n"
+"    color: #fff;\n"
+"    background-color: #646464;\n"
+"    padding: 4px;\n"
+"    border: 0px solid #fffff8;\n"
+"\n"
+"    width: 130px;\n"
+"    min-height: 20px;\n"
+"    gridline-color: #fffff8;\n"
+"    font: 13pt \"Helvetica\";\n"
+"\n"
+"    background-color: #646464;\n"
+"    border: 0px solid #fffff8;\n"
+"}")
+        self.label_analysis8_class.setText("")
+        self.label_analysis8_class.setObjectName("label_analysis8_class")
+        self.horizontalLayout_7.addWidget(self.label_analysis8_class)
+        self.verticalLayout_8.addLayout(self.horizontalLayout_7)
         self.tableWidget_learning = QtWidgets.QTableWidget(self.horizontalLayoutWidget_2)
         self.tableWidget_learning.setStyleSheet("QWidget {\n"
 "    background-color: #333333;\n"
@@ -413,15 +745,15 @@ class Ui_MainWindow(object):
 "}")
         self.button_saveStatistics.setObjectName("button_saveStatistics")
         self.verticalLayout_4.addWidget(self.button_saveStatistics)
-        spacerItem6 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
-        self.verticalLayout_4.addItem(spacerItem6)
+        spacerItem9 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        self.verticalLayout_4.addItem(spacerItem9)
         self.horizontalLayout_3.addLayout(self.verticalLayout_4)
         self.verticalLayout_10 = QtWidgets.QVBoxLayout()
         self.verticalLayout_10.setObjectName("verticalLayout_10")
         self.horizontalLayout_8 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_8.setObjectName("horizontalLayout_8")
-        spacerItem7 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_8.addItem(spacerItem7)
+        spacerItem10 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_8.addItem(spacerItem10)
         self.label_4 = QtWidgets.QLabel(self.horizontalLayoutWidget_3)
         self.label_4.setStyleSheet("color: #fff;\n"
 "font: 12pt \"Helvetica\";")
@@ -448,176 +780,12 @@ class Ui_MainWindow(object):
         self.progressBar_evaluation.setProperty("value", 0)
         self.progressBar_evaluation.setObjectName("progressBar_evaluation")
         self.horizontalLayout_8.addWidget(self.progressBar_evaluation)
-        spacerItem8 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_8.addItem(spacerItem8)
+        spacerItem11 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_8.addItem(spacerItem11)
         self.verticalLayout_10.addLayout(self.horizontalLayout_8)
-        self.horizontalLayout_7 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_7.setObjectName("horizontalLayout_7")
-        self.label_evaluation1 = QtWidgets.QLabel(self.horizontalLayoutWidget_3)
-        self.label_evaluation1.setStyleSheet("QLabel {\n"
-"    background-color: #333333;\n"
-"    color: #fff;\n"
-"    background-color: #646464;\n"
-"    padding: 4px;\n"
-"    border: 0px solid #fffff8;\n"
-"    font-size: 14pt;\n"
-"\n"
-"    width: 130px;\n"
-"    min-height: 150px;\n"
-"    gridline-color: #fffff8;\n"
-"    font-size: 12pt;\n"
-"\n"
-"    background-color: #646464;\n"
-"    border: 0px solid #fffff8;\n"
-"}")
-        self.label_evaluation1.setText("")
-        self.label_evaluation1.setObjectName("label_evaluation1")
-        self.horizontalLayout_7.addWidget(self.label_evaluation1)
-        self.label_evaluation2 = QtWidgets.QLabel(self.horizontalLayoutWidget_3)
-        self.label_evaluation2.setStyleSheet("QLabel {\n"
-"    background-color: #333333;\n"
-"    color: #fff;\n"
-"    background-color: #646464;\n"
-"    padding: 4px;\n"
-"    border: 0px solid #fffff8;\n"
-"    font-size: 14pt;\n"
-"\n"
-"    width: 130px;\n"
-"    min-height: 150px;\n"
-"    gridline-color: #fffff8;\n"
-"    font-size: 12pt;\n"
-"\n"
-"    background-color: #646464;\n"
-"    border: 0px solid #fffff8;\n"
-"}")
-        self.label_evaluation2.setText("")
-        self.label_evaluation2.setObjectName("label_evaluation2")
-        self.horizontalLayout_7.addWidget(self.label_evaluation2)
-        self.label_evaluation3 = QtWidgets.QLabel(self.horizontalLayoutWidget_3)
-        self.label_evaluation3.setStyleSheet("QLabel {\n"
-"    background-color: #333333;\n"
-"    color: #fff;\n"
-"    background-color: #646464;\n"
-"    padding: 4px;\n"
-"    border: 0px solid #fffff8;\n"
-"    font-size: 14pt;\n"
-"\n"
-"    width: 130px;\n"
-"    min-height: 150px;\n"
-"    gridline-color: #fffff8;\n"
-"    font-size: 12pt;\n"
-"\n"
-"    background-color: #646464;\n"
-"    border: 0px solid #fffff8;\n"
-"}")
-        self.label_evaluation3.setText("")
-        self.label_evaluation3.setObjectName("label_evaluation3")
-        self.horizontalLayout_7.addWidget(self.label_evaluation3)
-        self.label_evaluation4 = QtWidgets.QLabel(self.horizontalLayoutWidget_3)
-        self.label_evaluation4.setStyleSheet("QLabel {\n"
-"    background-color: #333333;\n"
-"    color: #fff;\n"
-"    background-color: #646464;\n"
-"    padding: 4px;\n"
-"    border: 0px solid #fffff8;\n"
-"    font-size: 14pt;\n"
-"\n"
-"    width: 130px;\n"
-"    min-height: 150px;\n"
-"    gridline-color: #fffff8;\n"
-"    font-size: 12pt;\n"
-"\n"
-"    background-color: #646464;\n"
-"    border: 0px solid #fffff8;\n"
-"}")
-        self.label_evaluation4.setText("")
-        self.label_evaluation4.setObjectName("label_evaluation4")
-        self.horizontalLayout_7.addWidget(self.label_evaluation4)
-        self.verticalLayout_10.addLayout(self.horizontalLayout_7)
-        self.horizontalLayout = QtWidgets.QHBoxLayout()
-        self.horizontalLayout.setObjectName("horizontalLayout")
-        self.label_evaluation1_text = QtWidgets.QLabel(self.horizontalLayoutWidget_3)
-        self.label_evaluation1_text.setStyleSheet("QLabel {\n"
-"    background-color: #333333;\n"
-"    color: #fff;\n"
-"    background-color: #646464;\n"
-"    padding: 4px;\n"
-"    border: 0px solid #fffff8;\n"
-"    font-size: 14pt;\n"
-"\n"
-"    width: 130px;\n"
-"    min-height: 20px;\n"
-"    gridline-color: #fffff8;\n"
-"    font-size: 12pt;\n"
-"\n"
-"    background-color: #646464;\n"
-"    border: 0px solid #fffff8;\n"
-"}")
-        self.label_evaluation1_text.setText("")
-        self.label_evaluation1_text.setObjectName("label_evaluation1_text")
-        self.horizontalLayout.addWidget(self.label_evaluation1_text)
-        self.label_evaluation2_text = QtWidgets.QLabel(self.horizontalLayoutWidget_3)
-        self.label_evaluation2_text.setStyleSheet("QLabel {\n"
-"    background-color: #333333;\n"
-"    color: #fff;\n"
-"    background-color: #646464;\n"
-"    padding: 4px;\n"
-"    border: 0px solid #fffff8;\n"
-"    font-size: 14pt;\n"
-"\n"
-"    width: 130px;\n"
-"    min-height: 20px;\n"
-"    gridline-color: #fffff8;\n"
-"    font-size: 12pt;\n"
-"\n"
-"    background-color: #646464;\n"
-"    border: 0px solid #fffff8;\n"
-"}")
-        self.label_evaluation2_text.setText("")
-        self.label_evaluation2_text.setObjectName("label_evaluation2_text")
-        self.horizontalLayout.addWidget(self.label_evaluation2_text)
-        self.label_evaluation3_text = QtWidgets.QLabel(self.horizontalLayoutWidget_3)
-        self.label_evaluation3_text.setStyleSheet("QLabel {\n"
-"    background-color: #333333;\n"
-"    color: #fff;\n"
-"    background-color: #646464;\n"
-"    padding: 4px;\n"
-"    border: 0px solid #fffff8;\n"
-"    font-size: 14pt;\n"
-"\n"
-"    width: 130px;\n"
-"    min-height: 20px;\n"
-"    gridline-color: #fffff8;\n"
-"    font-size: 12pt;\n"
-"\n"
-"    background-color: #646464;\n"
-"    border: 0px solid #fffff8;\n"
-"}")
-        self.label_evaluation3_text.setText("")
-        self.label_evaluation3_text.setObjectName("label_evaluation3_text")
-        self.horizontalLayout.addWidget(self.label_evaluation3_text)
-        self.label_evaluation4_text = QtWidgets.QLabel(self.horizontalLayoutWidget_3)
-        self.label_evaluation4_text.setStyleSheet("QLabel {\n"
-"    background-color: #333333;\n"
-"    color: #fff;\n"
-"    background-color: #646464;\n"
-"    padding: 4px;\n"
-"    border: 0px solid #fffff8;\n"
-"    font-size: 14pt;\n"
-"\n"
-"    width: 130px;\n"
-"    min-height: 20px;\n"
-"    gridline-color: #fffff8;\n"
-"    font-size: 12pt;\n"
-"\n"
-"    background-color: #646464;\n"
-"    border: 0px solid #fffff8;\n"
-"}")
-        self.label_evaluation4_text.setText("")
-        self.label_evaluation4_text.setObjectName("label_evaluation4_text")
-        self.horizontalLayout.addWidget(self.label_evaluation4_text)
-        self.verticalLayout_10.addLayout(self.horizontalLayout)
         self.tableWidget_evaluation = QtWidgets.QTableWidget(self.horizontalLayoutWidget_3)
+        self.tableWidget_evaluation.setMinimumSize(QtCore.QSize(300, 200))
+        self.tableWidget_evaluation.setMaximumSize(QtCore.QSize(3000, 2000))
         self.tableWidget_evaluation.setStyleSheet("QWidget {\n"
 "    background-color: #333333;\n"
 "    color: #fff;\n"
@@ -704,15 +872,15 @@ class Ui_MainWindow(object):
 "}")
         self.button_saveResults.setObjectName("button_saveResults")
         self.verticalLayout_5.addWidget(self.button_saveResults)
-        spacerItem9 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
-        self.verticalLayout_5.addItem(spacerItem9)
+        spacerItem12 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        self.verticalLayout_5.addItem(spacerItem12)
         self.horizontalLayout_4.addLayout(self.verticalLayout_5)
         self.verticalLayout_9 = QtWidgets.QVBoxLayout()
         self.verticalLayout_9.setObjectName("verticalLayout_9")
         self.horizontalLayout_9 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_9.setObjectName("horizontalLayout_9")
-        spacerItem10 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_9.addItem(spacerItem10)
+        spacerItem13 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_9.addItem(spacerItem13)
         self.label_5 = QtWidgets.QLabel(self.horizontalLayoutWidget_4)
         self.label_5.setStyleSheet("color: #fff;\n"
 "font: 12pt \"Helvetica\";")
@@ -740,10 +908,14 @@ class Ui_MainWindow(object):
         self.progressBar_inspection.setProperty("value", 0)
         self.progressBar_inspection.setObjectName("progressBar_inspection")
         self.horizontalLayout_9.addWidget(self.progressBar_inspection)
-        spacerItem11 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_9.addItem(spacerItem11)
+        spacerItem14 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_9.addItem(spacerItem14)
         self.verticalLayout_9.addLayout(self.horizontalLayout_9)
+        self.horizontalLayout_10 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_10.setObjectName("horizontalLayout_10")
         self.label_inspection = QtWidgets.QLabel(self.horizontalLayoutWidget_4)
+        self.label_inspection.setMinimumSize(QtCore.QSize(200, 208))
+        self.label_inspection.setMaximumSize(QtCore.QSize(600, 200))
         self.label_inspection.setStyleSheet("QLabel {\n"
 "    background-color: #333333;\n"
 "    color: #fff;\n"
@@ -763,8 +935,34 @@ class Ui_MainWindow(object):
 "}")
         self.label_inspection.setText("")
         self.label_inspection.setObjectName("label_inspection")
-        self.verticalLayout_9.addWidget(self.label_inspection)
+        self.horizontalLayout_10.addWidget(self.label_inspection)
+        self.label_inspection_fingerprint = QtWidgets.QLabel(self.horizontalLayoutWidget_4)
+        self.label_inspection_fingerprint.setMinimumSize(QtCore.QSize(200, 208))
+        self.label_inspection_fingerprint.setMaximumSize(QtCore.QSize(600, 200))
+        self.label_inspection_fingerprint.setStyleSheet("QLabel {\n"
+"    background-color: #333333;\n"
+"    color: #fff;\n"
+"    background-color: #646464;\n"
+"    padding: 4px;\n"
+"    border: 0px solid #fffff8;\n"
+"    font-size: 14pt;\n"
+"\n"
+"    width: 130px;\n"
+"    min-height: 250px;\n"
+"    gridline-color: #fffff8;\n"
+"    font-size: 12pt;\n"
+"    text-align: center;\n"
+"\n"
+"    background-color: #646464;\n"
+"    border: 0px solid #fffff8;\n"
+"}")
+        self.label_inspection_fingerprint.setText("")
+        self.label_inspection_fingerprint.setObjectName("label_inspection_fingerprint")
+        self.horizontalLayout_10.addWidget(self.label_inspection_fingerprint)
+        self.verticalLayout_9.addLayout(self.horizontalLayout_10)
         self.tableWidget_inspection = QtWidgets.QTableWidget(self.horizontalLayoutWidget_4)
+        self.tableWidget_inspection.setMinimumSize(QtCore.QSize(200, 200))
+        self.tableWidget_inspection.setMaximumSize(QtCore.QSize(2000, 3000))
         self.tableWidget_inspection.setStyleSheet("QWidget {\n"
 "    background-color: #333333;\n"
 "    color: #fff;\n"
@@ -906,7 +1104,6 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
         self.tabWidget.setCurrentIndex(0)
         self.button_loadData.clicked.connect(MainWindow.loadData)
-        self.button_evaluate.clicked.connect(MainWindow.showStat)
         self.button_loadImage.clicked.connect(MainWindow.loadImg)
         self.button_importKnowledge.clicked.connect(MainWindow.getCorrelation)
         self.button_exportKnowledge.clicked.connect(MainWindow.saveCorrelation)
@@ -918,6 +1115,7 @@ class Ui_MainWindow(object):
         self.spinBox.valueChanged['int'].connect(MainWindow.changeFeatureCount)
         self.menubar.hovered['QAction*'].connect(self.progressBar_loadingData.reset)
         self.menubar.hovered['QAction*'].connect(self.progressBar_loadingTraining.reset)
+        self.button_evaluate.clicked.connect(MainWindow.evaluate)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -931,7 +1129,7 @@ class Ui_MainWindow(object):
         self.button_train.setText(_translate("MainWindow", "ANALYZE"))
         self.button_importKnowledge.setText(_translate("MainWindow", "import analysis"))
         self.button_exportKnowledge.setText(_translate("MainWindow", "export analysis"))
-        self.label_7.setText(_translate("MainWindow", "Training:"))
+        self.label_7.setText(_translate("MainWindow", "Analysis:"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_learning), _translate("MainWindow", "Analysis"))
         self.button_evaluate.setText(_translate("MainWindow", "EVALUATE"))
         self.button_saveStatistics.setText(_translate("MainWindow", "save statistics"))

@@ -143,7 +143,7 @@ QTabBar::tab:left:only-one, QTabBar::tab:right:only-one {
            <x>0</x>
            <y>0</y>
            <width>911</width>
-           <height>591</height>
+           <height>656</height>
           </rect>
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout_6">
@@ -300,6 +300,18 @@ font: 12pt &quot;Helvetica&quot;;</string>
             </item>
             <item>
              <widget class="QTableWidget" name="tableWidget_data">
+              <property name="minimumSize">
+               <size>
+                <width>300</width>
+                <height>200</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>3000</width>
+                <height>2000</height>
+               </size>
+              </property>
               <property name="styleSheet">
                <string notr="true">QWidget {
     background-color: #333333;
@@ -347,7 +359,7 @@ QTableWidget QTableCornerButton::section {
            <x>0</x>
            <y>0</y>
            <width>911</width>
-           <height>591</height>
+           <height>645</height>
           </rect>
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -501,7 +513,7 @@ QPushButton:hover {
 font: 12pt &quot;Helvetica&quot;;</string>
                 </property>
                 <property name="text">
-                 <string>Training:</string>
+                 <string>Analysis:</string>
                 </property>
                </widget>
               </item>
@@ -543,6 +555,453 @@ font: 12pt &quot;Helvetica&quot;;</string>
                  </size>
                 </property>
                </spacer>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <spacer name="verticalSpacer_3">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="label_evaluation4c">
+              <item>
+               <widget class="QLabel" name="label_analysis1">
+                <property name="styleSheet">
+                 <string notr="true">QLabel {
+    background-color: #333333;
+    color: #fff;
+    background-color: #646464;
+    padding: 4px;
+    border: 0px solid #fffff8;
+    font-size: 14pt;
+
+	width: 130px;
+	min-height: 150px;
+    gridline-color: #fffff8;
+    font-size: 12pt;
+
+    background-color: #646464;
+    border: 0px solid #fffff8;
+}</string>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="label_analysis2">
+                <property name="styleSheet">
+                 <string notr="true">QLabel {
+    background-color: #333333;
+    color: #fff;
+    background-color: #646464;
+    padding: 4px;
+    border: 0px solid #fffff8;
+    font-size: 14pt;
+
+	width: 130px;
+	min-height: 150px;
+    gridline-color: #fffff8;
+    font-size: 12pt;
+
+    background-color: #646464;
+    border: 0px solid #fffff8;
+}</string>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="label_analysis3">
+                <property name="styleSheet">
+                 <string notr="true">QLabel {
+    background-color: #333333;
+    color: #fff;
+    background-color: #646464;
+    padding: 4px;
+    border: 0px solid #fffff8;
+    font-size: 14pt;
+
+	width: 130px;
+	min-height: 150px;
+    gridline-color: #fffff8;
+    font-size: 12pt;
+
+    background-color: #646464;
+    border: 0px solid #fffff8;
+}</string>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="label_analysis4">
+                <property name="styleSheet">
+                 <string notr="true">QLabel {
+    background-color: #333333;
+    color: #fff;
+    background-color: #646464;
+    padding: 4px;
+    border: 0px solid #fffff8;
+    font-size: 14pt;
+
+	width: 130px;
+	min-height: 150px;
+    gridline-color: #fffff8;
+    font-size: 12pt;
+
+    background-color: #646464;
+    border: 0px solid #fffff8;
+}</string>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_12">
+              <item>
+               <widget class="QLabel" name="label_analysis1_class">
+                <property name="styleSheet">
+                 <string notr="true">QLabel {
+    background-color: #333333;
+    color: #fff;
+    background-color: #646464;
+    padding: 4px;
+    border: 0px solid #fffff8;
+
+	width: 130px;
+	min-height: 20px;
+    gridline-color: #fffff8;
+    font: 13pt &quot;Helvetica&quot;;
+
+    background-color: #646464;
+    border: 0px solid #fffff8;
+}</string>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="label_analysis2_class">
+                <property name="styleSheet">
+                 <string notr="true">QLabel {
+    background-color: #333333;
+    color: #fff;
+    background-color: #646464;
+    padding: 4px;
+    border: 0px solid #fffff8;
+
+	width: 130px;
+	min-height: 20px;
+    gridline-color: #fffff8;
+    font: 13pt &quot;Helvetica&quot;;
+
+    background-color: #646464;
+    border: 0px solid #fffff8;
+}</string>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="label_analysis3_class">
+                <property name="styleSheet">
+                 <string notr="true">QLabel {
+    background-color: #333333;
+    color: #fff;
+    background-color: #646464;
+    padding: 4px;
+    border: 0px solid #fffff8;
+
+	width: 130px;
+	min-height: 20px;
+    gridline-color: #fffff8;
+    font: 13pt &quot;Helvetica&quot;;
+
+    background-color: #646464;
+    border: 0px solid #fffff8;
+}</string>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="label_analysis4_class">
+                <property name="styleSheet">
+                 <string notr="true">QLabel {
+    background-color: #333333;
+    color: #fff;
+    background-color: #646464;
+    padding: 4px;
+    border: 0px solid #fffff8;
+
+	width: 130px;
+	min-height: 20px;
+    gridline-color: #fffff8;
+    font: 13pt &quot;Helvetica&quot;;
+
+    background-color: #646464;
+    border: 0px solid #fffff8;
+}</string>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <spacer name="verticalSpacer_2">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <spacer name="verticalSpacer">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout">
+              <item>
+               <widget class="QLabel" name="label_analysis5">
+                <property name="styleSheet">
+                 <string notr="true">QLabel {
+    background-color: #333333;
+    color: #fff;
+    background-color: #646464;
+    padding: 4px;
+    border: 0px solid #fffff8;
+    font-size: 14pt;
+
+	width: 130px;
+	min-height: 150px;
+    gridline-color: #fffff8;
+    font-size: 12pt;
+
+    background-color: #646464;
+    border: 0px solid #fffff8;
+}</string>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="label_analysis6">
+                <property name="styleSheet">
+                 <string notr="true">QLabel {
+    background-color: #333333;
+    color: #fff;
+    background-color: #646464;
+    padding: 4px;
+    border: 0px solid #fffff8;
+    font-size: 14pt;
+
+	width: 130px;
+	min-height: 150px;
+    gridline-color: #fffff8;
+    font-size: 12pt;
+
+    background-color: #646464;
+    border: 0px solid #fffff8;
+}</string>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="label_analysis7">
+                <property name="styleSheet">
+                 <string notr="true">QLabel {
+    background-color: #333333;
+    color: #fff;
+    background-color: #646464;
+    padding: 4px;
+    border: 0px solid #fffff8;
+    font-size: 14pt;
+
+	width: 130px;
+	min-height: 150px;
+    gridline-color: #fffff8;
+    font-size: 12pt;
+
+    background-color: #646464;
+    border: 0px solid #fffff8;
+}</string>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="label_analysis8">
+                <property name="styleSheet">
+                 <string notr="true">QLabel {
+    background-color: #333333;
+    color: #fff;
+    background-color: #646464;
+    padding: 4px;
+    border: 0px solid #fffff8;
+    font-size: 14pt;
+
+	width: 130px;
+	min-height: 150px;
+    gridline-color: #fffff8;
+    font-size: 12pt;
+
+    background-color: #646464;
+    border: 0px solid #fffff8;
+}</string>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_7">
+              <item>
+               <widget class="QLabel" name="label_analysis5_class">
+                <property name="styleSheet">
+                 <string notr="true">QLabel {
+    background-color: #333333;
+    color: #fff;
+    background-color: #646464;
+    padding: 4px;
+    border: 0px solid #fffff8;
+
+	width: 130px;
+	min-height: 20px;
+    gridline-color: #fffff8;
+    font: 13pt &quot;Helvetica&quot;;
+
+    background-color: #646464;
+    border: 0px solid #fffff8;
+}</string>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="label_analysis6_class">
+                <property name="styleSheet">
+                 <string notr="true">QLabel {
+    background-color: #333333;
+    color: #fff;
+    background-color: #646464;
+    padding: 4px;
+    border: 0px solid #fffff8;
+
+	width: 130px;
+	min-height: 20px;
+    gridline-color: #fffff8;
+    font: 13pt &quot;Helvetica&quot;;
+
+    background-color: #646464;
+    border: 0px solid #fffff8;
+}</string>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="label_analysis7_class">
+                <property name="styleSheet">
+                 <string notr="true">QLabel {
+    background-color: #333333;
+    color: #fff;
+    background-color: #646464;
+    padding: 4px;
+    border: 0px solid #fffff8;
+
+	width: 130px;
+	min-height: 20px;
+    gridline-color: #fffff8;
+    font: 13pt &quot;Helvetica&quot;;
+
+    background-color: #646464;
+    border: 0px solid #fffff8;
+}</string>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="label_analysis8_class">
+                <property name="styleSheet">
+                 <string notr="true">QLabel {
+    background-color: #333333;
+    color: #fff;
+    background-color: #646464;
+    padding: 4px;
+    border: 0px solid #fffff8;
+
+	width: 130px;
+	min-height: 20px;
+    gridline-color: #fffff8;
+    font: 13pt &quot;Helvetica&quot;;
+
+    background-color: #646464;
+    border: 0px solid #fffff8;
+}</string>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
               </item>
              </layout>
             </item>
@@ -737,215 +1196,19 @@ font: 12pt &quot;Helvetica&quot;;</string>
              </layout>
             </item>
             <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_7">
-              <item>
-               <widget class="QLabel" name="label_evaluation1">
-                <property name="styleSheet">
-                 <string notr="true">QLabel {
-    background-color: #333333;
-    color: #fff;
-    background-color: #646464;
-    padding: 4px;
-    border: 0px solid #fffff8;
-    font-size: 14pt;
-
-	width: 130px;
-	min-height: 150px;
-    gridline-color: #fffff8;
-    font-size: 12pt;
-
-    background-color: #646464;
-    border: 0px solid #fffff8;
-}</string>
-                </property>
-                <property name="text">
-                 <string/>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QLabel" name="label_evaluation2">
-                <property name="styleSheet">
-                 <string notr="true">QLabel {
-    background-color: #333333;
-    color: #fff;
-    background-color: #646464;
-    padding: 4px;
-    border: 0px solid #fffff8;
-    font-size: 14pt;
-
-	width: 130px;
-	min-height: 150px;
-    gridline-color: #fffff8;
-    font-size: 12pt;
-
-    background-color: #646464;
-    border: 0px solid #fffff8;
-}</string>
-                </property>
-                <property name="text">
-                 <string/>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QLabel" name="label_evaluation3">
-                <property name="styleSheet">
-                 <string notr="true">QLabel {
-    background-color: #333333;
-    color: #fff;
-    background-color: #646464;
-    padding: 4px;
-    border: 0px solid #fffff8;
-    font-size: 14pt;
-
-	width: 130px;
-	min-height: 150px;
-    gridline-color: #fffff8;
-    font-size: 12pt;
-
-    background-color: #646464;
-    border: 0px solid #fffff8;
-}</string>
-                </property>
-                <property name="text">
-                 <string/>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QLabel" name="label_evaluation4">
-                <property name="styleSheet">
-                 <string notr="true">QLabel {
-    background-color: #333333;
-    color: #fff;
-    background-color: #646464;
-    padding: 4px;
-    border: 0px solid #fffff8;
-    font-size: 14pt;
-
-	width: 130px;
-	min-height: 150px;
-    gridline-color: #fffff8;
-    font-size: 12pt;
-
-    background-color: #646464;
-    border: 0px solid #fffff8;
-}</string>
-                </property>
-                <property name="text">
-                 <string/>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </item>
-            <item>
-             <layout class="QHBoxLayout" name="horizontalLayout">
-              <item>
-               <widget class="QLabel" name="label_evaluation1_text">
-                <property name="styleSheet">
-                 <string notr="true">QLabel {
-    background-color: #333333;
-    color: #fff;
-    background-color: #646464;
-    padding: 4px;
-    border: 0px solid #fffff8;
-    font-size: 14pt;
-
-	width: 130px;
-	min-height: 20px;
-    gridline-color: #fffff8;
-    font-size: 12pt;
-
-    background-color: #646464;
-    border: 0px solid #fffff8;
-}</string>
-                </property>
-                <property name="text">
-                 <string/>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QLabel" name="label_evaluation2_text">
-                <property name="styleSheet">
-                 <string notr="true">QLabel {
-    background-color: #333333;
-    color: #fff;
-    background-color: #646464;
-    padding: 4px;
-    border: 0px solid #fffff8;
-    font-size: 14pt;
-
-	width: 130px;
-	min-height: 20px;
-    gridline-color: #fffff8;
-    font-size: 12pt;
-
-    background-color: #646464;
-    border: 0px solid #fffff8;
-}</string>
-                </property>
-                <property name="text">
-                 <string/>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QLabel" name="label_evaluation3_text">
-                <property name="styleSheet">
-                 <string notr="true">QLabel {
-    background-color: #333333;
-    color: #fff;
-    background-color: #646464;
-    padding: 4px;
-    border: 0px solid #fffff8;
-    font-size: 14pt;
-
-	width: 130px;
-	min-height: 20px;
-    gridline-color: #fffff8;
-    font-size: 12pt;
-
-    background-color: #646464;
-    border: 0px solid #fffff8;
-}</string>
-                </property>
-                <property name="text">
-                 <string/>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QLabel" name="label_evaluation4_text">
-                <property name="styleSheet">
-                 <string notr="true">QLabel {
-    background-color: #333333;
-    color: #fff;
-    background-color: #646464;
-    padding: 4px;
-    border: 0px solid #fffff8;
-    font-size: 14pt;
-
-	width: 130px;
-	min-height: 20px;
-    gridline-color: #fffff8;
-    font-size: 12pt;
-
-    background-color: #646464;
-    border: 0px solid #fffff8;
-}</string>
-                </property>
-                <property name="text">
-                 <string/>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </item>
-            <item>
              <widget class="QTableWidget" name="tableWidget_evaluation">
+              <property name="minimumSize">
+               <size>
+                <width>300</width>
+                <height>200</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>3000</width>
+                <height>2000</height>
+               </size>
+              </property>
               <property name="styleSheet">
                <string notr="true">QWidget {
     background-color: #333333;
@@ -1159,9 +1422,23 @@ font: 12pt &quot;Helvetica&quot;;</string>
              </layout>
             </item>
             <item>
-             <widget class="QLabel" name="label_inspection">
-              <property name="styleSheet">
-               <string notr="true">QLabel {
+             <layout class="QHBoxLayout" name="horizontalLayout_10">
+              <item>
+               <widget class="QLabel" name="label_inspection">
+                <property name="minimumSize">
+                 <size>
+                  <width>200</width>
+                  <height>208</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>600</width>
+                  <height>200</height>
+                 </size>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">QLabel {
     background-color: #333333;
     color: #fff;
     background-color: #646464;
@@ -1178,14 +1455,66 @@ font: 12pt &quot;Helvetica&quot;;</string>
     background-color: #646464;
     border: 0px solid #fffff8;
 }</string>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-             </widget>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="label_inspection_fingerprint">
+                <property name="minimumSize">
+                 <size>
+                  <width>200</width>
+                  <height>208</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>600</width>
+                  <height>200</height>
+                 </size>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">QLabel {
+    background-color: #333333;
+    color: #fff;
+    background-color: #646464;
+    padding: 4px;
+    border: 0px solid #fffff8;
+    font-size: 14pt;
+
+	width: 130px;
+	min-height: 250px;
+    gridline-color: #fffff8;
+    font-size: 12pt;
+	text-align: center;
+
+    background-color: #646464;
+    border: 0px solid #fffff8;
+}</string>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+             </layout>
             </item>
             <item>
              <widget class="QTableWidget" name="tableWidget_inspection">
+              <property name="minimumSize">
+               <size>
+                <width>200</width>
+                <height>200</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>2000</width>
+                <height>3000</height>
+               </size>
+              </property>
               <property name="styleSheet">
                <string notr="true">QWidget {
     background-color: #333333;
@@ -1456,22 +1785,6 @@ color: #393939;</string>
    </hints>
   </connection>
   <connection>
-   <sender>button_evaluate</sender>
-   <signal>clicked()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>showStat()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>49</x>
-     <y>138</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>-1</x>
-     <y>155</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>button_loadImage</sender>
    <signal>clicked()</signal>
    <receiver>MainWindow</receiver>
@@ -1647,6 +1960,22 @@ color: #393939;</string>
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>button_evaluate</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>evaluate()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>91</x>
+     <y>126</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-4</x>
+     <y>72</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>saveSpectra()</slot>
@@ -1662,5 +1991,6 @@ color: #393939;</string>
   <slot>inspection()</slot>
   <slot>changeSegmentSize()</slot>
   <slot>changeFeatureCount()</slot>
+  <slot>evaluate()</slot>
  </slots>
 </ui>
