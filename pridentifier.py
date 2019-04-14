@@ -143,7 +143,7 @@ class Ui_Pridentifier(object):
 
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(937, 630)
+        MainWindow.resize(942, 676)
         MainWindow.setStyleSheet("background-color: #222222;")
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
@@ -408,34 +408,6 @@ class Ui_Pridentifier(object):
 "}")
         self.button_train.setObjectName("button_train")
         self.verticalLayout_3.addWidget(self.button_train)
-        self.button_importKnowledge = QtWidgets.QPushButton(self.horizontalLayoutWidget_2)
-        self.button_importKnowledge.setStyleSheet("QPushButton {\n"
-"    background-color: #393939;\n"
-"    min-width: 160px;\n"
-"    padding: 12px 16px;\n"
-"    border: 2px solid #fff;\n"
-"    color: #fff;\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"    background-color: #777777;\n"
-"}")
-        self.button_importKnowledge.setObjectName("button_importKnowledge")
-        self.verticalLayout_3.addWidget(self.button_importKnowledge)
-        self.button_exportKnowledge = QtWidgets.QPushButton(self.horizontalLayoutWidget_2)
-        self.button_exportKnowledge.setStyleSheet("QPushButton {\n"
-"    background-color: #393939;\n"
-"    min-width: 160px;\n"
-"    padding: 12px 16px;\n"
-"    border: 2px solid #fff;\n"
-"    color: #fff;\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"    background-color: #777777;\n"
-"}")
-        self.button_exportKnowledge.setObjectName("button_exportKnowledge")
-        self.verticalLayout_3.addWidget(self.button_exportKnowledge)
         spacerItem3 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.verticalLayout_3.addItem(spacerItem3)
         self.horizontalLayout_2.addLayout(self.verticalLayout_3)
@@ -1046,8 +1018,8 @@ class Ui_Pridentifier(object):
         self.horizontalLayout_10 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_10.setObjectName("horizontalLayout_10")
         self.label_inspection = QtWidgets.QLabel(self.horizontalLayoutWidget_4)
-        self.label_inspection.setMinimumSize(QtCore.QSize(200, 208))
-        self.label_inspection.setMaximumSize(QtCore.QSize(600, 200))
+        self.label_inspection.setMinimumSize(QtCore.QSize(200, 200))
+        self.label_inspection.setMaximumSize(QtCore.QSize(600, 208))
         self.label_inspection.setStyleSheet("QLabel {\n"
 "    background-color: #333333;\n"
 "    color: #fff;\n"
@@ -1069,8 +1041,8 @@ class Ui_Pridentifier(object):
         self.label_inspection.setObjectName("label_inspection")
         self.horizontalLayout_10.addWidget(self.label_inspection)
         self.label_inspection_fingerprint = QtWidgets.QLabel(self.horizontalLayoutWidget_4)
-        self.label_inspection_fingerprint.setMinimumSize(QtCore.QSize(200, 208))
-        self.label_inspection_fingerprint.setMaximumSize(QtCore.QSize(600, 200))
+        self.label_inspection_fingerprint.setMinimumSize(QtCore.QSize(200, 200))
+        self.label_inspection_fingerprint.setMaximumSize(QtCore.QSize(600, 208))
         self.label_inspection_fingerprint.setStyleSheet("QLabel {\n"
 "    background-color: #333333;\n"
 "    color: #fff;\n"
@@ -1131,7 +1103,7 @@ class Ui_Pridentifier(object):
         self.gridLayout.addWidget(self.tabWidget, 0, 0, 1, 1)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 937, 22))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 942, 22))
         self.menubar.setAutoFillBackground(False)
         self.menubar.setStyleSheet("")
         self.menubar.setObjectName("menubar")
@@ -1237,34 +1209,28 @@ class Ui_Pridentifier(object):
         self.tabWidget.setCurrentIndex(0)
         self.button_loadData.clicked.connect(self.loadData)
         self.button_loadImage.clicked.connect(self.loadImg)
-        #self.button_importKnowledge.clicked.connect(self.getCorrelation)
-        #self.button_exportKnowledge.clicked.connect(self.saveCorrelation)
         self.button_saveStatistics.clicked.connect(self.saveStat)
         self.button_saveResults.clicked.connect(self.saveResult)
         self.button_train.clicked.connect(self.training)
         self.button_inspect.clicked.connect(self.inspection)
         self.spinBox_2.valueChanged['int'].connect(self.changeSegmentSize)
         self.spinBox.valueChanged['int'].connect(self.changeFeatureCount)
-        #self.menubar.hovered['QAction*'].connect(self.progressBar_loadingData.reset)
-        #self.menubar.hovered['QAction*'].connect(self.progressBar_loadingTraining.reset)
         self.button_evaluate.clicked.connect(self.evaluate)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "Pridentifier"))
-        self.label_3.setText(_translate("MainWindow", "Segment width:"))
+        self.label_3.setText(_translate("MainWindow", "Segment width/height:"))
         self.button_loadData.setText(_translate("MainWindow", "LOAD"))
         self.label_2.setText(_translate("MainWindow", "Loading:"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_data), _translate("MainWindow", "Data"))
-        self.label.setText(_translate("MainWindow", "Feature count:"))
+        self.label.setText(_translate("MainWindow", "Features:"))
         self.button_train.setText(_translate("MainWindow", "ANALYZE"))
-        self.button_importKnowledge.setText(_translate("MainWindow", "import analysis"))
-        self.button_exportKnowledge.setText(_translate("MainWindow", "export analysis"))
         self.label_7.setText(_translate("MainWindow", "Analysis:"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_learning), _translate("MainWindow", "Analysis"))
         self.button_evaluate.setText(_translate("MainWindow", "EVALUATE"))
-        self.button_saveStatistics.setText(_translate("MainWindow", "save statistics"))
+        self.button_saveStatistics.setText(_translate("MainWindow", "save results"))
         self.label_4.setText(_translate("MainWindow", "Evaluation:"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_evaluation), _translate("MainWindow", "Evaluation"))
         self.button_loadImage.setText(_translate("MainWindow", "LOAD IMAGE"))
@@ -1301,6 +1267,8 @@ class Ui_Pridentifier(object):
         self.actionResult.setText(_translate("MainWindow", "Result"))
         self.actionExample_4.setText(_translate("MainWindow", "Example"))
         self.actionResult_2.setText(_translate("MainWindow", "Result"))
+
+
 
 
 
