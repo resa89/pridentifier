@@ -104,11 +104,16 @@ class FeatureExtractor(object):
                     # save sampled spectra for training analysis later
                     self.add_train_data(spectrum, class_name, sample_no)
                     sample_no += 1
+                    overall_sample_no += 1
+
                     if train:
-                        overall_sample_no += 1
                         index_of_class = self.classes.index(class_name)
                         config.state_analysis = index_of_class*100/len(self.classes)+\
                                                 (overall_sample_no/self.number_of_snippets*100)//len(self.classes)
+                    else:
+                        # //2 because the second step is the evaluation of the inspected image
+                        config.state_inspection = (overall_sample_no/self.number_of_snippets*100)//2
+
 
             sample_amount += segment_count[0] * segment_count[1]
 

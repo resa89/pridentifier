@@ -268,10 +268,10 @@ class ProgressLoadData(QtCore.QThread, QtCore.QObject):
             amount_images_per_class.append(amount_images)
             amount_snippets_per_class.append(amount_snippets)
 
-            count += 90 //number_of_classes
-            self.imageUploadStatusChanged.emit(count, None)
+            #count += 90 //number_of_classes
+            #self.imageUploadStatusChanged.emit(count, None)
+            #config.state_loading = count
 
-        count = 100
         args = classes, number_of_classes, fingerprints, amount_images_per_class, amount_snippets_per_class
         self.imageUploadStatusChanged.emit(count, args)
 
@@ -319,6 +319,8 @@ class ProgressEvaluateData(QtCore.QThread, QtCore.QObject):
     def run(self):
 
         count = 0
+
+        config.state_analysis = 0
 
         evaluator = Evaluator(self.classes,self.fingerprints, self.SNIPPET_WIDTH, train=True)
         evaluation_result = evaluator.get_evaluation()

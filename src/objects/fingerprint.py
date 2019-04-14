@@ -3,7 +3,7 @@ import numpy as np
 from PIL import Image
 
 from ..feature_extractor import FeatureExtractor
-
+import config
 
 class Fingerprint(object):
     def __init__(self, path, classes, SNIPPET_WIDTH, NUMBER_PIXELS):
@@ -38,7 +38,7 @@ class Fingerprint(object):
         self.number_of_images = len(self.img_names)
 
         amount_snippets = 0
-
+        count = 0
         for image in self.img_names:
             img_path = self.path_to_images_of_class + '/' + image
             img = Image.open(img_path)
@@ -47,6 +47,8 @@ class Fingerprint(object):
             amount_snippets_x_axis = width // self.SNIPPET_WIDTH
             amount_snippets_y_axis = height // self.SNIPPET_WIDTH
             amount_snippets += amount_snippets_x_axis * amount_snippets_y_axis
+            count += 1
+            config.state_loading = count/self.number_of_images*100 // len(self.classes)
 
         self.number_of_snippets = amount_snippets
 

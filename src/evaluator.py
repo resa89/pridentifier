@@ -3,7 +3,7 @@ import os.path
 import numpy as np
 import pandas as pd
 
-from config import SUBPATH
+import config
 from .feature_extractor import try_to_load_as_pickled_object_or_None
 
 
@@ -43,6 +43,15 @@ class Evaluator(object):
                 else:
                     self.result = self.result.append({'prediction': result[0], 'GTD': result[1], 'passed': result[2]},
                                        ignore_index=True)
+                if index > t_data.shape[0]:
+                    print("ERROR: with index in evaluation!!!!!")
+                if train:
+                    config.state_evaluation = i*100/(len(self.classes))+\
+                                                    (index/t_data.shape[0]*100)//len(self.classes)
+                else:
+                    # 50+ because the first part of inspection is the analysis
+                    config.state_inspection = 50 + (index/t_data.shape[0]*50)
+
 
 
     def get_evaluation(self):
@@ -63,11 +72,11 @@ class Evaluator(object):
     def get_data(self, class_name, train=True):
 
         if train:
-            folder = SUBPATH + '/trained_samples/'
+            folder = config.SUBPATH + '/trained_samples/'
             file_name = folder + class_name + "_train.pkl"
 
         else:
-            folder = SUBPATH + '/test_samples/'
+            folder = config.SUBPATH + '/test_samples/'
             file_name = folder + 'Q' + "_test.pkl"
 
 

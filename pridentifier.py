@@ -43,6 +43,9 @@ class Ui_Pridentifier(object):
     def onImageLoadUpdate(self, value, args=None):
         config.state_loading = value
         if args:
+            config.state_loading = 100
+            time.sleep(1)
+            #self.progressBar_loadingData.setValue(value)
             self.pridentifier.write_image_infos(args)
             self.showLoadedData()
         return()
@@ -55,8 +58,10 @@ class Ui_Pridentifier(object):
     def onAnalyzeDataUpdate(self, value, args=None):
         config.state_analysis = value
         if args:
-            self.pridentifier.write_training_results(args)
             config.state_analysis = 100
+            time.sleep(1)
+            #self.progressBar_loadingTraining.setValue(value)
+            self.pridentifier.write_training_results(args)
             self.showTrainingResult()
         return()
 
@@ -68,6 +73,9 @@ class Ui_Pridentifier(object):
     def onEvaluateDataUpdate(self, value, args=None):
         config.state_evaluation = value
         if args:
+            config.state_evaluation = 100
+            time.sleep(1)
+            #self.progressBar_evaluation.setValue(value)
             self.pridentifier.write_evaluation_results(args)
             self.showEvaluationResult()
         return()
@@ -81,6 +89,9 @@ class Ui_Pridentifier(object):
     def onInspectDataUpdate(self, value, args=None):
         config.state_inspection = value
         if type(args) == pd.DataFrame:
+            config.state_inspection = 100
+            time.sleep(1)
+            #self.progressBar_inspection.setValue(value)
             self.pridentifier.write_inspection_results(args)
             self.showInspectionResults()
         return()
@@ -1330,6 +1341,11 @@ class Ui_Pridentifier(object):
             self.calc.imageUploadStatusChanged.connect(self.onImageLoadUpdate)
             self.calc.start()
             #####
+            #####
+            self.calc4 =ProgressLoadingVisualizer()
+            self.calc4.loadingStatusChanged.connect(self.onImageLoadUpdateUI)
+            self.calc4.start()
+            #####
             #self.progressBar_loadingData.setValue(100)
 
     def showLoadedData(self):
@@ -1393,9 +1409,9 @@ class Ui_Pridentifier(object):
 
 
         #####
-        self.calc3 =ProgressAnalyzeVisualizer()
-        self.calc3.analysisStatusChanged.connect(self.onAnalyzeDataUpdateUI)
-        self.calc3.start()
+        self.calc2b =ProgressAnalyzeVisualizer()
+        self.calc2b.analysisStatusChanged.connect(self.onAnalyzeDataUpdateUI)
+        self.calc2b.start()
         #####
 
         #####
@@ -1437,6 +1453,10 @@ class Ui_Pridentifier(object):
 
     def evaluate(self):
         self.progressBar_evaluation.setValue(0)
+        #####
+        self.calc5 =ProgressEvaluateVisualizer()
+        self.calc5.evaluationStatusChanged.connect(self.onEvaluateDataUpdateUI)
+        self.calc5.start()
         #####
         self.calc3 = self.pridentifier.evaluate()
         self.calc3.evaluateDataStatusChanged.connect(self.onEvaluateDataUpdate)
@@ -1558,9 +1578,14 @@ class Ui_Pridentifier(object):
 
         self.progressBar_inspection.setValue(0)
         #####
-        self.calc3 = self.pridentifier.inspect()
-        self.calc3.inspectDataStatusChanged.connect(self.onInspectDataUpdate)
-        self.calc3.start()
+        self.calc3a = self.pridentifier.inspect()
+        self.calc3a.inspectDataStatusChanged.connect(self.onInspectDataUpdate)
+        self.calc3a.start()
+        #####
+        #####
+        self.calc6 =ProgressInspectionVisualizer()
+        self.calc6.inspectionStatusChanged.connect(self.onInspectDataUpdateUI)
+        self.calc6.start()
         #####
 
 
@@ -1620,6 +1645,22 @@ class Ui_Pridentifier(object):
 
 
 
+class ProgressLoadingVisualizer(QtCore.QThread, QtCore.QObject):
+    """
+    Runs a counter object.
+    """
+    loadingStatusChanged = pyqtSignal(int)
+
+    def __init__(self):
+        super(ProgressLoadingVisualizer, self).__init__()
+
+    def run(self):
+        count = 0
+        while count < 100:
+            count = config.state_loading
+            self.loadingStatusChanged.emit(count)
+            time.sleep(1)
+
 class ProgressAnalyzeVisualizer(QtCore.QThread, QtCore.QObject):
     """
     Runs a counter object.
@@ -1633,8 +1674,42 @@ class ProgressAnalyzeVisualizer(QtCore.QThread, QtCore.QObject):
         count = 0
         while count < 100:
             count = config.state_analysis
-            time.sleep(1)
             self.analysisStatusChanged.emit(count)
+            time.sleep(1)
+
+class ProgressEvaluateVisualizer(QtCore.QThread, QtCore.QObject):
+    """
+    Runs a counter object.
+    """
+    evaluationStatusChanged = pyqtSignal(int)
+
+    def __init__(self):
+        super(ProgressEvaluateVisualizer, self).__init__()
+
+    def run(self):
+        count = 0
+        while count < 100:
+            count = config.state_evaluation
+            self.evaluationStatusChanged.emit(count)
+            time.sleep(1)
+
+
+class ProgressInspectionVisualizer(QtCore.QThread, QtCore.QObject):
+    """
+    Runs a counter object.
+    """
+    inspectionStatusChanged = pyqtSignal(int)
+
+    def __init__(self):
+        super(ProgressInspectionVisualizer, self).__init__()
+
+    def run(self):
+        count = 0
+        while count < 100:
+            count = config.state_inspection
+            self.inspectionStatusChanged.emit(count)
+            time.sleep(1)
+
 
 
 
