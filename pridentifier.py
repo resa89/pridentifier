@@ -13,6 +13,7 @@ import numpy as np
 
 import config
 from src.objects import pridentifier
+from src.feature_extractor import save_as_pickled_object, try_to_load_as_pickled_object_or_None
 
 
 #TODO: remove dropdown menu/training method
@@ -48,6 +49,15 @@ class Ui_Pridentifier(object):
             #self.progressBar_loadingData.setValue(value)
             self.pridentifier.write_image_infos(args)
             self.showLoadedData()
+            #####
+            self.button_loadData.setEnabled(True)
+            self.button_train.setEnabled(True)
+            self.button_evaluate.setEnabled(True)
+            self.button_saveStatistics.setEnabled(True)
+            self.button_loadImage.setEnabled(True)
+            self.button_inspect.setEnabled(True)
+            self.button_saveResults.setEnabled(True)
+            ######
         return()
 
     #slot
@@ -63,6 +73,17 @@ class Ui_Pridentifier(object):
             #self.progressBar_loadingTraining.setValue(value)
             self.pridentifier.write_training_results(args)
             self.showTrainingResult()
+
+            #####
+            self.button_loadData.setEnabled(True)
+            self.button_train.setEnabled(True)
+            self.button_evaluate.setEnabled(True)
+            self.button_saveStatistics.setEnabled(True)
+            self.button_loadImage.setEnabled(True)
+            self.button_inspect.setEnabled(True)
+            self.button_saveResults.setEnabled(True)
+            ######
+
         return()
 
     #slot
@@ -78,6 +99,15 @@ class Ui_Pridentifier(object):
             #self.progressBar_evaluation.setValue(value)
             self.pridentifier.write_evaluation_results(args)
             self.showEvaluationResult()
+            #####
+            self.button_loadData.setEnabled(True)
+            self.button_train.setEnabled(True)
+            self.button_evaluate.setEnabled(True)
+            self.button_saveStatistics.setEnabled(True)
+            self.button_loadImage.setEnabled(True)
+            self.button_inspect.setEnabled(True)
+            self.button_saveResults.setEnabled(True)
+            ######
         return()
 
     #slot
@@ -94,6 +124,15 @@ class Ui_Pridentifier(object):
             #self.progressBar_inspection.setValue(value)
             self.pridentifier.write_inspection_results(args)
             self.showInspectionResults()
+            #####
+            self.button_loadData.setEnabled(True)
+            self.button_train.setEnabled(True)
+            self.button_evaluate.setEnabled(True)
+            self.button_saveStatistics.setEnabled(True)
+            self.button_loadImage.setEnabled(True)
+            self.button_inspect.setEnabled(True)
+            self.button_saveResults.setEnabled(True)
+            ######
         return()
 
     #slot
@@ -1198,8 +1237,8 @@ class Ui_Pridentifier(object):
         self.tabWidget.setCurrentIndex(0)
         self.button_loadData.clicked.connect(self.loadData)
         self.button_loadImage.clicked.connect(self.loadImg)
-        self.button_importKnowledge.clicked.connect(self.getCorrelation)
-        self.button_exportKnowledge.clicked.connect(self.saveCorrelation)
+        #self.button_importKnowledge.clicked.connect(self.getCorrelation)
+        #self.button_exportKnowledge.clicked.connect(self.saveCorrelation)
         self.button_saveStatistics.clicked.connect(self.saveStat)
         self.button_saveResults.clicked.connect(self.saveResult)
         self.button_train.clicked.connect(self.training)
@@ -1325,6 +1364,7 @@ class Ui_Pridentifier(object):
     def loadData(self):
         # print(DIRS)
         #filter = "Folder with folders representing each class (*.*)"
+        config.state_loading = 0
         dialog = QtWidgets.QFileDialog()
         path = dialog.getExistingDirectory(directory='..', options=QtWidgets.QFileDialog.ShowDirsOnly)
 
@@ -1335,6 +1375,16 @@ class Ui_Pridentifier(object):
             # use the last set snippet size in ui
             self.SNIPPET_WIDTH_last_upload = self.SNIPPET_WIDTH
             self.pridentifier.update_snippetSize(self.SNIPPET_WIDTH_last_upload)
+
+            #####
+            self.button_loadData.setEnabled(False)
+            self.button_train.setEnabled(False)
+            self.button_evaluate.setEnabled(False)
+            self.button_saveStatistics.setEnabled(False)
+            self.button_loadImage.setEnabled(False)
+            self.button_inspect.setEnabled(False)
+            self.button_saveResults.setEnabled(False)
+            ######
 
             #####
             self.calc = self.pridentifier.load_images(path)
@@ -1382,7 +1432,7 @@ class Ui_Pridentifier(object):
             tableWidget.setItem(0,i, QtWidgets.QTableWidgetItem(str(int(img_no[i]))))#self.inspector.data_detailed.shape[0]/4)))) #ToDo: check segment amount per printer
             tableWidget.setItem(1,i, QtWidgets.QTableWidgetItem(str(int(seg_no[i]))))#self.inspector.data_detailed.shape[0]/4)))) #ToDo: check segment amount per printer
 
-
+    '''
     def saveSpectra(self):
 
         self.pridentifier.save_fingerprints()
@@ -1396,19 +1446,26 @@ class Ui_Pridentifier(object):
             self.pridentifier.get_fingerprints(path)
             self.progressBar_loadingData.setValue(100)
             self.loadTable(self.tableWidget_data)
-
+    '''
 
     def training(self):
 
         self.progressBar_loadingTraining.setValue(0)
+        config.state_analysis = 0
 
         # use the last set snippet size in ui
         self.NUMBER_PIXELS_last_analysis = self.NUMBER_PIXELS
         self.pridentifier.update_pixelSize(self.NUMBER_PIXELS_last_analysis)
 
-
-
         #####
+        self.button_loadData.setEnabled(False)
+        self.button_train.setEnabled(False)
+        self.button_evaluate.setEnabled(False)
+        self.button_saveStatistics.setEnabled(False)
+        self.button_loadImage.setEnabled(False)
+        self.button_inspect.setEnabled(False)
+        self.button_saveResults.setEnabled(False)
+        ######
         self.calc2b =ProgressAnalyzeVisualizer()
         self.calc2b.analysisStatusChanged.connect(self.onAnalyzeDataUpdateUI)
         self.calc2b.start()
@@ -1429,30 +1486,48 @@ class Ui_Pridentifier(object):
         self.showFingerprints()
 
 
-
-
+    '''
+    # import analysis
     def getCorrelation(self):
+        filter = "Folder which contains the data_detailed.pkl and data_merged.pkl files. (*.*)"
+        path = QtWidgets.QFileDialog.getOpenFileName(filter='Images (*.pkl)')
+        #path = "/Users/resa/Projekte/Korensics/02-Pridentifier/generated_data"
+        print('selected path to get data: ', path)
 
+        if path != None:
+            self.pridentifier.fingerprints = try_to_load_as_pickled_object_or_None(path)
+            #self.progressBar_loadingTraining.setValue(100)
+            self.loadTable(self.tableWidget_learning)
+
+
+    # export analysis
+    def saveCorrelation(self):
         filter = "Folder which contains the data_detailed.pkl and data_merged.pkl files. (*.*)"
         path = QtWidgets.QFileDialog.getExistingDirectory(directory='..', options=QtWidgets.QFileDialog.ShowDirsOnly)
         #path = "/Users/resa/Projekte/Korensics/02-Pridentifier/generated_data"
         print('selected path to get data: ', path)
 
+        path = path + '/pridentifier_exported_analysis.pkl'
+
         if path:
-            self.inspector.getCorrelation(path)
-            self.progressBar_loadingTraining.setValue(100)
+            save_as_pickled_object(self.pridentifier.fingerprints, path)
+            #self.progressBar_loadingTraining.setValue(100)
             self.loadTable(self.tableWidget_learning)
 
-
-
-    def saveCorrelation(self):
-
-        self.inspector.saveCorrelation()
-
-
+    '''
 
     def evaluate(self):
         self.progressBar_evaluation.setValue(0)
+        config.state_evaluation = 0
+
+        #####
+        self.button_loadData.setEnabled(False)
+        self.button_train.setEnabled(False)
+        self.button_evaluate.setEnabled(False)
+        self.button_saveStatistics.setEnabled(False)
+        self.button_loadImage.setEnabled(False)
+        self.button_inspect.setEnabled(False)
+        self.button_saveResults.setEnabled(False)
         #####
         self.calc5 =ProgressEvaluateVisualizer()
         self.calc5.evaluationStatusChanged.connect(self.onEvaluateDataUpdateUI)
@@ -1511,40 +1586,11 @@ class Ui_Pridentifier(object):
 
 
     def saveStat(self):
+        path = QtWidgets.QFileDialog.getSaveFileName(filter="CSV File (*.csv)")
+        result = self.pridentifier.get_evaluation_result(train=True)
+        if not result.empty:
+            result.to_csv(path[0])
 
-        if config.ACCUMULATED_SPECTRA:
-
-            statistics = pd.DataFrame(columns=col)
-
-            for i in range(0, len(self.pridentifier.get_classes())):
-                #print("TRAIN SET")
-                amount_pos = self.inspector.correctPositiveTrain[i] + self.inspector.falseNegativeTrain[i]
-                amount_neg = self.inspector.correctNegativeTrain[i] + self.inspector.falsePositiveTrain[i]
-                amount_all = amount_neg + amount_pos
-
-                true_positive = 100*self.inspector.correctPositiveTrain[i] / amount_pos
-                miss_rate = 100*self.inspector.falseNegativeTrain[i] / amount_pos
-                #fall_out = 100*self.inspector.falsePositiveTrain[i] / (self.inspector.falsePositiveTrain[i] + self.inspector.correctNegativeTrain[i])
-                accuracy = 100*(self.inspector.correctPositiveTrain[i]+self.inspector.correctNegativeTrain[i]) / amount_all
-                #failure = 100*(self.inspector.falsePositiveTrain[i] + self.inspector.falseNegativeTrain[i]) / amount_all
-
-                # print(self.inspector.printer_types[i], "############################")
-                print("Hit Rate: %d %s" % (true_positive, "%"))
-                print("Miss Rate: %d %s" % (miss_rate, "%"))
-                #print("Fallout: %d %s" % (fall_out, "%"))
-                print("-------------------------------")
-                print("Accuracy: %d %s" % (accuracy, "%"))
-                #print("Classification Failure: %d %s" % (failure, "%"))
-
-                statistics.loc[i] = np.array([true_positive,miss_rate,accuracy,self.pridentifier.get_classes()[i]])
-
-            statistics.to_pickle(config.SUBPATH+"/statistics.pkl")
-                #line6 = "TEST SET"
-                #line7 = self.inspector.printer_types[i]
-                #line111 = "Hit Rate: %d %s" % (100*correctPositiveTest[i] / (correctPositiveTest[i] + falseNegativeTest[i]), "%")
-                #line112 = "Accuracy: %d %s" % (100*correctPositiveTest[i] / (correctPositiveTest[i] + falsePositiveTest[i]), "%")
-                #line113 = "Fallout: %d %s" % (100*falsePositiveTest[i] / (falsePositiveTest[i] + correctNegativeTest[i]), "%")
-                #newstr.append("\n".join(("                                                            ".join((line0)),"                                                            ".join((line1)),"          ".join((line2)),"         ".join((line3)),"                    ".join((line4)),"                    ".join((line5)),"                                                        ".join((line6)),"                                                        ".join((line7)))))
 
 
 
@@ -1580,6 +1626,15 @@ class Ui_Pridentifier(object):
 
     def inspection(self):
         self.progressBar_inspection.setValue(0)
+        #####
+        self.button_loadData.setEnabled(False)
+        self.button_train.setEnabled(False)
+        self.button_evaluate.setEnabled(False)
+        self.button_saveStatistics.setEnabled(False)
+        self.button_loadImage.setEnabled(False)
+        self.button_inspect.setEnabled(False)
+        self.button_saveResults.setEnabled(False)
+        ######
         #####
         self.calc6 =ProgressInspectionVisualizer()
         self.calc6.inspectionStatusChanged.connect(self.onInspectDataUpdateUI)
@@ -1636,7 +1691,11 @@ class Ui_Pridentifier(object):
 
     def saveResult(self):
 
-        self.pridentifier.save_result()
+        path = QtWidgets.QFileDialog.getSaveFileName(filter="CSV File (*.csv)")
+        result = self.pridentifier.get_evaluation_result(train=False)
+        if not result.empty:
+            result.to_csv(path[0])
+        #print('Inspection TO SAVE: \n', result)
 
 
     def changeSegmentSize(self, size):

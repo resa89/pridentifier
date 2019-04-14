@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>937</width>
-    <height>630</height>
+    <width>942</width>
+    <height>676</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -171,7 +171,7 @@ QTabBar::tab:left:only-one, QTabBar::tab:right:only-one {
 font: 12pt &quot;Helvetica&quot;;</string>
               </property>
               <property name="text">
-               <string>Segment width:</string>
+               <string>Segment width/height:</string>
               </property>
              </widget>
             </item>
@@ -385,7 +385,7 @@ font: 12pt &quot;Helvetica&quot;;
 </string>
               </property>
               <property name="text">
-               <string>Feature count:</string>
+               <string>Features:</string>
               </property>
              </widget>
             </item>
@@ -431,46 +431,6 @@ QPushButton:hover {
               </property>
               <property name="text">
                <string>ANALYZE</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="button_importKnowledge">
-              <property name="styleSheet">
-               <string notr="true">QPushButton {
-	background-color: #393939;
-	min-width: 160px;
-	padding: 12px 16px;
-	border: 2px solid #fff;
-	color: #fff;
-}
-
-QPushButton:hover {
-	background-color: #777777;
-}</string>
-              </property>
-              <property name="text">
-               <string>import analysis</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="button_exportKnowledge">
-              <property name="styleSheet">
-               <string notr="true">QPushButton {
-	background-color: #393939;
-	min-width: 160px;
-	padding: 12px 16px;
-	border: 2px solid #fff;
-	color: #fff;
-}
-
-QPushButton:hover {
-	background-color: #777777;
-}</string>
-              </property>
-              <property name="text">
-               <string>export analysis</string>
               </property>
              </widget>
             </item>
@@ -1107,7 +1067,7 @@ QPushButton:hover {
 }</string>
               </property>
               <property name="text">
-               <string>save statistics</string>
+               <string>save results</string>
               </property>
              </widget>
             </item>
@@ -1428,13 +1388,13 @@ font: 12pt &quot;Helvetica&quot;;</string>
                 <property name="minimumSize">
                  <size>
                   <width>200</width>
-                  <height>208</height>
+                  <height>200</height>
                  </size>
                 </property>
                 <property name="maximumSize">
                  <size>
                   <width>600</width>
-                  <height>200</height>
+                  <height>208</height>
                  </size>
                 </property>
                 <property name="styleSheet">
@@ -1466,13 +1426,13 @@ font: 12pt &quot;Helvetica&quot;;</string>
                 <property name="minimumSize">
                  <size>
                   <width>200</width>
-                  <height>208</height>
+                  <height>200</height>
                  </size>
                 </property>
                 <property name="maximumSize">
                  <size>
                   <width>600</width>
-                  <height>200</height>
+                  <height>208</height>
                  </size>
                 </property>
                 <property name="styleSheet">
@@ -1561,7 +1521,7 @@ QTableWidget QTableCornerButton::section {
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>937</width>
+     <width>942</width>
      <height>22</height>
     </rect>
    </property>
@@ -1779,7 +1739,7 @@ color: #393939;</string>
      <y>196</y>
     </hint>
     <hint type="destinationlabel">
-     <x>-2</x>
+     <x>0</x>
      <y>120</y>
     </hint>
    </hints>
@@ -1797,38 +1757,6 @@ color: #393939;</string>
     <hint type="destinationlabel">
      <x>6</x>
      <y>116</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>button_importKnowledge</sender>
-   <signal>clicked()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>getCorrelation()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>83</x>
-     <y>214</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>-19</x>
-     <y>278</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>button_exportKnowledge</sender>
-   <signal>clicked()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>saveCorrelation()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>145</x>
-     <y>312</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>-3</x>
-     <y>224</y>
     </hint>
    </hints>
   </connection>
@@ -1859,7 +1787,7 @@ color: #393939;</string>
      <y>214</y>
     </hint>
     <hint type="destinationlabel">
-     <x>-2</x>
+     <x>0</x>
      <y>317</y>
     </hint>
    </hints>
@@ -1929,38 +1857,6 @@ color: #393939;</string>
    </hints>
   </connection>
   <connection>
-   <sender>menubar</sender>
-   <signal>hovered(QAction*)</signal>
-   <receiver>progressBar_loadingData</receiver>
-   <slot>reset()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>647</x>
-     <y>13</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>682</x>
-     <y>98</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>menubar</sender>
-   <signal>hovered(QAction*)</signal>
-   <receiver>progressBar_loadingTraining</receiver>
-   <slot>reset()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>664</x>
-     <y>16</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>686</x>
-     <y>100</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>button_evaluate</sender>
    <signal>clicked()</signal>
    <receiver>MainWindow</receiver>
@@ -1971,7 +1867,7 @@ color: #393939;</string>
      <y>126</y>
     </hint>
     <hint type="destinationlabel">
-     <x>-4</x>
+     <x>0</x>
      <y>72</y>
     </hint>
    </hints>

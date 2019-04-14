@@ -37,7 +37,10 @@ class Evaluator(object):
             # for every sample / snippet
             for index, row in t_data.iterrows():
                 prediction, gtd, passed = self.compare_to_fingerprints(row, self.classes,  self.fingerprints) # return (predicted class, GTD, True or False prediction)
-                result = [prediction, gtd, passed]
+                if train:
+                    result = [prediction, gtd, passed]
+                else:
+                    result = [prediction, gtd, 'unknown']
                 if len(self.result) == 0:
                     self.result = pd.DataFrame(np.array(result).reshape(1,3), columns=['prediction', 'GTD', 'passed'])
                 else:
