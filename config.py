@@ -18,6 +18,12 @@ PRINTER_TYPES = np.array(())
 NUMBER_OF_CLASSES = 0
 
 
+state_loading = 0
+state_analysis = 0
+state_evaluation = 0
+state_inspection = 0
+
+
 # path handling
 if DB_IMPORT:
     #setupDB()

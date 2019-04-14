@@ -6,11 +6,11 @@ from ..feature_extractor import FeatureExtractor
 
 
 class Fingerprint(object):
-    def __init__(self, path, SNIPPET_WIDTH, NUMBER_PIXELS):
+    def __init__(self, path, classes, SNIPPET_WIDTH, NUMBER_PIXELS):
         self.path_to_images_of_class = path
         self.class_name = os.path.split(path)[-1]
         self.image_names = []
-
+        self.classes = classes
         self.number_of_images = 0
         self.number_of_snippets = 0
         self.fingerprint = np.array(())
@@ -58,7 +58,7 @@ class Fingerprint(object):
     def extract_fingerprint(self):
 
         feature_extractor = FeatureExtractor(self.path_to_images_of_class, self.img_names, self.number_of_snippets,
-                                             self.SNIPPET_WIDTH, self.NUMBER_PIXELS)
+                                             self.classes, self.SNIPPET_WIDTH, self.NUMBER_PIXELS)
         self.fingerprint = feature_extractor.get_accumulated_spectra()
 
 

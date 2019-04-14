@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 
 from config import SUBPATH
+from .feature_extractor import try_to_load_as_pickled_object_or_None
 
 
 class Evaluator(object):
@@ -74,7 +75,7 @@ class Evaluator(object):
             print("Error: Folder does not exist: ", folder)
 
         if os.path.isfile(file_name):
-            unpickled_df = pd.read_pickle(file_name)
+            unpickled_df = try_to_load_as_pickled_object_or_None(file_name)
 
         return(unpickled_df)
 

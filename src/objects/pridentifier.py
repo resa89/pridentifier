@@ -10,7 +10,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from .fingerprint import Fingerprint
 from ..evaluator import Evaluator
 from ..feature_extractor import FeatureExtractor
-
+import config
 
 class Pridentifier(QObject):
 
@@ -262,7 +262,7 @@ class ProgressLoadData(QtCore.QThread, QtCore.QObject):
 
         for class_name in classes:
             class_path = self.path + '/' + class_name
-            fingerprint = Fingerprint(class_path, self.SNIPPET_WIDTH, self.NUMBER_PIXELS)
+            fingerprint = Fingerprint(class_path, classes, self.SNIPPET_WIDTH, self.NUMBER_PIXELS)
             fingerprints.append(fingerprint)
             amount_images, amount_snippets = fingerprint.get_numbers()
             amount_images_per_class.append(amount_images)
@@ -296,7 +296,8 @@ class ProgressAnalyzeData(QtCore.QThread, QtCore.QObject):
             fingerprint.update_pixelSize(self.NUMBER_PIXELS)
             fingerprint.extract_fingerprint()
             count += 100//len(self.fingerprints)
-            self.analyzeDataStatusChanged.emit(count, None)
+            #self.analyzeDataStatusChanged.emit(count, None)
+            config.state_analysis = count
 
         args = self.fingerprints
         self.analyzeDataStatusChanged.emit(count, args)
@@ -361,7 +362,8 @@ class ProgressInspectData(QtCore.QThread, QtCore.QObject):
         amount_snippets = amount_snippets_x_axis * amount_snippets_y_axis
 
         # extract features of test sample
-        inspector = FeatureExtractor(path, [file], amount_snippets, self.SNIPPET_WIDTH, self.NUMBER_PIXELS, train=False)
+        inspector = FeatureExtractor(path, [file], amount_snippets, self.classes,
+                                     self.SNIPPET_WIDTH, self.NUMBER_PIXELS, train=False)
 
         inspection_evaluator = Evaluator(self.classes,self.fingerprints, self.SNIPPET_WIDTH, train=False)
         test_result = inspection_evaluator.get_evaluation()

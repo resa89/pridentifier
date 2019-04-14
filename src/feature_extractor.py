@@ -1,5 +1,7 @@
 import os.path
+import sys
 
+import pickle
 import numpy as np
 from PIL import Image
 from scipy import misc
@@ -7,16 +9,17 @@ import pandas as pd
 from scipy import fftpack
 from scipy import signal
 
-from config import SUBPATH
+import config
 
 
 class FeatureExtractor(object):
 
-    def __init__(self, path, img_names, number_of_snippets, SNIPPET_WIDTH, NUMBER_PIXELS, train=True):
+    def __init__(self, path, img_names, number_of_snippets, classes, SNIPPET_WIDTH, NUMBER_PIXELS, train=True):
         self.path_to_class = path
         self.img_names = img_names
         self.number_of_snippets = number_of_snippets
         self.train = train
+        self.classes = classes
         self.SNIPPET_WIDTH = SNIPPET_WIDTH
         self.NUMBER_PIXELS = NUMBER_PIXELS
         self.accumulated_spectra = np.zeros((self.SNIPPET_WIDTH, self.SNIPPET_WIDTH))
@@ -59,6 +62,8 @@ class FeatureExtractor(object):
 
         first_image = True
 
+        overall_sample_no = 0
+
         for image in self.img_names:
             img_path = self.path_to_class + '/' + image
             img = misc.imread(img_path)
@@ -99,6 +104,11 @@ class FeatureExtractor(object):
                     # save sampled spectra for training analysis later
                     self.add_train_data(spectrum, class_name, sample_no)
                     sample_no += 1
+                    if train:
+                        overall_sample_no += 1
+                        index_of_class = self.classes.index(class_name)
+                        config.state_analysis = index_of_class*100/len(self.classes)+\
+                                                (overall_sample_no/self.number_of_snippets*100)//len(self.classes)
 
             sample_amount += segment_count[0] * segment_count[1]
 
@@ -197,21 +207,23 @@ class FeatureExtractor(object):
     def save_train_data(self, df_all_segments, class_name, train, first=False):
 
         if train:
-            folder = SUBPATH + '/trained_samples/'
+            folder = config.SUBPATH + '/trained_samples/'
             file_name = folder + class_name + "_train.pkl"
         else:
-            folder = SUBPATH + '/test_samples/'
+            folder = config.SUBPATH + '/test_samples/'
             file_name = folder + class_name + "_test.pkl"
 
         if not os.path.exists(folder):
             os.makedirs(folder)
 
-        if os.path.isfile(file_name) and not first:
-            unpickled_df = pd.read_pickle(file_name)
+        if not first: # and os.path.isfile(file_name)
+            unpickled_df = try_to_load_as_pickled_object_or_None(file_name)
             df_all_segments = unpickled_df.append(df_all_segments, ignore_index=True)
-            df_all_segments.to_pickle(file_name)
+            save_as_pickled_object(df_all_segments, file_name)
         else:
-            df_all_segments.to_pickle(file_name)
+            save_as_pickled_object(df_all_segments, file_name)
+
+
 
 
 
@@ -256,7 +268,7 @@ class FeatureExtractor(object):
         f_add = Image.fromarray(np.divide(magnitude_all, magnitude_all.max()) * 255).convert('RGB')
 
         # save image: merged frequency spectrum by addition
-        path = SUBPATH + '/fingerprint/'
+        path = config.SUBPATH + '/fingerprint/'
 
         if not os.path.exists(path):
             os.makedirs(path)
@@ -284,6 +296,36 @@ class FeatureExtractor(object):
         return(self.accumulated_spectra)
 
 
+
+
+
+def save_as_pickled_object(obj, filepath):
+    """
+    This is a defensive way to write pickle.write, allowing for very large files on all platforms
+    """
+    max_bytes = 2**31 - 1
+    bytes_out = pickle.dumps(obj)
+    n_bytes = sys.getsizeof(bytes_out)
+    with open(filepath, 'wb') as f_out:
+        for idx in range(0, n_bytes, max_bytes):
+            f_out.write(bytes_out[idx:idx+max_bytes])
+
+
+def try_to_load_as_pickled_object_or_None(filepath):
+    """
+    This is a defensive way to write pickle.load, allowing for very large files on all platforms
+    """
+    max_bytes = 2**31 - 1
+    try:
+        input_size = os.path.getsize(filepath)
+        bytes_in = bytearray(0)
+        with open(filepath, 'rb') as f_in:
+            for _ in range(0, input_size, max_bytes):
+                bytes_in += f_in.read(max_bytes)
+        obj = pickle.loads(bytes_in)
+    except:
+        return None
+    return obj
 
 
 

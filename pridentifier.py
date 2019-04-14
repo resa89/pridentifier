@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 import os
+import time
 
+from PyQt5.QtCore import pyqtSignal
+from PyQt5.QtCore import QObject, pyqtSlot
 from PyQt5 import QtCore, QtGui, QtWidgets
 import pandas as pd
 from PyQt5.QtGui import QPixmap
@@ -38,35 +41,54 @@ class Ui_Pridentifier(object):
 
     #slot
     def onImageLoadUpdate(self, value, args=None):
-        self.progressBar_loadingData.setValue(value)
+        config.state_loading = value
         if args:
             self.pridentifier.write_image_infos(args)
             self.showLoadedData()
         return()
 
     #slot
+    def onImageLoadUpdateUI(self, value):
+        self.progressBar_loadingData.setValue(value)
+
+    #slot
     def onAnalyzeDataUpdate(self, value, args=None):
-        self.progressBar_loadingTraining.setValue(value)
+        config.state_analysis = value
         if args:
             self.pridentifier.write_training_results(args)
+            config.state_analysis = 100
             self.showTrainingResult()
         return()
 
     #slot
+    def onAnalyzeDataUpdateUI(self, value):
+        self.progressBar_loadingTraining.setValue(value)
+
+    #slot
     def onEvaluateDataUpdate(self, value, args=None):
-        self.progressBar_evaluation.setValue(value)
+        config.state_evaluation = value
         if args:
             self.pridentifier.write_evaluation_results(args)
             self.showEvaluationResult()
         return()
 
     #slot
+    def onEvaluateDataUpdateUI(self, value):
+        self.progressBar_evaluation.setValue(value)
+
+
+    #slot
     def onInspectDataUpdate(self, value, args=None):
-        self.progressBar_inspection.setValue(value)
+        config.state_inspection = value
         if type(args) == pd.DataFrame:
             self.pridentifier.write_inspection_results(args)
             self.showInspectionResults()
         return()
+
+    #slot
+    def onInspectDataUpdateUI(self, value):
+        self.progressBar_inspection.setValue(value)
+
 
 
     def setupUi(self, MainWindow):
@@ -1369,14 +1391,22 @@ class Ui_Pridentifier(object):
         self.pridentifier.update_pixelSize(self.NUMBER_PIXELS_last_analysis)
 
 
+
+        #####
+        self.calc3 =ProgressAnalyzeVisualizer()
+        self.calc3.analysisStatusChanged.connect(self.onAnalyzeDataUpdateUI)
+        self.calc3.start()
+        #####
+
         #####
         self.calc2 = self.pridentifier.extract_features()
         self.calc2.analyzeDataStatusChanged.connect(self.onAnalyzeDataUpdate)
         self.calc2.start()
         #####
 
+
         #self.progressBar_loadingTraining.setValue(100)
-        self.tableWidget_learning
+        #self.tableWidget_learning
 
     def showTrainingResult(self):
         # show computed fingerprint images
@@ -1587,6 +1617,27 @@ class Ui_Pridentifier(object):
 
     def changeFeatureCount(self, count):
         self.NUMBER_PIXELS = count #TODO: change constants
+
+
+
+class ProgressAnalyzeVisualizer(QtCore.QThread, QtCore.QObject):
+    """
+    Runs a counter object.
+    """
+    analysisStatusChanged = pyqtSignal(int)
+
+    def __init__(self):
+        super(ProgressAnalyzeVisualizer, self).__init__()
+
+    def run(self):
+        count = 0
+        while count < 100:
+            count = config.state_analysis
+            time.sleep(1)
+            self.analysisStatusChanged.emit(count)
+
+
+
 
 def main():
     import sys
