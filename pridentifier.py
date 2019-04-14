@@ -1568,25 +1568,29 @@ class Ui_Pridentifier(object):
 
                 self.label_inspection.setAlignment(QtCore.Qt.AlignCenter)
                 self.tableWidget_inspection.clear()
+                self.tableWidget_inspection.setRowCount(0)
+                self.tableWidget_inspection.setColumnCount(0)
+                self.label_inspection_fingerprint.clear()
+                self.label_inspection_fingerprint.setAlignment(QtCore.Qt.AlignCenter)
+                self.progressBar_inspection.setValue(0)
+                config.state_inspection = 0
 
 
 
 
     def inspection(self):
-
-
-
         self.progressBar_inspection.setValue(0)
-        #####
-        self.calc3a = self.pridentifier.inspect()
-        self.calc3a.inspectDataStatusChanged.connect(self.onInspectDataUpdate)
-        self.calc3a.start()
-        #####
         #####
         self.calc6 =ProgressInspectionVisualizer()
         self.calc6.inspectionStatusChanged.connect(self.onInspectDataUpdateUI)
         self.calc6.start()
         #####
+        #####
+        self.calc3a = self.pridentifier.inspect()
+        self.calc3a.inspectDataStatusChanged.connect(self.onInspectDataUpdate)
+        self.calc3a.start()
+        #####
+
 
 
     def showInspectionResults(self):
