@@ -3,12 +3,10 @@ import os
 import time
 
 from PyQt5.QtCore import pyqtSignal
-from PyQt5.QtCore import QObject, pyqtSlot
 from PyQt5 import QtCore, QtGui, QtWidgets
 import pandas as pd
 from PyQt5.QtGui import QPixmap
-from PyQt5.QtCore import QObject, pyqtSlot
-import numpy as np
+from PyQt5.QtWidgets import QMessageBox
 
 
 import config
@@ -29,6 +27,8 @@ class Ui_Pridentifier(object):
         self.SNIPPET_WIDTH_last_upload = config.SNIPPET_WIDTH
         self.NUMBER_PIXELS_last_analysis = config.NUMBER_PIXELS
 
+        self.state = 0 # 0: initial, 1: loaded images, 2: analysed images, 3: evaluated images, 4: load image, 5: inspected
+
         print("Number of Pixels: ", self.NUMBER_PIXELS)
         self.pridentifier = pridentifier.Pridentifier(self.SNIPPET_WIDTH_last_upload, self.NUMBER_PIXELS_last_analysis)
         #self.make_connection(pridentifier)
@@ -45,6 +45,7 @@ class Ui_Pridentifier(object):
         config.state_loading = value
         if args:
             config.state_loading = 100
+            self.state = 1
             time.sleep(1)
             #self.progressBar_loadingData.setValue(value)
             self.pridentifier.write_image_infos(args)
@@ -57,6 +58,8 @@ class Ui_Pridentifier(object):
             self.button_loadImage.setEnabled(True)
             self.button_inspect.setEnabled(True)
             self.button_saveResults.setEnabled(True)
+            self.tableWidget_learning.setColumnCount(0)
+            self.tableWidget_learning.clear()
             ######
         return()
 
@@ -69,6 +72,7 @@ class Ui_Pridentifier(object):
         config.state_analysis = value
         if args:
             config.state_analysis = 100
+            self.state = 2
             time.sleep(1)
             #self.progressBar_loadingTraining.setValue(value)
             self.pridentifier.write_training_results(args)
@@ -83,6 +87,8 @@ class Ui_Pridentifier(object):
             self.button_inspect.setEnabled(True)
             self.button_saveResults.setEnabled(True)
             ######
+            self.tableWidget_evaluation.setColumnCount(0)
+            self.tableWidget_evaluation.clear()
 
         return()
 
@@ -95,6 +101,7 @@ class Ui_Pridentifier(object):
         config.state_evaluation = value
         if args:
             config.state_evaluation = 100
+            self.state = 3
             time.sleep(1)
             #self.progressBar_evaluation.setValue(value)
             self.pridentifier.write_evaluation_results(args)
@@ -120,6 +127,7 @@ class Ui_Pridentifier(object):
         config.state_inspection = value
         if type(args) == pd.DataFrame:
             config.state_inspection = 100
+            self.state = 4
             time.sleep(1)
             #self.progressBar_inspection.setValue(value)
             self.pridentifier.write_inspection_results(args)
@@ -1417,37 +1425,39 @@ class Ui_Pridentifier(object):
     '''
 
     def training(self):
+        if self.state >= 1:
+            self.progressBar_loadingTraining.setValue(0)
+            config.state_analysis = 0
 
-        self.progressBar_loadingTraining.setValue(0)
-        config.state_analysis = 0
+            # use the last set snippet size in ui
+            self.NUMBER_PIXELS_last_analysis = self.NUMBER_PIXELS
+            self.pridentifier.update_pixelSize(self.NUMBER_PIXELS_last_analysis)
 
-        # use the last set snippet size in ui
-        self.NUMBER_PIXELS_last_analysis = self.NUMBER_PIXELS
-        self.pridentifier.update_pixelSize(self.NUMBER_PIXELS_last_analysis)
+            #####
+            self.button_loadData.setEnabled(False)
+            self.button_train.setEnabled(False)
+            self.button_evaluate.setEnabled(False)
+            self.button_saveStatistics.setEnabled(False)
+            self.button_loadImage.setEnabled(False)
+            self.button_inspect.setEnabled(False)
+            self.button_saveResults.setEnabled(False)
+            ######
+            self.calc2b =ProgressAnalyzeVisualizer()
+            self.calc2b.analysisStatusChanged.connect(self.onAnalyzeDataUpdateUI)
+            self.calc2b.start()
+            #####
 
-        #####
-        self.button_loadData.setEnabled(False)
-        self.button_train.setEnabled(False)
-        self.button_evaluate.setEnabled(False)
-        self.button_saveStatistics.setEnabled(False)
-        self.button_loadImage.setEnabled(False)
-        self.button_inspect.setEnabled(False)
-        self.button_saveResults.setEnabled(False)
-        ######
-        self.calc2b =ProgressAnalyzeVisualizer()
-        self.calc2b.analysisStatusChanged.connect(self.onAnalyzeDataUpdateUI)
-        self.calc2b.start()
-        #####
-
-        #####
-        self.calc2 = self.pridentifier.extract_features()
-        self.calc2.analyzeDataStatusChanged.connect(self.onAnalyzeDataUpdate)
-        self.calc2.start()
-        #####
-
-
-        #self.progressBar_loadingTraining.setValue(100)
-        #self.tableWidget_learning
+            #####
+            self.calc2 = self.pridentifier.extract_features()
+            self.calc2.analyzeDataStatusChanged.connect(self.onAnalyzeDataUpdate)
+            self.calc2.start()
+            #####
+            #self.progressBar_loadingTraining.setValue(100)
+            #self.tableWidget_learning
+        else:
+            self.tableWidget_learning.setColumnCount(1)
+            self.tableWidget_learning.setHorizontalHeaderItem(0, QtWidgets.QTableWidgetItem('You have to load data first, before you can do an analysis.'))
+            self.tableWidget_learning.resizeColumnsToContents()
 
     def showTrainingResult(self):
         # show computed fingerprint images
@@ -1485,30 +1495,33 @@ class Ui_Pridentifier(object):
     '''
 
     def evaluate(self):
-        self.progressBar_evaluation.setValue(0)
-        config.state_evaluation = 0
+        if self.state >= 2:
+            self.progressBar_evaluation.setValue(0)
+            config.state_evaluation = 0
 
-        #####
-        self.button_loadData.setEnabled(False)
-        self.button_train.setEnabled(False)
-        self.button_evaluate.setEnabled(False)
-        self.button_saveStatistics.setEnabled(False)
-        self.button_loadImage.setEnabled(False)
-        self.button_inspect.setEnabled(False)
-        self.button_saveResults.setEnabled(False)
-        #####
-        self.calc5 =ProgressEvaluateVisualizer()
-        self.calc5.evaluationStatusChanged.connect(self.onEvaluateDataUpdateUI)
-        self.calc5.start()
-        #####
-        self.calc3 = self.pridentifier.evaluate()
-        self.calc3.evaluateDataStatusChanged.connect(self.onEvaluateDataUpdate)
-        self.calc3.start()
-        #####
-
+            #####
+            self.button_loadData.setEnabled(False)
+            self.button_train.setEnabled(False)
+            self.button_evaluate.setEnabled(False)
+            self.button_saveStatistics.setEnabled(False)
+            self.button_loadImage.setEnabled(False)
+            self.button_inspect.setEnabled(False)
+            self.button_saveResults.setEnabled(False)
+            #####
+            self.calc5 =ProgressEvaluateVisualizer()
+            self.calc5.evaluationStatusChanged.connect(self.onEvaluateDataUpdateUI)
+            self.calc5.start()
+            #####
+            self.calc3 = self.pridentifier.evaluate()
+            self.calc3.evaluateDataStatusChanged.connect(self.onEvaluateDataUpdate)
+            self.calc3.start()
+            #####
+        else:
+            self.tableWidget_evaluation.setColumnCount(1)
+            self.tableWidget_evaluation.setHorizontalHeaderItem(0, QtWidgets.QTableWidgetItem('You have to load and analyze data first, before you can do an evaluation.'))
+            self.tableWidget_evaluation.resizeColumnsToContents()
 
     def showEvaluationResult(self):
-
         # generate data for table
         col = []
         col.append('true positive')
@@ -1563,56 +1576,65 @@ class Ui_Pridentifier(object):
 
 
     def loadImg(self):
+        if self.state >= 2:
+            filename = QtWidgets.QFileDialog.getOpenFileName(filter='Images (*.png *.xpm *.jpg)')
 
-        filename = QtWidgets.QFileDialog.getOpenFileName(filter='Images (*.png *.xpm *.jpg)')
+            if filename:
+                qimg = QtGui.QImage()
+                qimg.load(filename[0])
 
-        if filename:
-            qimg = QtGui.QImage()
-            qimg.load(filename[0])
+                # Create widget
+                if qimg:
+                    self.pridentifier.set_inspection_image_path(filename[0])
+                    pixmap = QPixmap.fromImage(qimg)
+                    #self.label_inspection.setPixmap(pixmap)
+                    #self.label_inspection.setScaledContents(True)
+                    self.label_inspection.setPixmap(pixmap.scaled(
+                        self.label_inspection.size(), QtCore.Qt.KeepAspectRatio,
+                        QtCore.Qt.SmoothTransformation))
 
-            # Create widget
-            if qimg:
-                self.pridentifier.set_inspection_image_path(filename[0])
-                pixmap = QPixmap.fromImage(qimg)
-                #self.label_inspection.setPixmap(pixmap)
-                #self.label_inspection.setScaledContents(True)
-                self.label_inspection.setPixmap(pixmap.scaled(
-                    self.label_inspection.size(), QtCore.Qt.KeepAspectRatio,
-                    QtCore.Qt.SmoothTransformation))
-
-                self.label_inspection.setAlignment(QtCore.Qt.AlignCenter)
-                self.tableWidget_inspection.clear()
-                self.tableWidget_inspection.setRowCount(0)
-                self.tableWidget_inspection.setColumnCount(0)
-                self.label_inspection_fingerprint.clear()
-                self.label_inspection_fingerprint.setAlignment(QtCore.Qt.AlignCenter)
-                self.progressBar_inspection.setValue(0)
-                config.state_inspection = 0
+                    self.label_inspection.setAlignment(QtCore.Qt.AlignCenter)
+                    self.tableWidget_inspection.clear()
+                    self.tableWidget_inspection.setRowCount(0)
+                    self.tableWidget_inspection.setColumnCount(0)
+                    self.label_inspection_fingerprint.clear()
+                    self.label_inspection_fingerprint.setAlignment(QtCore.Qt.AlignCenter)
+                    self.progressBar_inspection.setValue(0)
+                    config.state_inspection = 0
+                    self.state = 4
+                    self.tableWidget_inspection.setColumnCount(0)
+                    self.tableWidget_inspection.clear()
 
 
 
 
     def inspection(self):
-        self.progressBar_inspection.setValue(0)
-        #####
-        self.button_loadData.setEnabled(False)
-        self.button_train.setEnabled(False)
-        self.button_evaluate.setEnabled(False)
-        self.button_saveStatistics.setEnabled(False)
-        self.button_loadImage.setEnabled(False)
-        self.button_inspect.setEnabled(False)
-        self.button_saveResults.setEnabled(False)
-        ######
-        #####
-        self.calc6 =ProgressInspectionVisualizer()
-        self.calc6.inspectionStatusChanged.connect(self.onInspectDataUpdateUI)
-        self.calc6.start()
-        #####
-        #####
-        self.calc3a = self.pridentifier.inspect()
-        self.calc3a.inspectDataStatusChanged.connect(self.onInspectDataUpdate)
-        self.calc3a.start()
-        #####
+        if self.state >= 4:
+            self.progressBar_inspection.setValue(0)
+            #####
+            self.button_loadData.setEnabled(False)
+            self.button_train.setEnabled(False)
+            self.button_evaluate.setEnabled(False)
+            self.button_saveStatistics.setEnabled(False)
+            self.button_loadImage.setEnabled(False)
+            self.button_inspect.setEnabled(False)
+            self.button_saveResults.setEnabled(False)
+            ######
+            #####
+            self.calc6 =ProgressInspectionVisualizer()
+            self.calc6.inspectionStatusChanged.connect(self.onInspectDataUpdateUI)
+            self.calc6.start()
+            #####
+            #####
+            self.calc3a = self.pridentifier.inspect()
+            self.calc3a.inspectDataStatusChanged.connect(self.onInspectDataUpdate)
+            self.calc3a.start()
+            #####
+        else:
+            self.tableWidget_inspection.setColumnCount(1)
+            self.tableWidget_inspection.setHorizontalHeaderItem(0, QtWidgets.QTableWidgetItem('You have to load and alayze data and load an inspection image first, before you can do an inspection.'))
+            self.tableWidget_inspection.resizeColumnsToContents()
+
 
 
 
