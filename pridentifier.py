@@ -11,6 +11,7 @@ from PyQt5.QtWidgets import QMessageBox
 
 import config
 from src.objects import pridentifier
+from design import dialog_developer
 from src.feature_extractor import save_as_pickled_object, try_to_load_as_pickled_object_or_None
 
 
@@ -31,14 +32,16 @@ class Ui_Pridentifier(object):
 
         print("Number of Pixels: ", self.NUMBER_PIXELS)
         self.pridentifier = pridentifier.Pridentifier(self.SNIPPET_WIDTH_last_upload, self.NUMBER_PIXELS_last_analysis)
-        #self.make_connection(pridentifier)
 
-    #def make_connection(self, pridentifier):
-    #    pridentifier.connect(self.get_slider_value)
 
-    #@pyqtSlot(int)
-    #def get_slider_value(self, val):
-    #    self.progressBar_loadingTraining.setValue(val)
+    def developer_dialog(self):
+        # If you pass a parent (self) will block the Main Window,
+        # and if you do not pass both will be independent,
+        # I recommend you try both cases.
+        widget = QtWidgets.QDialog()
+        ui=dialog_developer.Ui_Dialog()
+        ui.setupUi(widget)
+        widget.exec_()
 
     #slot
     def onImageLoadUpdate(self, value, args=None):
@@ -146,7 +149,6 @@ class Ui_Pridentifier(object):
     #slot
     def onInspectDataUpdateUI(self, value):
         self.progressBar_inspection.setValue(value)
-
 
 
     def setupUi(self, MainWindow):
@@ -1026,7 +1028,7 @@ class Ui_Pridentifier(object):
         self.horizontalLayout_10 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_10.setObjectName("horizontalLayout_10")
         self.label_inspection = QtWidgets.QLabel(self.horizontalLayoutWidget_4)
-        self.label_inspection.setMinimumSize(QtCore.QSize(200, 200))
+        self.label_inspection.setMinimumSize(QtCore.QSize(200, 258))
         self.label_inspection.setMaximumSize(QtCore.QSize(600, 208))
         self.label_inspection.setStyleSheet("QLabel {\n"
 "    background-color: #333333;\n"
@@ -1049,7 +1051,7 @@ class Ui_Pridentifier(object):
         self.label_inspection.setObjectName("label_inspection")
         self.horizontalLayout_10.addWidget(self.label_inspection)
         self.label_inspection_fingerprint = QtWidgets.QLabel(self.horizontalLayoutWidget_4)
-        self.label_inspection_fingerprint.setMinimumSize(QtCore.QSize(200, 200))
+        self.label_inspection_fingerprint.setMinimumSize(QtCore.QSize(200, 258))
         self.label_inspection_fingerprint.setMaximumSize(QtCore.QSize(600, 208))
         self.label_inspection_fingerprint.setStyleSheet("QLabel {\n"
 "    background-color: #333333;\n"
@@ -1115,30 +1117,27 @@ class Ui_Pridentifier(object):
         self.menubar.setAutoFillBackground(False)
         self.menubar.setStyleSheet("")
         self.menubar.setObjectName("menubar")
-        self.menuData = QtWidgets.QMenu(self.menubar)
-        self.menuData.setStyleSheet("background-color: #fff;\n"
+        self.menuPridentifier = QtWidgets.QMenu(self.menubar)
+        self.menuPridentifier.setStyleSheet("background-color: #fff;\n"
+"color: #393939;\n"
+"")
+        self.menuPridentifier.setObjectName("menuPridentifier")
+        self.menuInstruction = QtWidgets.QMenu(self.menubar)
+        self.menuInstruction.setStyleSheet("background-color: #fff;\n"
 "color: #393939;")
-        self.menuData.setObjectName("menuData")
-        self.menuAnalysis = QtWidgets.QMenu(self.menubar)
-        self.menuAnalysis.setStyleSheet("background-color: #fff;\n"
+        self.menuInstruction.setObjectName("menuInstruction")
+        self.menuDevelopment = QtWidgets.QMenu(self.menubar)
+        self.menuDevelopment.setStyleSheet("background-color: #fff;\n"
 "color: #393939;")
-        self.menuAnalysis.setObjectName("menuAnalysis")
-        self.menuTest = QtWidgets.QMenu(self.menubar)
-        self.menuTest.setStyleSheet("background-color: #fff;\n"
+        self.menuDevelopment.setObjectName("menuDevelopment")
+        self.menuResearch = QtWidgets.QMenu(self.menubar)
+        self.menuResearch.setStyleSheet("background-color: #fff;\n"
 "color: #393939;")
-        self.menuTest.setObjectName("menuTest")
-        self.menuInspection = QtWidgets.QMenu(self.menubar)
-        self.menuInspection.setStyleSheet("background-color: #fff;\n"
+        self.menuResearch.setObjectName("menuResearch")
+        self.menuHelp = QtWidgets.QMenu(self.menubar)
+        self.menuHelp.setStyleSheet("background-color: #fff;\n"
 "color: #393939;")
-        self.menuInspection.setObjectName("menuInspection")
-        self.menuInfo = QtWidgets.QMenu(self.menubar)
-        self.menuInfo.setStyleSheet("background-color: #fff;\n"
-"color: #393939;")
-        self.menuInfo.setObjectName("menuInfo")
-        self.menuIntroduction = QtWidgets.QMenu(self.menubar)
-        self.menuIntroduction.setStyleSheet("background-color: #fff;\n"
-"color: #393939;")
-        self.menuIntroduction.setObjectName("menuIntroduction")
+        self.menuHelp.setObjectName("menuHelp")
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
@@ -1189,29 +1188,61 @@ class Ui_Pridentifier(object):
         self.actionExample_4.setObjectName("actionExample_4")
         self.actionResult_2 = QtWidgets.QAction(MainWindow)
         self.actionResult_2.setObjectName("actionResult_2")
-        self.menuData.addAction(self.actionExample)
-        self.menuData.addAction(self.actionExperiment)
-        self.menuAnalysis.addAction(self.actionExample_2)
-        self.menuAnalysis.addAction(self.actionMethod)
-        self.menuTest.addAction(self.actionExample_3)
-        self.menuTest.addAction(self.actionResult)
-        self.menuInspection.addAction(self.actionExample_4)
-        self.menuInspection.addAction(self.actionResult_2)
-        self.menuInfo.addAction(self.actionDevelopment)
-        self.menuInfo.addAction(self.actionCredits)
-        self.menuInfo.addAction(self.actionLicence)
-        self.menuInfo.addSeparator()
-        self.menuInfo.addAction(self.actionTroubleshooting)
-        self.menuInfo.addAction(self.actionFeedback)
-        self.menuInfo.addAction(self.actionContact)
-        self.menuIntroduction.addAction(self.actionPurpose)
-        self.menuIntroduction.addAction(self.actionUse_Cases)
-        self.menubar.addAction(self.menuIntroduction.menuAction())
-        self.menubar.addAction(self.menuData.menuAction())
-        self.menubar.addAction(self.menuAnalysis.menuAction())
-        self.menubar.addAction(self.menuTest.menuAction())
-        self.menubar.addAction(self.menuInspection.menuAction())
-        self.menubar.addAction(self.menuInfo.menuAction())
+        self.actionData = QtWidgets.QAction(MainWindow)
+        self.actionData.setObjectName("actionData")
+        self.actionAnalysis = QtWidgets.QAction(MainWindow)
+        self.actionAnalysis.setObjectName("actionAnalysis")
+        self.actionEvaluation = QtWidgets.QAction(MainWindow)
+        self.actionEvaluation.setObjectName("actionEvaluation")
+        self.actionInspection = QtWidgets.QAction(MainWindow)
+        self.actionInspection.setObjectName("actionInspection")
+        self.actionAbout = QtWidgets.QAction(MainWindow)
+        self.actionAbout.setObjectName("actionAbout")
+        self.actionAnalysis_Method = QtWidgets.QAction(MainWindow)
+        self.actionAnalysis_Method.setObjectName("actionAnalysis_Method")
+        self.actionExperiment_Results = QtWidgets.QAction(MainWindow)
+        self.actionExperiment_Results.setObjectName("actionExperiment_Results")
+        self.actionApplication_Field = QtWidgets.QAction(MainWindow)
+        self.actionApplication_Field.setObjectName("actionApplication_Field")
+        self.actionTroubleshooting_2 = QtWidgets.QAction(MainWindow)
+        self.actionTroubleshooting_2.setObjectName("actionTroubleshooting_2")
+        self.actionFeedback_2 = QtWidgets.QAction(MainWindow)
+        self.actionFeedback_2.setObjectName("actionFeedback_2")
+        self.actionContact_2 = QtWidgets.QAction(MainWindow)
+        self.actionContact_2.setObjectName("actionContact_2")
+        self.actionDeveloper = QtWidgets.QAction(MainWindow)
+        self.actionDeveloper.setObjectName("actionDeveloper")
+        self.actionParticipating_People = QtWidgets.QAction(MainWindow)
+        self.actionParticipating_People.setObjectName("actionParticipating_People")
+        self.actionCredits_2 = QtWidgets.QAction(MainWindow)
+        self.actionCredits_2.setObjectName("actionCredits_2")
+        self.actionOpen_Questions = QtWidgets.QAction(MainWindow)
+        self.actionOpen_Questions.setObjectName("actionOpen_Questions")
+        self.actionAbout_Pridentifier = QtWidgets.QAction(MainWindow)
+        self.actionAbout_Pridentifier.setObjectName("actionAbout_Pridentifier")
+        self.actionAbout_2 = QtWidgets.QAction(MainWindow)
+        self.actionAbout_2.setObjectName("actionAbout_2")
+        self.menuPridentifier.addAction(self.actionAbout_2)
+        self.menuPridentifier.addAction(self.actionAbout_Pridentifier)
+        self.menuPridentifier.addAction(self.actionApplication_Field)
+        self.menuInstruction.addAction(self.actionData)
+        self.menuInstruction.addAction(self.actionAnalysis)
+        self.menuInstruction.addAction(self.actionEvaluation)
+        self.menuInstruction.addAction(self.actionInspection)
+        self.menuDevelopment.addAction(self.actionDeveloper)
+        self.menuDevelopment.addAction(self.actionParticipating_People)
+        self.menuDevelopment.addAction(self.actionCredits_2)
+        self.menuResearch.addAction(self.actionAnalysis_Method)
+        self.menuResearch.addAction(self.actionExperiment_Results)
+        self.menuResearch.addAction(self.actionOpen_Questions)
+        self.menuHelp.addAction(self.actionTroubleshooting_2)
+        self.menuHelp.addAction(self.actionFeedback_2)
+        self.menuHelp.addAction(self.actionContact_2)
+        self.menubar.addAction(self.menuPridentifier.menuAction())
+        self.menubar.addAction(self.menuInstruction.menuAction())
+        self.menubar.addAction(self.menuDevelopment.menuAction())
+        self.menubar.addAction(self.menuResearch.menuAction())
+        self.menubar.addAction(self.menuHelp.menuAction())
 
         self.retranslateUi(MainWindow)
         self.tabWidget.setCurrentIndex(0)
@@ -1224,6 +1255,9 @@ class Ui_Pridentifier(object):
         self.spinBox_2.valueChanged['int'].connect(self.changeSegmentSize)
         self.spinBox.valueChanged['int'].connect(self.changeFeatureCount)
         self.button_evaluate.clicked.connect(self.evaluate)
+        # add dialogs
+        self.actionDeveloper.triggered.connect(self.developer_dialog)
+
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -1246,12 +1280,11 @@ class Ui_Pridentifier(object):
         self.button_saveResults.setText(_translate("MainWindow", "save results"))
         self.label_5.setText(_translate("MainWindow", "Inspection:"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_inspection), _translate("MainWindow", "Inspection"))
-        self.menuData.setTitle(_translate("MainWindow", "Data"))
-        self.menuAnalysis.setTitle(_translate("MainWindow", "Analysis"))
-        self.menuTest.setTitle(_translate("MainWindow", "Evaluation"))
-        self.menuInspection.setTitle(_translate("MainWindow", "Inspection"))
-        self.menuInfo.setTitle(_translate("MainWindow", "Info"))
-        self.menuIntroduction.setTitle(_translate("MainWindow", "Instruction"))
+        self.menuPridentifier.setTitle(_translate("MainWindow", "Pridentifier"))
+        self.menuInstruction.setTitle(_translate("MainWindow", "Instruction"))
+        self.menuDevelopment.setTitle(_translate("MainWindow", "Development"))
+        self.menuResearch.setTitle(_translate("MainWindow", "Research"))
+        self.menuHelp.setTitle(_translate("MainWindow", "Help"))
         self.actionload.setText(_translate("MainWindow", "load"))
         self.actionimport.setText(_translate("MainWindow", "import data"))
         self.actiontrain.setText(_translate("MainWindow", "train"))
@@ -1275,9 +1308,23 @@ class Ui_Pridentifier(object):
         self.actionResult.setText(_translate("MainWindow", "Result"))
         self.actionExample_4.setText(_translate("MainWindow", "Example"))
         self.actionResult_2.setText(_translate("MainWindow", "Result"))
-
-
-
+        self.actionData.setText(_translate("MainWindow", "Data"))
+        self.actionAnalysis.setText(_translate("MainWindow", "Analysis"))
+        self.actionEvaluation.setText(_translate("MainWindow", "Evaluation"))
+        self.actionInspection.setText(_translate("MainWindow", "Inspection"))
+        self.actionAbout.setText(_translate("MainWindow", "About Pridentifier"))
+        self.actionAnalysis_Method.setText(_translate("MainWindow", "Analysis Method"))
+        self.actionExperiment_Results.setText(_translate("MainWindow", "Experimental Results"))
+        self.actionApplication_Field.setText(_translate("MainWindow", "Application Fields"))
+        self.actionTroubleshooting_2.setText(_translate("MainWindow", "Troubleshooting"))
+        self.actionFeedback_2.setText(_translate("MainWindow", "Feedback"))
+        self.actionContact_2.setText(_translate("MainWindow", "Contact"))
+        self.actionDeveloper.setText(_translate("MainWindow", "Developer"))
+        self.actionParticipating_People.setText(_translate("MainWindow", "Participating People"))
+        self.actionCredits_2.setText(_translate("MainWindow", "Credits"))
+        self.actionOpen_Questions.setText(_translate("MainWindow", "Open Questions"))
+        self.actionAbout_Pridentifier.setText(_translate("MainWindow", "About Pridentifier"))
+        self.actionAbout_2.setText(_translate("MainWindow", "About"))
 
 
 
