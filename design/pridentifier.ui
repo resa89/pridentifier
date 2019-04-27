@@ -1388,7 +1388,7 @@ font: 12pt &quot;Helvetica&quot;;</string>
                 <property name="minimumSize">
                  <size>
                   <width>200</width>
-                  <height>200</height>
+                  <height>258</height>
                  </size>
                 </property>
                 <property name="maximumSize">
@@ -1426,7 +1426,7 @@ font: 12pt &quot;Helvetica&quot;;</string>
                 <property name="minimumSize">
                  <size>
                   <width>200</width>
-                  <height>200</height>
+                  <height>258</height>
                  </size>
                 </property>
                 <property name="maximumSize">
@@ -1531,67 +1531,19 @@ QTableWidget QTableCornerButton::section {
    <property name="styleSheet">
     <string notr="true"/>
    </property>
-   <widget class="QMenu" name="menuData">
+   <widget class="QMenu" name="menuPridentifier">
     <property name="styleSheet">
      <string notr="true">background-color: #fff;
-color: #393939;</string>
+color: #393939;
+</string>
     </property>
     <property name="title">
-     <string>Data</string>
+     <string>Pridentifier</string>
     </property>
-    <addaction name="actionExample"/>
-    <addaction name="actionExperiment"/>
+    <addaction name="actionAbout"/>
+    <addaction name="actionApplication_Field"/>
    </widget>
-   <widget class="QMenu" name="menuAnalysis">
-    <property name="styleSheet">
-     <string notr="true">background-color: #fff;
-color: #393939;</string>
-    </property>
-    <property name="title">
-     <string>Analysis</string>
-    </property>
-    <addaction name="actionExample_2"/>
-    <addaction name="actionMethod"/>
-   </widget>
-   <widget class="QMenu" name="menuTest">
-    <property name="styleSheet">
-     <string notr="true">background-color: #fff;
-color: #393939;</string>
-    </property>
-    <property name="title">
-     <string>Evaluation</string>
-    </property>
-    <addaction name="actionExample_3"/>
-    <addaction name="actionResult"/>
-   </widget>
-   <widget class="QMenu" name="menuInspection">
-    <property name="styleSheet">
-     <string notr="true">background-color: #fff;
-color: #393939;</string>
-    </property>
-    <property name="title">
-     <string>Inspection</string>
-    </property>
-    <addaction name="actionExample_4"/>
-    <addaction name="actionResult_2"/>
-   </widget>
-   <widget class="QMenu" name="menuInfo">
-    <property name="styleSheet">
-     <string notr="true">background-color: #fff;
-color: #393939;</string>
-    </property>
-    <property name="title">
-     <string>Info</string>
-    </property>
-    <addaction name="actionDevelopment"/>
-    <addaction name="actionCredits"/>
-    <addaction name="actionLicence"/>
-    <addaction name="separator"/>
-    <addaction name="actionTroubleshooting"/>
-    <addaction name="actionFeedback"/>
-    <addaction name="actionContact"/>
-   </widget>
-   <widget class="QMenu" name="menuIntroduction">
+   <widget class="QMenu" name="menuInstruction">
     <property name="styleSheet">
      <string notr="true">background-color: #fff;
 color: #393939;</string>
@@ -1599,15 +1551,52 @@ color: #393939;</string>
     <property name="title">
      <string>Instruction</string>
     </property>
-    <addaction name="actionPurpose"/>
-    <addaction name="actionUse_Cases"/>
+    <addaction name="actionData"/>
+    <addaction name="actionAnalysis"/>
+    <addaction name="actionEvaluation"/>
+    <addaction name="actionInspection"/>
    </widget>
-   <addaction name="menuIntroduction"/>
-   <addaction name="menuData"/>
-   <addaction name="menuAnalysis"/>
-   <addaction name="menuTest"/>
-   <addaction name="menuInspection"/>
-   <addaction name="menuInfo"/>
+   <widget class="QMenu" name="menuDevelopment">
+    <property name="styleSheet">
+     <string notr="true">background-color: #fff;
+color: #393939;</string>
+    </property>
+    <property name="title">
+     <string>Development</string>
+    </property>
+    <addaction name="actionDeveloper"/>
+    <addaction name="actionParticipating_People"/>
+    <addaction name="actionCredits_2"/>
+   </widget>
+   <widget class="QMenu" name="menuResearch">
+    <property name="styleSheet">
+     <string notr="true">background-color: #fff;
+color: #393939;</string>
+    </property>
+    <property name="title">
+     <string>Research</string>
+    </property>
+    <addaction name="actionAnalysis_Method"/>
+    <addaction name="actionExperiment_Results"/>
+    <addaction name="actionOpen_Questions"/>
+   </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="styleSheet">
+     <string notr="true">background-color: #fff;
+color: #393939;</string>
+    </property>
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="actionTroubleshooting_2"/>
+    <addaction name="actionFeedback_2"/>
+    <addaction name="actionContact_2"/>
+   </widget>
+   <addaction name="menuPridentifier"/>
+   <addaction name="menuInstruction"/>
+   <addaction name="menuDevelopment"/>
+   <addaction name="menuResearch"/>
+   <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionload">
@@ -1723,6 +1712,81 @@ color: #393939;</string>
   <action name="actionResult_2">
    <property name="text">
     <string>Result</string>
+   </property>
+  </action>
+  <action name="actionData">
+   <property name="text">
+    <string>Data</string>
+   </property>
+  </action>
+  <action name="actionAnalysis">
+   <property name="text">
+    <string>Analysis</string>
+   </property>
+  </action>
+  <action name="actionEvaluation">
+   <property name="text">
+    <string>Evaluation</string>
+   </property>
+  </action>
+  <action name="actionInspection">
+   <property name="text">
+    <string>Inspection</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="text">
+    <string>About Pridentifier</string>
+   </property>
+  </action>
+  <action name="actionAnalysis_Method">
+   <property name="text">
+    <string>Analysis Method</string>
+   </property>
+  </action>
+  <action name="actionExperiment_Results">
+   <property name="text">
+    <string>Experimental Results</string>
+   </property>
+  </action>
+  <action name="actionApplication_Field">
+   <property name="text">
+    <string>Application Fields</string>
+   </property>
+  </action>
+  <action name="actionTroubleshooting_2">
+   <property name="text">
+    <string>Troubleshooting</string>
+   </property>
+  </action>
+  <action name="actionFeedback_2">
+   <property name="text">
+    <string>Feedback</string>
+   </property>
+  </action>
+  <action name="actionContact_2">
+   <property name="text">
+    <string>Contact</string>
+   </property>
+  </action>
+  <action name="actionDeveloper">
+   <property name="text">
+    <string>Developer</string>
+   </property>
+  </action>
+  <action name="actionParticipating_People">
+   <property name="text">
+    <string>Participating People</string>
+   </property>
+  </action>
+  <action name="actionCredits_2">
+   <property name="text">
+    <string>Credits</string>
+   </property>
+  </action>
+  <action name="actionOpen_Questions">
+   <property name="text">
+    <string>Open Questions</string>
    </property>
   </action>
  </widget>
