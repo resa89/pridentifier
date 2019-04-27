@@ -1540,7 +1540,8 @@ color: #393939;
     <property name="title">
      <string>Pridentifier</string>
     </property>
-    <addaction name="actionAbout"/>
+    <addaction name="actionAbout_2"/>
+    <addaction name="actionAbout_Pridentifier"/>
     <addaction name="actionApplication_Field"/>
    </widget>
    <widget class="QMenu" name="menuInstruction">
@@ -1787,6 +1788,16 @@ color: #393939;</string>
   <action name="actionOpen_Questions">
    <property name="text">
     <string>Open Questions</string>
+   </property>
+  </action>
+  <action name="actionAbout_Pridentifier">
+   <property name="text">
+    <string>About Pridentifier</string>
+   </property>
+  </action>
+  <action name="actionAbout_2">
+   <property name="text">
+    <string>About</string>
    </property>
   </action>
  </widget>
