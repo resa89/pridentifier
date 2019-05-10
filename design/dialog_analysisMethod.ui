@@ -102,5 +102,38 @@ QPushButton:hover {
   </widget>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>clicked(QAbstractButton*)</signal>
+   <receiver>Dialog</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>431</x>
+     <y>354</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>382</x>
+     <y>387</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>clicked(QAbstractButton*)</signal>
+   <receiver>Dialog</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>527</x>
+     <y>348</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>543</x>
+     <y>375</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

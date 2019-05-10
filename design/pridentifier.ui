@@ -1531,17 +1531,16 @@ QTableWidget QTableCornerButton::section {
    <property name="styleSheet">
     <string notr="true"/>
    </property>
-   <widget class="QMenu" name="menuPridentifier">
+   <widget class="QMenu" name="menuAbout">
     <property name="styleSheet">
      <string notr="true">background-color: #fff;
 color: #393939;
 </string>
     </property>
     <property name="title">
-     <string>Pridentifier</string>
+     <string>About</string>
     </property>
-    <addaction name="actionAbout_2"/>
-    <addaction name="actionAbout_Pridentifier"/>
+    <addaction name="actionPridentifier"/>
     <addaction name="actionApplication_Field"/>
    </widget>
    <widget class="QMenu" name="menuInstruction">
@@ -1581,23 +1580,23 @@ color: #393939;</string>
     <addaction name="actionExperiment_Results"/>
     <addaction name="actionOpen_Questions"/>
    </widget>
-   <widget class="QMenu" name="menuHelp">
+   <widget class="QMenu" name="menuContact">
     <property name="styleSheet">
      <string notr="true">background-color: #fff;
 color: #393939;</string>
     </property>
     <property name="title">
-     <string>Help</string>
+     <string>Contact</string>
     </property>
-    <addaction name="actionTroubleshooting_2"/>
+    <addaction name="actionErrorReport"/>
     <addaction name="actionFeedback_2"/>
     <addaction name="actionContact_2"/>
    </widget>
-   <addaction name="menuPridentifier"/>
+   <addaction name="menuAbout"/>
    <addaction name="menuInstruction"/>
    <addaction name="menuDevelopment"/>
    <addaction name="menuResearch"/>
-   <addaction name="menuHelp"/>
+   <addaction name="menuContact"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionload">
@@ -1755,9 +1754,9 @@ color: #393939;</string>
     <string>Application Fields</string>
    </property>
   </action>
-  <action name="actionTroubleshooting_2">
+  <action name="actionErrorReport">
    <property name="text">
-    <string>Troubleshooting</string>
+    <string>Error Report</string>
    </property>
   </action>
   <action name="actionFeedback_2">
@@ -1767,7 +1766,7 @@ color: #393939;</string>
   </action>
   <action name="actionContact_2">
    <property name="text">
-    <string>Contact</string>
+    <string>Contact Developer</string>
    </property>
   </action>
   <action name="actionDeveloper">
@@ -1798,6 +1797,11 @@ color: #393939;</string>
   <action name="actionAbout_2">
    <property name="text">
     <string>About</string>
+   </property>
+  </action>
+  <action name="actionPridentifier">
+   <property name="text">
+    <string>Pridentifier</string>
    </property>
   </action>
  </widget>

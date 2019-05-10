@@ -11,13 +11,17 @@ from PyQt5.QtWidgets import QMessageBox
 
 import config
 from src.objects import pridentifier
-from design import dialog_developer
+from design import dialog_developer, dialog_aboutPridentifier, \
+    dialog_analysisMethod, dialog_applicationFields, dialog_contactDeveloper, \
+    dialog_credits, dialog_experimentResults, dialog_feedback, dialog_errorReport, dialog_openQuestions, \
+    dialog_instructionData, dialog_instructionAnalysis, dialog_instructionEvaluation, dialog_instructionInspection,\
+    dialog_participatingPeople
+
 from src.feature_extractor import save_as_pickled_object, try_to_load_as_pickled_object_or_None
 
 
 #TODO: remove dropdown menu/training method
 #TODO: make window responsive
-#TODO: make loading bars show iterative process
 
 class Ui_Pridentifier(object):
     def __init__(self):
@@ -34,7 +38,7 @@ class Ui_Pridentifier(object):
         self.pridentifier = pridentifier.Pridentifier(self.SNIPPET_WIDTH_last_upload, self.NUMBER_PIXELS_last_analysis)
 
 
-    def developer_dialog(self):
+    def show_dialog_developer(self):
         # If you pass a parent (self) will block the Main Window,
         # and if you do not pass both will be independent,
         # I recommend you try both cases.
@@ -42,6 +46,160 @@ class Ui_Pridentifier(object):
         ui=dialog_developer.Ui_Dialog()
         ui.setupUi(widget)
         widget.exec_()
+
+    def show_dialog_aboutPridentifier(self):
+        # If you pass a parent (self) will block the Main Window,
+        # and if you do not pass both will be independent,
+        # I recommend you try both cases.
+        widget = QtWidgets.QDialog()
+        ui=dialog_aboutPridentifier.Ui_Dialog()
+        ui.setupUi(widget)
+
+        path = config.SUBPATH + '/../../' # in execution folder
+
+        qimg = QtGui.QImage()
+
+        img_path = path + "pridi.png"
+
+        qimg.load(img_path)
+        #create widget
+        fingerprint = QPixmap.fromImage(qimg)
+
+        ui.label_2.setPixmap(fingerprint.scaled(
+                 ui.label_2.size(), QtCore.Qt.KeepAspectRatio,QtCore.Qt.SmoothTransformation))
+
+        ui.label_2.setAlignment(QtCore.Qt.AlignCenter)
+
+        widget.exec_()
+
+    def show_dialog_analysisMethod(self):
+        # If you pass a parent (self) will block the Main Window,
+        # and if you do not pass both will be independent,
+        # I recommend you try both cases.
+        widget = QtWidgets.QDialog()
+        ui=dialog_analysisMethod.Ui_Dialog()
+        ui.setupUi(widget)
+        widget.exec_()
+
+    def show_dialog_applicationFields(self):
+        # If you pass a parent (self) will block the Main Window,
+        # and if you do not pass both will be independent,
+        # I recommend you try both cases.
+        widget = QtWidgets.QDialog()
+        ui=dialog_applicationFields.Ui_Dialog()
+        ui.setupUi(widget)
+        widget.exec_()
+
+    def show_dialog_applicationFields(self):
+        # If you pass a parent (self) will block the Main Window,
+        # and if you do not pass both will be independent,
+        # I recommend you try both cases.
+        widget = QtWidgets.QDialog()
+        ui=dialog_applicationFields.Ui_Dialog()
+        ui.setupUi(widget)
+        widget.exec_()
+
+    def show_dialog_participatingPeople(self):
+        # If you pass a parent (self) will block the Main Window,
+        # and if you do not pass both will be independent,
+        # I recommend you try both cases.
+        widget = QtWidgets.QDialog()
+        ui=dialog_participatingPeople.Ui_Dialog()
+        ui.setupUi(widget)
+        widget.exec_()
+
+    def show_dialog_data(self):
+        # If you pass a parent (self) will block the Main Window,
+        # and if you do not pass both will be independent,
+        # I recommend you try both cases.
+        widget = QtWidgets.QDialog()
+        ui=dialog_instructionData.Ui_Dialog()
+        ui.setupUi(widget)
+        widget.exec_()
+
+    def show_dialog_analysis(self):
+        # If you pass a parent (self) will block the Main Window,
+        # and if you do not pass both will be independent,
+        # I recommend you try both cases.
+        widget = QtWidgets.QDialog()
+        ui=dialog_instructionAnalysis.Ui_Dialog()
+        ui.setupUi(widget)
+        widget.exec_()
+
+    def show_dialog_evaluation(self):
+        # If you pass a parent (self) will block the Main Window,
+        # and if you do not pass both will be independent,
+        # I recommend you try both cases.
+        widget = QtWidgets.QDialog()
+        ui=dialog_instructionEvaluation.Ui_Dialog()
+        ui.setupUi(widget)
+        widget.exec_()
+
+    def show_dialog_inspection(self):
+        # If you pass a parent (self) will block the Main Window,
+        # and if you do not pass both will be independent,
+        # I recommend you try both cases.
+        widget = QtWidgets.QDialog()
+        ui=dialog_instructionInspection.Ui_Dialog()
+        ui.setupUi(widget)
+        widget.exec_()
+
+    def show_dialog_credits(self):
+        # If you pass a parent (self) will block the Main Window,
+        # and if you do not pass both will be independent,
+        # I recommend you try both cases.
+        widget = QtWidgets.QDialog()
+        ui=dialog_credits.Ui_Dialog()
+        ui.setupUi(widget)
+        widget.exec_()
+
+    def show_dialog_experimentResults(self):
+        # If you pass a parent (self) will block the Main Window,
+        # and if you do not pass both will be independent,
+        # I recommend you try both cases.
+        widget = QtWidgets.QDialog()
+        ui=dialog_experimentResults.Ui_Dialog()
+        ui.setupUi(widget)
+        widget.exec_()
+
+    def show_dialog_feedback(self):
+        # If you pass a parent (self) will block the Main Window,
+        # and if you do not pass both will be independent,
+        # I recommend you try both cases.
+        widget = QtWidgets.QDialog()
+        ui=dialog_feedback.Ui_Dialog()
+        ui.setupUi(widget)
+        widget.exec_()
+
+    def show_dialog_errorReport(self):
+        # If you pass a parent (self) will block the Main Window,
+        # and if you do not pass both will be independent,
+        # I recommend you try both cases.
+        widget = QtWidgets.QDialog()
+        ui=dialog_errorReport.Ui_Dialog()
+        ui.setupUi(widget)
+        widget.exec_()
+
+    def show_dialog_contactDeveloper(self):
+        # If you pass a parent (self) will block the Main Window,
+        # and if you do not pass both will be independent,
+        # I recommend you try both cases.
+        widget = QtWidgets.QDialog()
+        ui=dialog_contactDeveloper.Ui_Dialog()
+        ui.setupUi(widget)
+        widget.exec_()
+
+    def show_dialog_openQuestions(self):
+        # If you pass a parent (self) will block the Main Window,
+        # and if you do not pass both will be independent,
+        # I recommend you try both cases.
+        widget = QtWidgets.QDialog()
+        ui=dialog_openQuestions.Ui_Dialog()
+        ui.setupUi(widget)
+        widget.exec_()
+
+
+
 
     #slot
     def onImageLoadUpdate(self, value, args=None):
@@ -1117,11 +1275,11 @@ class Ui_Pridentifier(object):
         self.menubar.setAutoFillBackground(False)
         self.menubar.setStyleSheet("")
         self.menubar.setObjectName("menubar")
-        self.menuPridentifier = QtWidgets.QMenu(self.menubar)
-        self.menuPridentifier.setStyleSheet("background-color: #fff;\n"
+        self.menuAbout = QtWidgets.QMenu(self.menubar)
+        self.menuAbout.setStyleSheet("background-color: #fff;\n"
 "color: #393939;\n"
 "")
-        self.menuPridentifier.setObjectName("menuPridentifier")
+        self.menuAbout.setObjectName("menuAbout")
         self.menuInstruction = QtWidgets.QMenu(self.menubar)
         self.menuInstruction.setStyleSheet("background-color: #fff;\n"
 "color: #393939;")
@@ -1134,10 +1292,10 @@ class Ui_Pridentifier(object):
         self.menuResearch.setStyleSheet("background-color: #fff;\n"
 "color: #393939;")
         self.menuResearch.setObjectName("menuResearch")
-        self.menuHelp = QtWidgets.QMenu(self.menubar)
-        self.menuHelp.setStyleSheet("background-color: #fff;\n"
+        self.menuContact = QtWidgets.QMenu(self.menubar)
+        self.menuContact.setStyleSheet("background-color: #fff;\n"
 "color: #393939;")
-        self.menuHelp.setObjectName("menuHelp")
+        self.menuContact.setObjectName("menuContact")
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
@@ -1204,8 +1362,8 @@ class Ui_Pridentifier(object):
         self.actionExperiment_Results.setObjectName("actionExperiment_Results")
         self.actionApplication_Field = QtWidgets.QAction(MainWindow)
         self.actionApplication_Field.setObjectName("actionApplication_Field")
-        self.actionTroubleshooting_2 = QtWidgets.QAction(MainWindow)
-        self.actionTroubleshooting_2.setObjectName("actionTroubleshooting_2")
+        self.actionErrorReport = QtWidgets.QAction(MainWindow)
+        self.actionErrorReport.setObjectName("actionErrorReport")
         self.actionFeedback_2 = QtWidgets.QAction(MainWindow)
         self.actionFeedback_2.setObjectName("actionFeedback_2")
         self.actionContact_2 = QtWidgets.QAction(MainWindow)
@@ -1222,9 +1380,10 @@ class Ui_Pridentifier(object):
         self.actionAbout_Pridentifier.setObjectName("actionAbout_Pridentifier")
         self.actionAbout_2 = QtWidgets.QAction(MainWindow)
         self.actionAbout_2.setObjectName("actionAbout_2")
-        self.menuPridentifier.addAction(self.actionAbout_2)
-        self.menuPridentifier.addAction(self.actionAbout_Pridentifier)
-        self.menuPridentifier.addAction(self.actionApplication_Field)
+        self.actionPridentifier = QtWidgets.QAction(MainWindow)
+        self.actionPridentifier.setObjectName("actionPridentifier")
+        self.menuAbout.addAction(self.actionPridentifier)
+        self.menuAbout.addAction(self.actionApplication_Field)
         self.menuInstruction.addAction(self.actionData)
         self.menuInstruction.addAction(self.actionAnalysis)
         self.menuInstruction.addAction(self.actionEvaluation)
@@ -1235,14 +1394,14 @@ class Ui_Pridentifier(object):
         self.menuResearch.addAction(self.actionAnalysis_Method)
         self.menuResearch.addAction(self.actionExperiment_Results)
         self.menuResearch.addAction(self.actionOpen_Questions)
-        self.menuHelp.addAction(self.actionTroubleshooting_2)
-        self.menuHelp.addAction(self.actionFeedback_2)
-        self.menuHelp.addAction(self.actionContact_2)
-        self.menubar.addAction(self.menuPridentifier.menuAction())
+        self.menuContact.addAction(self.actionErrorReport)
+        self.menuContact.addAction(self.actionFeedback_2)
+        self.menuContact.addAction(self.actionContact_2)
+        self.menubar.addAction(self.menuAbout.menuAction())
         self.menubar.addAction(self.menuInstruction.menuAction())
         self.menubar.addAction(self.menuDevelopment.menuAction())
         self.menubar.addAction(self.menuResearch.menuAction())
-        self.menubar.addAction(self.menuHelp.menuAction())
+        self.menubar.addAction(self.menuContact.menuAction())
 
         self.retranslateUi(MainWindow)
         self.tabWidget.setCurrentIndex(0)
@@ -1255,8 +1414,24 @@ class Ui_Pridentifier(object):
         self.spinBox_2.valueChanged['int'].connect(self.changeSegmentSize)
         self.spinBox.valueChanged['int'].connect(self.changeFeatureCount)
         self.button_evaluate.clicked.connect(self.evaluate)
+
         # add dialogs
-        self.actionDeveloper.triggered.connect(self.developer_dialog)
+        self.actionPridentifier.triggered.connect(self.show_dialog_aboutPridentifier)
+        self.actionApplication_Field.triggered.connect(self.show_dialog_applicationFields)
+        self.actionData.triggered.connect(self.show_dialog_data)
+        self.actionAnalysis.triggered.connect(self.show_dialog_analysis)
+        self.actionEvaluation.triggered.connect(self.show_dialog_evaluation)
+        self.actionInspection.triggered.connect(self.show_dialog_inspection)
+        self.actionDeveloper.triggered.connect(self.show_dialog_developer)
+        self.actionParticipating_People.triggered.connect(self.show_dialog_participatingPeople)
+        self.actionCredits_2.triggered.connect(self.show_dialog_credits)
+        self.actionAnalysis_Method.triggered.connect(self.show_dialog_analysisMethod)
+        self.actionExperiment_Results.triggered.connect(self.show_dialog_experimentResults)
+        self.actionOpen_Questions.triggered.connect(self.show_dialog_openQuestions)
+        self.actionErrorReport.triggered.connect(self.show_dialog_errorReport)
+        self.actionFeedback_2.triggered.connect(self.show_dialog_feedback)
+        self.actionContact_2.triggered.connect(self.show_dialog_contactDeveloper)
+        ##############
 
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
@@ -1280,11 +1455,11 @@ class Ui_Pridentifier(object):
         self.button_saveResults.setText(_translate("MainWindow", "save results"))
         self.label_5.setText(_translate("MainWindow", "Inspection:"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_inspection), _translate("MainWindow", "Inspection"))
-        self.menuPridentifier.setTitle(_translate("MainWindow", "Pridentifier"))
+        self.menuAbout.setTitle(_translate("MainWindow", "About"))
         self.menuInstruction.setTitle(_translate("MainWindow", "Instruction"))
         self.menuDevelopment.setTitle(_translate("MainWindow", "Development"))
         self.menuResearch.setTitle(_translate("MainWindow", "Research"))
-        self.menuHelp.setTitle(_translate("MainWindow", "Help"))
+        self.menuContact.setTitle(_translate("MainWindow", "Contact"))
         self.actionload.setText(_translate("MainWindow", "load"))
         self.actionimport.setText(_translate("MainWindow", "import data"))
         self.actiontrain.setText(_translate("MainWindow", "train"))
@@ -1316,16 +1491,16 @@ class Ui_Pridentifier(object):
         self.actionAnalysis_Method.setText(_translate("MainWindow", "Analysis Method"))
         self.actionExperiment_Results.setText(_translate("MainWindow", "Experimental Results"))
         self.actionApplication_Field.setText(_translate("MainWindow", "Application Fields"))
-        self.actionTroubleshooting_2.setText(_translate("MainWindow", "Troubleshooting"))
+        self.actionErrorReport.setText(_translate("MainWindow", "Error Report"))
         self.actionFeedback_2.setText(_translate("MainWindow", "Feedback"))
-        self.actionContact_2.setText(_translate("MainWindow", "Contact"))
+        self.actionContact_2.setText(_translate("MainWindow", "Contact Developer"))
         self.actionDeveloper.setText(_translate("MainWindow", "Developer"))
         self.actionParticipating_People.setText(_translate("MainWindow", "Participating People"))
         self.actionCredits_2.setText(_translate("MainWindow", "Credits"))
         self.actionOpen_Questions.setText(_translate("MainWindow", "Open Questions"))
         self.actionAbout_Pridentifier.setText(_translate("MainWindow", "About Pridentifier"))
         self.actionAbout_2.setText(_translate("MainWindow", "About"))
-
+        self.actionPridentifier.setText(_translate("MainWindow", "Pridentifier"))
 
 
 
