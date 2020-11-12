@@ -1,4 +1,4 @@
-# Pridentifier
+# Pridentifier  ![Pridentifier Logo](design/pridi.jpg)
 
 The Pridentifier is a research project with the goal to identify the original printer of a given print (even of small snippets of a print).
 
