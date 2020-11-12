@@ -23,6 +23,12 @@ To activate the new environment type:
 conda activate pridi
 ```
 
+Then install the modules with:
+
+```bash
+python setup.py install 
+```
+
 
 ## Run the Pridentifier 
 
@@ -36,14 +42,10 @@ python pridentifier.py
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
+To contribute in the development of the Pridentifier type:
 
-
-```python
-import foobar
-
-foobar.pluralize('word') # returns 'words'
-foobar.pluralize('goose') # returns 'geese'
-foobar.singularize('phenomena') # returns 'phenomenon'
+```bash
+python setup.py develop 
 ```
 
 
