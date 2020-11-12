@@ -8,6 +8,7 @@ from scipy import misc
 import pandas as pd
 from scipy import fftpack
 from scipy import signal
+import imageio
 
 import config
 
@@ -66,7 +67,7 @@ class FeatureExtractor(object):
 
         for image in self.img_names:
             img_path = self.path_to_class + '/' + image
-            img = misc.imread(img_path)
+            img = imageio.imread(img_path)
 
             grey_img = self.greyscale(img)
 
