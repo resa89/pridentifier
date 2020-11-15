@@ -46,23 +46,30 @@ For any questions if having problems with the installation or usage contact: tro
 
 ## Roadmap
 
-**GUI optimization**
-- responsive design
-
-**Build process**
-- integrate ui-generated python automatically in app by adding a inheritance object for additional changes made in app afterwards
-
 **App development**
 - add functionality to make evaluation on an uploaded test-set
 - save-button for evaluation results
 - make possible to analyze more than 8 classes (also display scrollable in GUI)
+- enable tiff-formats
+
 
 **Methods development**
 - optimize feature selection with local maxima selection methods 
 
+**GUI optimization**
+- responsive design
+- style menu bar 
+- show also correlation value with all classes in the inspection
 
-## Trouble shooting 
-- change segment size several times, crashes or does not load any more, classes must be loaded again in the data-tab.
+**Build process**
+- integrate ui-generated python automatically in app by adding a inheritance object for additional changes made in app afterwards
+- integrate windows exe-build to this repository
+
+
+## Trouble shooting (because not fixed yet)
+- change segment size several times, crashes or does not updates any more --> classes must be loaded again in the data-tab
+- when clicking "save result" and then "cancel", the app crashes --> restart
+- not sure if already fixed: windows "Thumbs.db" files are skipped when accessing all classes images -> those hidden files must be deleted in windows filesystem
 
 
 ## Contributing
