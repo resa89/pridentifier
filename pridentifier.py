@@ -59,7 +59,7 @@ class Ui_Pridentifier(object):
 
         qimg = QtGui.QImage()
 
-        img_path = path + "pridi.png"
+        img_path = path + "img/pridi.png"
 
         qimg.load(img_path)
         #create widget
