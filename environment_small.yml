@@ -1,0 +1,11 @@
+name: pridi
+channels:
+  - defaults
+dependencies:
+  - pyqt
+  - pandas
+  - matplotlib
+  - scipy
+  - pillow
+  - imageio
+prefix: /Users/resa/miniconda3/envs/pridi

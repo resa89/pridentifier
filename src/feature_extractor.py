@@ -90,6 +90,8 @@ class FeatureExtractor(object):
                     #spectrum =self.compute_spectrum(segment_windowed)
 
                     window = signal.windows.hann(segment.shape[0])
+                    #window = signal.windows.bartlett(segment.shape[0])
+
                     # fft with scipy
                     spectrum = fftpack.fft2(segment*window*window.T)
                     shift = fftpack.fftshift(spectrum)

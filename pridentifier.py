@@ -1271,6 +1271,7 @@ class Ui_Pridentifier(object):
         self.gridLayout.addWidget(self.tabWidget, 0, 0, 1, 1)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
+        self.menubar.setNativeMenuBar(False)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 942, 22))
         self.menubar.setAutoFillBackground(False)
         self.menubar.setStyleSheet("")

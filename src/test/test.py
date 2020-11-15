@@ -168,7 +168,7 @@ class Tester():
 
         for p in range(len(self.printer_types)):
             similiarity = 100 * result[p]/s
-            print self.printer_types[p]+ ":     " + "{0:.2f}".format(similiarity) + "%"
+            print(self.printer_types[p]+ ":     " + "{0:.2f}".format(similiarity) + "%")
             result_stats.append([self.printer_types[p], "{0:.2f}".format(similiarity) + "%"])
 
         return result_stats
