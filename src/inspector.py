@@ -73,7 +73,7 @@ class Inspector(object):
         a = 0
         self.printer_types = np.array(())
         for printer in DIRS:
-            if printer == '.DS_Store':
+            if printer in ['.DS_Store', 'Thumbs.db', 'thumbs.db']:
                 pass
             else:
                 self.printer_types = np.append(self.printer_types, printer)
@@ -98,7 +98,7 @@ class Inspector(object):
                 magnitude_all_multi = np.ones((SNIPPET_WIDTH, SNIPPET_WIDTH))
 
                 for img in imgs:
-                    if img == '.DS_Store':
+                    if img in ['.DS_Store', 'Thumbs.db', 'thumbs.db']:
                         print('DS_Store files has not been removed.')
                     else:
                         # read image
