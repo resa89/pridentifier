@@ -11,7 +11,7 @@ from PyQt5.QtWidgets import QMessageBox
 
 import config
 from src.objects import pridentifier
-from design import dialog_developer, dialog_aboutPridentifier, \
+from ui import dialog_developer, dialog_aboutPridentifier, \
     dialog_analysisMethod, dialog_applicationFields, dialog_contactDeveloper, \
     dialog_credits, dialog_experimentResults, dialog_feedback, dialog_errorReport, dialog_openQuestions, \
     dialog_instructionData, dialog_instructionAnalysis, dialog_instructionEvaluation, dialog_instructionInspection,\
