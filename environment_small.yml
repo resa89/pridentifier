@@ -1,4 +1,4 @@
-name: pridi
+name: pridentifier
 channels:
   - defaults
 dependencies:

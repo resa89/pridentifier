@@ -1,4 +1,4 @@
-# Pridentifier  <img align="right" src="img/pridi.jpg">
+# Pridentifier  <img align="right" src="img/pridi.png">
 
 The Pridentifier is a research project with the goal to identify the original printer of a given print (even of small snippets of a print).
 
@@ -20,7 +20,7 @@ conda env create -f environment.yml
 To activate the new environment type:
 
 ```bash
-conda activate pridi
+conda activate pridentifier
 ```
 
 Then install the modules with:
