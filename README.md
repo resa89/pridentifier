@@ -80,6 +80,49 @@ python setup.py develop
 ```
 
 
+## Usage
+
+### Load data
+
+In the Data tab of the Pridentifier, you can load the data of classes you want to learn from.
+
+<img align="center" src="img/screenshots/01a_data.png">
+
+Select the top folder with one folder for each class (printer) with one or more images (prints) to load the testset. You can test it with the img/example/id-testset folder of this repository. 
+
+<img align="center" src="img/screenshots/01b_data_load.png">
+
+After loading all images, the app tells you how much images it could find per class (printer) and into how many segments it can be split given the configured segment width/height before loading the data.
+
+<img align="center" src="img/screenshots/01c_data_loaded.png">
+
+
+### Analyse 
+
+In the Analysis tab of the Pridentifier, you can analyze the referenced data by clicking the Analyze button. You can configure the number of features to consider before analysing.
+
+<img align="center" src="img/screenshots/02b_analysis_done.png">
+
+When the analysis is finished, the fingerprints of the classes (printers) are shown with its class names (labels). The fingerprints are the first highest frequencies of the frequency spectrum.
+
+### Evaluate 
+
+In the Evaluation tab of the Pridentifier, you can evaluate the analysis of the the given data. It will tell you how good every segment used for the analysis will be classified. For that, every segment will be inspected and classified as if its printer was not known.
+
+<img align="center" src="img/screenshots/03b_evaluation_done.png">
+
+
+### Inspect
+
+In the Inspection tab of the Pridentifier, you can inspect unknown prints or segments of prints.
+
+<img align="center" src="img/screenshots/04a_inspection_load.png">
+
+After loading the unknown print, you must start the inspection. When finished, the results are shown in the table. The decissions are made for every segment on the test image.
+
+<img align="center" src="img/screenshots/04b_inspection_done.png">
+
+
 ## Authors
 
 - Theresa Kocher (theresa@korensic.com)
@@ -96,39 +139,4 @@ I'd like to say a big thank you to all institutions and persons given above.
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
 
-
-## Usage
-
-### Load data
-
-In the Data tab of the Pridentifier, you can load the data of classes you want to learn from.
-
-<img align="center" src="img/screenshots/01a_data.png">
-
-<img align="center" src="img/screenshots/01b_data_load.png">
-
-<img align="center" src="img/screenshots/01c_data_loaded.png">
-
-
-### Analyse 
-
-In the Analysis tab of the Pridentifier, you can analyze the referenced data.
-
-<img align="center" src="img/screenshots/02b_analysis_done.png">
-
-
-### Evaluate 
-
-In the Evaluation tab of the Pridentifier, you can evaluate the analysis of the the given data. It will tell you how good every segment used for the analysis will be classified. For that, every segment will be inspected and classified as its printer was not known.
-
-<img align="center" src="img/screenshots/03b_evaluation_done.png">
-
-
-### Inspect
-
-In the Inspection tab of the Pridentifier, you can inspect unknown prints or segments of prints.
-
-<img align="center" src="img/screenshots/04a_inspection_load.png">
-
-<img align="center" src="img/screenshots/04b_inspection_done.png">
 
