@@ -38,34 +38,6 @@ python pridentifier.py
 ```
 
 
-## Usage
-
-### Load data
-
-<img align="center" src="img/screenshots/01a_data.png">
-
-<img align="center" src="img/screenshots/01b_data_load.png">
-
-<img align="center" src="img/screenshots/01c_data_loaded.png">
-
-
-### Analyse 
-
-<img align="center" src="img/screenshots/02b_analysis_done.png">
-
-
-### Evaluate 
-
-<img align="center" src="img/screenshots/03b_evaluation_done.png">
-
-
-### Inspect
-
-<img align="center" src="img/screenshots/04a_inspection_load.png">
-
-<img align="center" src="img/screenshots/04b_inspection_done.png">
-
-
 ## Support
 
 For any questions if having problems with the installation or usage contact: trouble@korensic.com
@@ -123,3 +95,40 @@ I'd like to say a big thank you to all institutions and persons given above.
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
+
+
+## Usage
+
+### Load data
+
+In the Data tab of the Pridentifier, you can load the data of classes you want to learn from.
+
+<img align="center" src="img/screenshots/01a_data.png">
+
+<img align="center" src="img/screenshots/01b_data_load.png">
+
+<img align="center" src="img/screenshots/01c_data_loaded.png">
+
+
+### Analyse 
+
+In the Analysis tab of the Pridentifier, you can analyze the referenced data.
+
+<img align="center" src="img/screenshots/02b_analysis_done.png">
+
+
+### Evaluate 
+
+In the Evaluation tab of the Pridentifier, you can evaluate the analysis of the the given data. It will tell you how good every segment used for the analysis will be classified. For that, every segment will be inspected and classified as its printer was not known.
+
+<img align="center" src="img/screenshots/03b_evaluation_done.png">
+
+
+### Inspect
+
+In the Inspection tab of the Pridentifier, you can inspect unknown prints or segments of prints.
+
+<img align="center" src="img/screenshots/04a_inspection_load.png">
+
+<img align="center" src="img/screenshots/04b_inspection_done.png">
+
