@@ -5,6 +5,8 @@ This Pridentifier software can be used to investigate what kind of printers can 
 
 Feel free to investigate your (forensic) classification problems with the Pridentifier.
 
+<img align="center" src="img/screenshots/02c_fingerprints.png">
+
 
 ## Installation
 
@@ -38,6 +40,31 @@ python pridentifier.py
 
 ## Usage
 
+### Load data
+
+<img align="center" src="img/screenshots/01a_data.png">
+
+<img align="center" src="img/screenshots/01b_data_load.png">
+
+<img align="center" src="img/screenshots/01c_data_loaded.png">
+
+
+### Analyse 
+
+<img align="center" src="img/screenshots/02b_analysis_done.png">
+
+
+### Evaluate 
+
+<img align="center" src="img/screenshots/03b_evaluation_done.png">
+
+
+### Inspect
+
+<img align="center" src="img/screenshots/04a_inspection_load.png">
+
+<img align="center" src="img/screenshots/04b_inspection_done.png">
+
 
 ## Support
 
@@ -49,7 +76,7 @@ For any questions if having problems with the installation or usage contact: tro
 **App development**
 - add functionality to make evaluation on an uploaded test-set
 - save-button for evaluation results
-- make possible to analyze more than 8 classes (also display scrollable in GUI)
+- enable to analyze more than 8 classes (and make scrollable in GUI)
 - enable tiff-formats
 
 
@@ -69,7 +96,6 @@ For any questions if having problems with the installation or usage contact: tro
 ## Trouble shooting (because not fixed yet)
 - change segment size several times, crashes or does not updates any more --> classes must be loaded again in the data-tab
 - when clicking "save result" and then "cancel", the app crashes --> restart
-- not sure if already fixed: windows "Thumbs.db" files are skipped when accessing all classes images -> those hidden files must be deleted in windows filesystem
 
 
 ## Contributing
