@@ -1,7 +1,7 @@
 # Pridentifier  <img align="right" src="img/pridi.png">
 
 
-This Pridentifier software was developed as research tool to investigate which printers (brand, model or individual) can be distinguished with the help of Fourier analysis features. But it can also be used for other classification problems of textual images. Feel free to investigate your textual classification problems with the Pridentifier.
+This **Pridentifier** software was developed as research tool to investigate which printers (brand, model or individual) can be distinguished with the help of Fourier analysis features. But it can also be used for other classification problems of textual images. Feel free to investigate your textual classification problems with the Pridentifier.
 
 The following image shows the 'fingerprints' (Fourier spectra) of 4 exemplary printers we used in our experiment. We examined one individual printer of each brand. Here we only name the brand, even if we examined indivuals of only one model. This repository contains a small test set of these 4 classes. 
 
